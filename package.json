@@ -1,0 +1,25 @@
+{
+  "name": "fotaza",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --env-file=.env index.js",
+    "dev": "node --watch --env-file=.env index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nicanor95/fotaza.git"
+  },
+  "author": "Nicanor Arancibia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nicanor95/fotaza/issues"
+  },
+  "homepage": "https://github.com/Nicanor95/fotaza#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "pug": "^3.0.4"
+  }
+}
