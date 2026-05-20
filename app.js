@@ -8,10 +8,13 @@ const PORT = process.env.PORT;
 app.set('view engine', 'pug');
 app.set('views', './views');
 
+// Serve statics
+app.use(express.static("public"));
+
 // Routes
 app.get('/', (req, res) => {
-	res.render('index', { title:"FOTAZA", text:"Que buena foto.", });
-})
+	res.render('homepage');
+});
 
 // Run server
 app.listen(PORT, () => {
