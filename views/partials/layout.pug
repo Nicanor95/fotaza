@@ -3,6 +3,8 @@ html(lang="en")
 	head
 		meta(charset="UTF-8")
 		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet", type='text/css', href="/css/fontawesome.css")
+		link(rel="stylesheet", type='text/css', href="/css/solid.css")
 		link(rel="stylesheet", type='text/css', href="/css/style.css")
 		title= title || "Fotaza"
 	body 
@@ -13,4 +15,5 @@ html(lang="en")
 		main
 			block content
 		footer
-			a(href="mailto://fotaza@foo.baz") Email de contacto 
+			a(href="mailto://fotaza@foo.baz" title="Contact through Email")
+				i(class="fa-solid fa-envelope")

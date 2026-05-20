@@ -5,6 +5,8 @@ import pug from 'pug';
 // Server options
 const app = express();
 const PORT = process.env.PORT;
+
+// Set up view engine.
 app.set('view engine', 'pug');
 app.set('views', './views');
 

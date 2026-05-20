@@ -1,3 +1,8 @@
+@font-face {
+	font-family: 'Fira Sans';
+	src: url("/webfonts/FiraSansCondensed-Medium.woff2");
+}
+
 * {
 	--background: #212830;
 	--background-dark: #151b23;
@@ -6,17 +11,33 @@
 	--accent: #ADF6C6;
 	--foreground: #d7f5e2;
 
+	font-family: 'Fira Sans', Tahoma, Helvetica, sans-serif;
+
 	background-color: var(--background);
 	color: var(--foreground);
+}
+
+body {
+	width: 80%;
+	margin: auto;
 }
 
 header {
 	display: flex;
 	border-bottom: 1px solid var(--border);
+	align-items: center;
 }
 
 header h1 {
 	color: var(--accent);
+	padding: 0 2rem 0 2rem
+}
+
+header nav ul {
+	list-style: none;
+	display: flex;
+	gap: 1rem;
+	padding-left: 0;
 }
 
 main {
@@ -26,7 +47,18 @@ main {
 }
 
 footer {
+	display:flex;
 	border-top: 1px solid var(--border);
+	margin-top: 2rem;
+	padding-top: 1rem;
+	justify-content: center;
+}
+
+footer a i {
+	color: var(--accent);
+	border: 1px solid var(--border);
+	border-radius: 50%;
+	padding: 1rem;
 }
 
 .c_flex {
