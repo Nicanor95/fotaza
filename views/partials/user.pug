@@ -1,0 +1,7 @@
+- let user = {username: "Usuario1", validador: false, anonimo: true }
+
+div#usuario
+	unless user.anonimo 
+		span #{user.username}
+	else 
+		a(href="/login") Login

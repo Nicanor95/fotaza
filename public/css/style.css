@@ -61,6 +61,10 @@ footer a i {
 	padding: 1rem;
 }
 
+#usuario {
+	margin-left: auto;
+}
+
 .c_flex {
 	display: flex;
 	flex-direction: column;
