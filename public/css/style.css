@@ -61,6 +61,10 @@ footer a i {
 	padding: 1rem;
 }
 
+#icon {
+	text-decoration: none;
+}
+
 #usuario {
 	margin-left: auto;
 }
