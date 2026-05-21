@@ -18,6 +18,10 @@ app.get('/', (req, res) => {
 	res.render('homepage');
 });
 
+app.get('/login', (req, res) => {
+	res.render('login', {title:'FOTAZA | Login'});
+});
+
 // Run server
 app.listen(PORT, () => {
 	console.log(`Fotaza listening on port ${PORT}`);
