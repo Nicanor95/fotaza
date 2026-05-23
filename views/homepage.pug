@@ -1,6 +1,9 @@
 extends partials/layout
 
 block content
-	div.c_flex.center
-		h1 FOTAZA 
-		p esto funciona parece
+	- let posts = [{img:'', title:'Imagen1'}, {img:'', title:'Imagen2'}]
+	div.r_flex.center
+		each p in posts
+			div.post
+				img(src=p.img, width=300, height=600)
+				h3 #{p.title}
