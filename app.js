@@ -1,18 +1,12 @@
+import 'dotenv/config';
 import express from 'express';
 import pug from 'pug';
-import { Sequelize, DataTypes } from 'sequelize';
+import sequelize from './models/config.js';
 
 
 // Server options
 const app = express();
 const PORT = process.env.PORT;
-
-// Database connection
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
-	host: process.env.DB_HOST,
-	port: process.env.DB_PORT,
-	dialect: process.env.DB_DIALECT
-});
 
 // Set up view engine.
 app.set('view engine', 'pug');
