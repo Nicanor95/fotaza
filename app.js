@@ -2,7 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import pug from 'pug';
 import sequelize from './models/config.js';
-import './models/modules.js';
+import './models/models.js';
 
 
 // Server options
