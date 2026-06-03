@@ -2,7 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import pug from 'pug';
 import sequelize from './models/config.js';
-import './models/sync.js';
+import './models/modules.js';
 
 
 // Server options
@@ -34,7 +34,7 @@ try {
 	process.exit(1);
 }
 // Sync database
-await sequelize.sync({ /*force: true*/ });
+await sequelize.sync(/*{ force: true, alter: true }*/);
 
 // Run server
 app.listen(PORT, () => {
