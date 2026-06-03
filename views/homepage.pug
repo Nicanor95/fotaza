@@ -1,9 +1,7 @@
 extends partials/layout
+include partials/wall
 
 block content
 	- let posts = [{img:'', title:'Imagen1'}, {img:'', title:'Imagen2'}]
-	div.r_flex.center
-		each p in posts
-			div.post
-				img(src=p.img, width=300, height=600)
-				h3 #{p.title}
+
+	+wall(posts)

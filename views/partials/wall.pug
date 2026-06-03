@@ -1,0 +1,6 @@
+mixin wall(posts)
+	div.r_flex.center
+		each p in posts
+			div.post
+				img(src=p.img, width=300, height=600)
+				h3 #{p.title}
