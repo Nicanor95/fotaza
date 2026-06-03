@@ -15,5 +15,6 @@ export const ColImg = sequelize.define(
   	},
   	{
 		timestamps: false,
+		tableName: 'col_img'
   	},
 );

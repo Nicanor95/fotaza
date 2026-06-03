@@ -15,5 +15,6 @@ export const ChatParticipant = sequelize.define(
   	},
   	{
 		timestamps: false,
+		tableName: 'chatparticipants'
   	},
 );

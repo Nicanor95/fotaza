@@ -15,5 +15,6 @@ export const ImgTag = sequelize.define(
   	},
   	{
 		timestamps: false,
+		tableName: 'img_tag'
   	},
 );

@@ -15,5 +15,6 @@ export const Follow = sequelize.define(
   	},
   	{
 		timestamps: true,
+		tableName: 'follows'
   	},
 );

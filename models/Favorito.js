@@ -15,5 +15,6 @@ export const Favorito = sequelize.define(
   	},
   	{
 		timestamps: true,
+		tableName: 'favoritos'
   	},
 );

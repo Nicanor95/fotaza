@@ -23,5 +23,6 @@ export const Reporte = sequelize.define(
   	},
   	{
 		timestamps: true, // Adds createdAt and updatedAt.
+		tableName: 'reportes'
   	},
 );

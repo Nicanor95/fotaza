@@ -19,5 +19,6 @@ export const Tag = sequelize.define(
   	},
   	{
 		timestamps: false,
+		tableName: 'tags'
   	},
 );

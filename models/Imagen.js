@@ -30,6 +30,7 @@ export const Imagen = sequelize.define(
 		}
   	},
   	{
-		timestamps: true
+		timestamps: true,
+		tableName: 'imagenes'
   	},
 );

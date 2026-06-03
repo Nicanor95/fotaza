@@ -15,5 +15,6 @@ export const ColPub = sequelize.define(
   	},
   	{
 		timestamps: false,
+		tableName: 'col_pub'
   	},
 );

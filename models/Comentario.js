@@ -23,6 +23,7 @@ export const Comentario = sequelize.define(
   	},
   	{
 		timestamps: true, // Adds createdAt and updatedAt.
-		paranoid: true // Adds deletedAt.
+		paranoid: true, // Adds deletedAt.
+		tableName: 'comentarios'
   	},
 );

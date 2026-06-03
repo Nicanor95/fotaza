@@ -24,5 +24,6 @@ export const Notificacion = sequelize.define(
   	},
   	{
 		timestamps: true, // Adds createdAt and updatedAt.
+		tableName: 'notificaciones'
   	},
 );
