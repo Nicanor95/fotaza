@@ -1,7 +1,6 @@
 import { Chat } from './Chat.js';
 import { Coleccion } from './Coleccion.js';
 import { Comentario } from './Comentario.js';
-import { Favorito } from './Favorito.js';
 import { Imagen } from './Imagen.js';
 import { Mensaje } from './Mensaje.js';
 import { Notificacion } from './Notificacion.js';
@@ -76,11 +75,8 @@ Valoracion.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 Usuario.hasMany(Valoracion, { foreignKey: 'usuario_id' });
 
 // Favoritos
-Favorito.belongsTo(Imagen, { foreignKey: 'img_id' });
-Imagen.hasMany(Favorito, { foreignKey: 'img_id' });
-
-Favorito.belongsTo(Usuario, { foreignKey: 'usuario_id' });
-Usuario.hasMany(Favorito, { foreignKey: 'usuario_id' });
+Imagen.belongsToMany(Usuario, { through: 'favoritos', foreignKey: 'img_id' });
+Usuario.belongsToMany(Imagen, { through: 'favoritos', foreignKey: 'usuario_id' });
 
 // Follows
 Usuario.belongsToMany(Usuario, { as: 'follower', through: 'follows', foreignKey: 'follower'});
