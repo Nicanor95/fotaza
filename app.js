@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import pug from 'pug';
 import sequelize from './models/config.js';
+import './models/sync.js';
 
 
 // Server options
@@ -24,14 +25,18 @@ app.get('/login', (req, res) => {
 	res.render('login', {title:'FOTAZA | Login'});
 });
 
+// Test database
+try {
+	await sequelize.authenticate();
+	console.log('Database connection has been established successfully.');
+} catch (error) {
+	console.error('Unable to connect to the database:', error);
+	process.exit(1);
+}
+// Sync database
+await sequelize.sync({ /*force: true*/ });
+
 // Run server
-app.listen(PORT, async () => {
+app.listen(PORT, () => {
 	console.log(`Fotaza listening on port ${PORT}`);
-	// Test database connection.
-	try {
-		await sequelize.authenticate();
-		console.log('Database connection has been established successfully.');
-	} catch (error) {
-		console.error('Unable to connect to the database:', error);
-	}
 });
