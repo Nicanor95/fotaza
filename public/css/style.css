@@ -101,12 +101,12 @@ footer a i {
 	width: 30rem;
 }
 
-#searchbar > input {
+#searchbar > input, .sendcomment > input{
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 }
 
-#searchbar > button {
+#searchbar > button, .sendcomment > button {
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
 	padding-right: 1.3rem;
