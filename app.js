@@ -31,6 +31,11 @@ app.get('/post/:post_id', (req, res) => {
 	res.render('post', {img:"p.png", title:"stuff"});
 });
 
+app.get('/search/:searchterms', (req, res) => {
+	// TODO: Do the search and get results
+	res.render('searchresults', {})
+});
+
 // Test database
 try {
 	await sequelize.authenticate();
