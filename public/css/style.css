@@ -76,6 +76,12 @@ footer a i {
 
 #usuario {
 	margin-left: auto;
+	margin-right: 2rem;
+}
+
+#searchbar {
+	margin-left: auto;
+	width: 30rem;
 }
 
 .c_flex {
