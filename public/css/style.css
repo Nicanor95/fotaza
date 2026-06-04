@@ -31,6 +31,23 @@ a, header a:visited {
 	color: var(--accent-bright);
 }
 
+input, button {
+	color: var(--foreground);
+	border: 1px solid var(--border);
+	border-radius: 1rem;
+}
+
+input {
+	background-color: var(--background-dark);
+	height: 2rem;
+	padding: 0 1rem;
+}
+
+button {
+	background-color: var(--background-light);
+	padding: 0 1rem;
+}
+
 header {
 	display: flex;
 	border-bottom: 1px solid var(--border);
@@ -82,6 +99,17 @@ footer a i {
 #searchbar {
 	margin-left: auto;
 	width: 30rem;
+}
+
+#searchbar > input {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+#searchbar > button {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	padding-right: 1.3rem;
 }
 
 .c_flex {
