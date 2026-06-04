@@ -1,0 +1,11 @@
+extends partials/layout
+
+block content
+	div.r_flex
+		// TODO: make carousel with all images of the post
+		img.post_image(src=img)
+		div.c_flex.post_details 
+			h2.center=title
+			div.comments 
+				// each comment in comments.-
+				input.newcomment

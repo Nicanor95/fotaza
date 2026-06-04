@@ -116,3 +116,15 @@ footer a i {
 .post > h3 {
 	overflow: hidden;
 }
+
+.post_image{
+	flex-grow: 3;
+}
+
+.post_details {
+	flex-basis: 300px;
+}
+
+.searchinput {
+	width: inherit;
+}

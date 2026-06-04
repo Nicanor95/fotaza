@@ -25,6 +25,12 @@ app.get('/login', (req, res) => {
 	res.render('login', {title:'FOTAZA | Login'});
 });
 
+app.get('/post/:post_id', (req, res) => {
+	// TODO: Get post from db
+
+	res.render('post', {img:"p.png", title:"stuff"});
+});
+
 // Test database
 try {
 	await sequelize.authenticate();
