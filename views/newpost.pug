@@ -1,0 +1,13 @@
+extends partials/layout
+include partials/wall
+
+block content
+	form.center(action="", method="post") 
+		div
+			span.center.endalign Titulo:
+			input.center.startalign#title(type="text", name="title")
+		div
+			span.center.endalign Imagen:
+			input.center.startalign#img(type="file", name="img", accept="image/*")
+		
+		button.center(type="submit") Subir

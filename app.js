@@ -18,6 +18,9 @@ app.set('views', './views');
 // Serve statics
 app.use(express.static("public"));
 
+app.use(express.json());
+app.use(express.urlencoded( { extended: true }));
+
 // Routes
 app.get('/', (req, res) => {
 	res.render('homepage');
@@ -49,13 +52,17 @@ app.get('/post/:post_id', async (req, res) => {
 	if (pub === null || images === []) {
 		res.status(404).render('fourohfour');
 	} else {
-		res.render('post');
+		res.render('post', {p:pub, img:images});
 	}
 });
 
 app.get('/search/:searchterms', (req, res) => {
 	// TODO: Do the search and get results
 	res.render('searchresults', {})
+});
+
+app.get('/newpost', (req, res) => {
+	res.render('newpost');
 });
 
 // 404

@@ -87,12 +87,42 @@ footer a i {
 	padding: 1rem;
 }
 
+form {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	max-width: 40rem;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 2rem;
+	padding: 1rem;
+}
+
+form > div {
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+}
+
+form > div > span {
+	min-width: 6rem;
+}
+
+form > div > input {
+	width: 100%;
+}
+
+form > button {
+	width: 50%;
+	height: 2rem;
+	margin-top: 2rem;
+}
+
 #icon {
 	text-decoration: none;
 }
 
 #usuario {
-	margin-left: auto;
 	margin-right: 2rem;
 }
 
@@ -130,6 +160,14 @@ footer a i {
 	justify-content: center;
 }
 
+.endalign {
+	text-align: end;
+}
+
+.startalign {
+	text-align: start;
+}
+
 .post {
 	max-height: 450px;
 	border: var(--border);
@@ -161,4 +199,13 @@ footer a i {
 
 .searchinput {
 	width: inherit;
+}
+
+.newpost {
+	margin-right: 1rem;
+	margin-left: auto;
+}
+
+.newpost > button {
+	height: 2rem;
 }

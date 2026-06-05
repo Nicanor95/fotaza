@@ -1,4 +1,9 @@
-- let user = {username: "Usuario1", validador: false, anonimo: true }
+- let user = {username: "Usuario1", validador: false, anonimo: false }
+
+// Boton para crear post.
+a(href="/newpost").newpost
+	button
+		i.fa-solid.fa-plus
 
 div#usuario
 	unless user.anonimo 
