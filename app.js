@@ -36,6 +36,11 @@ app.get('/search/:searchterms', (req, res) => {
 	res.render('searchresults', {})
 });
 
+// 404
+app.use((req, res, next) => {
+	res.status(404).render('fourohfour');
+});
+
 // Test database
 try {
 	await sequelize.authenticate();
