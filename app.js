@@ -3,6 +3,8 @@ import express from 'express';
 import pug from 'pug';
 import sequelize from './models/config.js';
 import './models/models.js';
+import { Publicacion } from './models/Publicacion.js';
+import { Imagen } from './models/Imagen.js';
 
 
 // Server options
@@ -25,10 +27,30 @@ app.get('/login', (req, res) => {
 	res.render('login', {title:'FOTAZA | Login'});
 });
 
-app.get('/post/:post_id', (req, res) => {
-	// TODO: Get post from db
+app.get('/post/:post_id', async (req, res) => {
+	// Get the post id, check if it's a number.
+	const pid = parseInt(req.params.post_id, 10);
+	if (!pid) {
+		res.status(404).render('fourohfour');
+		return;
+	}
+	
+	// Make the two requests to the db
+	let pub = Publicacion.findByPk(pid);
+	let images = Imagen.findAll({
+		where: {
+			publicacion_id: pid
+		}
+	});
 
-	res.render('post', {img:"p.png", title:"stuff"});
+	// Wait for  the results
+	pub = await pub;
+	images = await images;
+	if (pub === null || images === []) {
+		res.status(404).render('fourohfour');
+	} else {
+		res.render('post');
+	}
 });
 
 app.get('/search/:searchterms', (req, res) => {
