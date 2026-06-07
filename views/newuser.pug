@@ -1,0 +1,14 @@
+extends partials/layout
+
+block content 
+	form.center(action="/register", method="post", enctype="application/json")
+		label(for="nombre") Nombre
+		input#nombre(type="text", name="nombre")
+		label(for="email") Email
+		input#email(type="email", name="email")
+		label(for="password") Contraseña
+		input#password(type="password", name="password")
+		label(for="password_confirm") Confirme Contraseña
+		input#password_confirm(type="password", name="password_confirm") 
+		div.c_flex.botonera
+			button.center(type="submit") Registrarse 

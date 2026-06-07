@@ -65,10 +65,21 @@ app.get('/newpost', (req, res) => {
 	res.render('newpost');
 });
 
+app.get('/newuser', (req, res) => {
+	res.render('newuser');
+});
+
 app.post('/upload', (req,res) => {
+	//Manejar la subida, investigar sobre multer
 	console.log(req.body);
 	res.json(req.body);
 });
+
+app.post('/register', (req,res) => {
+	//Manejar el registro
+	console.log(req.body);
+	res.json(req.body);
+})
 
 // 404
 app.use((req, res, next) => {
