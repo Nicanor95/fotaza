@@ -2,13 +2,13 @@ extends partials/layout
 include partials/wall
 
 block content
-	form.center(action="/upload", method="post", enctype="multipart/form-data") 
+	form.center(action="/upload", method="post", enctype="application/json") 
 		div
 			label.center.endalign(for="title") Titulo:
 			input.center.startalign#title(type="text", name="title")
 		div
 			label.center.endalign(for="fileinput") Imágenes:
-			input.center.startalign#fileinput(type="file", name="fileinput", accept="image/*" multiple)
+			input.center.startalign#fileinput(type="file", name="fileinput" accept="image/*" multiple)
 		div.c_flex#previews
 		button.center(type="submit") Subir
 

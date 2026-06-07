@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import express from 'express';
+import express, { json } from 'express';
 import pug from 'pug';
 import sequelize from './models/config.js';
 import './models/models.js';
@@ -19,7 +19,7 @@ app.set('views', './views');
 app.use(express.static("public"));
 
 app.use(express.json());
-app.use(express.urlencoded( { extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.get('/', (req, res) => {
@@ -65,9 +65,9 @@ app.get('/newpost', (req, res) => {
 	res.render('newpost');
 });
 
-app.post('/upload', (req,res, next) => {
-	console.log(req);
-	next();
+app.post('/upload', (req,res) => {
+	console.log(req.body);
+	res.json(req.body);
 });
 
 // 404
