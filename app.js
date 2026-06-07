@@ -65,6 +65,11 @@ app.get('/newpost', (req, res) => {
 	res.render('newpost');
 });
 
+app.post('/upload', (req,res, next) => {
+	console.log(req);
+	next();
+});
+
 // 404
 app.use((req, res, next) => {
 	res.status(404).render('fourohfour');

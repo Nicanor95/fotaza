@@ -31,13 +31,13 @@ a, header a:visited {
 	color: var(--accent-bright);
 }
 
-input, button {
+input, button, textarea {
 	color: var(--foreground);
 	border: 1px solid var(--border);
 	border-radius: 1rem;
 }
 
-input {
+input, textarea {
 	background-color: var(--background-dark);
 	height: 2rem;
 	padding: 0 1rem;
@@ -104,13 +104,23 @@ form > div {
 	gap: 1rem;
 }
 
-form > div > span {
+form > div > label {
 	min-width: 6rem;
 }
 
-form > div > input {
+form > div > label[for="description"] {
+	padding-top: 0.5rem;
+}
+
+form > div > input, form textarea {
 	width: 100%;
 }
+
+form textarea {
+	padding: 0.5rem;
+	resize:vertical;
+}
+
 
 form > button {
 	width: 50%;
@@ -140,6 +150,22 @@ form > button {
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
 	padding-right: 1.3rem;
+}
+
+#previews img {
+	height: 200px;
+	overflow: hidden;
+}
+
+#previews .imgContainer {
+	width: 300px;
+	overflow: clip;
+	background-color: var(--background-dark);
+	border-color: var(--border);
+}
+
+#previews > div {
+	gap: 1rem;
 }
 
 .c_flex {
@@ -208,4 +234,8 @@ form > button {
 
 .newpost > button {
 	height: 2rem;
+}
+
+.descDiv {
+	flex-grow: 0.84;
 }
