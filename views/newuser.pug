@@ -1,14 +1,20 @@
 extends partials/layout
 
 block content 
-	form.center(action="/register", method="post", enctype="application/json")
+	form#registro.center(action="/register", method="post",enctype="application/json")
 		label(for="nombre") Nombre
 		input#nombre(type="text", name="nombre")
+		span(hidden="true").error.startalign * Nombre requerido
 		label(for="email") Email
 		input#email(type="email", name="email")
+		span(hidden="true").error.startalign * Email requerido
 		label(for="password") Contraseña
 		input#password(type="password", name="password")
+		span(hidden="true").error.startalign * Contraseña requerida, minimo 6 caracteres
 		label(for="password_confirm") Confirme Contraseña
 		input#password_confirm(type="password", name="password_confirm") 
+		span(hidden="true").error.startalign * Contraseñas no concuerdan.
 		div.c_flex.botonera
-			button.center(type="submit") Registrarse 
+			button.center(type="submit", onclick="validate(event)") Registrarse 
+	
+	script(src="/script/register.js") 

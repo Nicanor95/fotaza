@@ -259,3 +259,7 @@ form button {
 .botonera {
 	margin-top: 2rem;
 }
+
+.error {
+	color: lightcoral;
+}
