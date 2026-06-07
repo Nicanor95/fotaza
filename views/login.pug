@@ -1,7 +1,12 @@
 extends partials/layout
 
 block content 
-	span Usuario
-	input(type="email", name="user")
-	span Contraseña
-	input(type="password", name="password") 
+	form.center(action="/ingreso", method="post", enctype="application/json")
+		label Usuario
+		input(type="email", name="user")
+		label Contraseña
+		input(type="password", name="password")
+		div.c_flex.botonera
+			button.center(type="submit") Ingresar 
+			a.center(href="/newuser") 
+				button.center(type="button") Registrarse

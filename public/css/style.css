@@ -35,6 +35,7 @@ input, button, textarea {
 	color: var(--foreground);
 	border: 1px solid var(--border);
 	border-radius: 1rem;
+	box-shadow: 2px 2px 3px #101010;
 }
 
 input, textarea {
@@ -46,6 +47,15 @@ input, textarea {
 button {
 	background-color: var(--background-light);
 	padding: 0 1rem;
+}
+
+button:hover {
+	background-color: var(--border);
+}
+
+button:active {
+	box-shadow: 1px 1px 2px #101010;
+	transform: translate(1px, 1px);
 }
 
 header {
@@ -121,11 +131,13 @@ form textarea {
 	resize:vertical;
 }
 
+form a {
+	width: 100%;
+}
 
-form > button {
+form button {
 	width: 50%;
 	height: 2rem;
-	margin-top: 2rem;
 }
 
 #icon {
@@ -238,4 +250,8 @@ form > button {
 
 .descDiv {
 	flex-grow: 0.84;
+}
+
+.botonera {
+	margin-top: 2rem;
 }
