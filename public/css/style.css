@@ -6,6 +6,7 @@
 * {
 	--background: #212830;
 	--background-dark: #151b23;
+	--background-dl: #262c36;
 	--background-light: #2a313c;
 	--border: #3d444d;
 	--accent: #ADF6C6;
@@ -106,6 +107,9 @@ form {
 	margin-right: auto;
 	margin-top: 2rem;
 	padding: 1rem;
+	background-color: var(--background-dl);
+	border-radius: 1rem;
+	box-shadow: 0 0 10px #101010;
 }
 
 form > div {
