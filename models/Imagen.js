@@ -25,7 +25,7 @@ export const Imagen = sequelize.define(
 			type: DataTypes.STRING
 		},
 		blob: {
-			type: DataTypes.STRING,
+			type: DataTypes.BLOB,
 			allowNull: false
 		}
   	},
