@@ -116,18 +116,11 @@ app.post('/register', async (req,res) => {
 		return res.render('error');
 	}
 
-	const hash = await hashPassword(password);
-
-	if (!verifyPassword(hash, password_conf)) { 
-		// Should be unnecessary, but if something 
-		// went wrong hashing, we'll catch it here.
-		return res.render('error');
-	}
 	try {
 		const newUser = await Usuario.create({ 
 			nombre: nombre,
 			email: email,
-			phash: hash
+			phash: password //Hashes on hook
 		});
 	} catch (err) {
 		console.log(err);
@@ -152,7 +145,7 @@ app.post('/ingreso', async (req,res) => {
 			return res.render('error', {error: "Datos incorrectos."});
 		}	
 	
-		if (await verifyPassword(user.phash, password)) {
+		if (await user.verifyPassword(password)) {
 			req.session.user = {
 				id: user.id
 			}
