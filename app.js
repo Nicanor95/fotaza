@@ -71,13 +71,15 @@ app.get('/newuser', (req, res) => {
 
 app.post('/upload', (req,res) => {
 	//Manejar la subida, investigar sobre multer
-	console.log(req.body);
 	res.json(req.body);
 });
 
 app.post('/register', (req,res) => {
 	//Manejar el registro
-	console.log(req.body);
+	res.json(req.body);
+})
+
+app.post('/ingreso', (req,res) => {
 	res.json(req.body);
 })
 

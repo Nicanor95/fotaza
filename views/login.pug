@@ -2,11 +2,15 @@ extends partials/layout
 
 block content 
 	form.center(action="/ingreso", method="post", enctype="application/json")
-		label Usuario
-		input(type="email", name="user")
-		label Contraseña
-		input(type="password", name="password")
+		label(for="user") Email
+		input#email(type="email", name="user")
+		span(hidden="true").error.startalign * Email invalido
+		label(for="user") Contraseña
+		input#password(type="password", name="password")
+		span(hidden="true").error.startalign * Contraseña muy corta
 		div.c_flex.botonera
-			button.center(type="submit") Ingresar 
+			button.center(type="submit", onclick="validate(event)") Ingresar 
 			a.center(href="/newuser") 
 				button.center(type="button") Registrarse
+	
+	script(src="/script/login.js") 
