@@ -3,6 +3,8 @@ import express, { json } from 'express';
 import pug from 'pug';
 import { hashPassword, verifyPassword } from './crypt.js';
 import sequelize from './models/config.js';
+import session from 'express-session';
+import ConnectSessionSequelize from "connect-session-sequelize";
 import './models/models.js';
 import { Publicacion } from './models/Publicacion.js';
 import { Imagen } from './models/Imagen.js';
@@ -15,6 +17,25 @@ const regMail = /^[a-zA-Z0-9](?:[\.-\w])*@\w+(?:-\w+)?(?:\.\w+(?:-\w+)?)+$/;
 // Server options
 const app = express();
 const PORT = process.env.PORT;
+
+// Session storage
+const SequelizeStore = ConnectSessionSequelize(session.Store);
+app.use(
+	session({
+		secret: process.env.SECRET_KEY,
+		store: new SequelizeStore({
+			db: sequelize
+		}),
+		resave: false,
+		saveUninitialized: true,
+		cookie: {
+			secure: false,
+			maxAge: 24*60*60*1000, //24h
+			httpOnly: false,
+			sameSite: 'lax'
+		},
+	})
+)
 
 // Set up view engine.
 app.set('view engine', 'pug');
@@ -132,6 +153,9 @@ app.post('/ingreso', async (req,res) => {
 		}	
 	
 		if (await verifyPassword(user.phash, password)) {
+			req.session.user = {
+				id: user.id
+			}
 			return res.redirect('/');
 		} else {
 			return res.render('error', {error: "Datos incorrectos."});
