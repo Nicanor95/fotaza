@@ -112,12 +112,34 @@ app.post('/register', async (req,res) => {
 		console.log(err);
 		return res.render('error', {error: "El usuario ya existe."});
 	}
-	return res.render('homepage');
+	return res.redirect('/');
 })
 
-app.post('/ingreso', (req,res) => {
-	res.json(req.body);
-})
+app.post('/ingreso', async (req,res) => {
+	const mail = req.body.email
+	const password = req.body.password
+
+	// Get user by mail (unique)
+	try {
+		const user = await Usuario.findOne({
+			where: {
+				email: mail
+			}
+		});
+
+		if (!user) { // No se encuentra usuario
+			return res.render('error', {error: "Datos incorrectos."});
+		}	
+	
+		if (await verifyPassword(user.phash, password)) {
+			return res.redirect('/');
+		} else {
+			return res.render('error', {error: "Datos incorrectos."});
+		}
+	} catch (error) {
+		return res.render('error', {error: "Datos incorrectos."});
+	}
+});
 
 // 404
 app.use((req, res, next) => {

@@ -22,7 +22,7 @@ function validate(event) {
 	}
 
 	// Validate password
-	if (password.value.length <= 6) {
+	if (password.value.length < 1) {
 		password.style.borderColor = "red";
 		document.querySelector("#password+.error").hidden = false;
 		valid = false;
