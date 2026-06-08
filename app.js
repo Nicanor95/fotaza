@@ -1,11 +1,16 @@
 import 'dotenv/config';
 import express, { json } from 'express';
 import pug from 'pug';
+import { hashPassword, verifyPassword } from './crypt.js';
 import sequelize from './models/config.js';
 import './models/models.js';
 import { Publicacion } from './models/Publicacion.js';
 import { Imagen } from './models/Imagen.js';
+import { Usuario } from './models/Usuario.js';
 
+// Regex for validation.
+const regNombre = /^[a-zA-Zñ]{3,}(?: [a-zA-Z]+)*$/;
+const regMail = /^[a-zA-Z0-9](?:[\.-\w])*@\w+(?:-\w+)?(?:\.\w+(?:-\w+)?)+$/;
 
 // Server options
 const app = express();
@@ -74,9 +79,40 @@ app.post('/upload', (req,res) => {
 	res.json(req.body);
 });
 
-app.post('/register', (req,res) => {
+app.post('/register', async (req,res) => {
 	//Manejar el registro
-	res.json(req.body);
+	const nombre = req.body.nombre;
+	const email = req.body.email;
+	const password = req.body.password;
+	const password_conf = req.body.password_confirm;
+
+	// Validate
+	if ( [nombre,email,password,password_conf].some( (e) => { return (e === undefined); }) ||
+		!(password === password_conf) || 
+		(password.length < 6) ||
+		!(regMail.test(email)) || 
+		!(regNombre.test(nombre))) {
+		return res.render('error');
+	}
+
+	const hash = await hashPassword(password);
+
+	if (!verifyPassword(hash, password_conf)) { 
+		// Should be unnecessary, but if something 
+		// went wrong hashing, we'll catch it here.
+		return res.render('error');
+	}
+	try {
+		const newUser = await Usuario.create({ 
+			nombre: nombre,
+			email: email,
+			phash: hash
+		});
+	} catch (err) {
+		console.log(err);
+		return res.render('error', {error: "El usuario ya existe."});
+	}
+	return res.render('homepage');
 })
 
 app.post('/ingreso', (req,res) => {

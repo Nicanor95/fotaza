@@ -1,0 +1,7 @@
+extends partials/layout
+include partials/wall
+
+block content
+	div.c_flex.center
+		h1.center Ha ocurrido un error
+		p.center= error || "Vuelva a intentar en unos minutos"
