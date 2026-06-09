@@ -1,7 +1,7 @@
 extends partials/layout
 
 block content 
-	form#registro.center(action="/register", method="post",enctype="application/json")
+	form#registro.center(method="post",enctype="application/json")
 		label(for="nombre") Nombre
 		input#nombre(type="text", name="nombre")
 		span(hidden="true").error.startalign * Nombre requerido

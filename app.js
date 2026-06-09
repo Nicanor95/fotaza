@@ -5,13 +5,11 @@ import sequelize from './models/config.js';
 import session from 'express-session';
 import ConnectSessionSequelize from "connect-session-sequelize";
 import './models/models.js';
+import authRouter from './route/auth.js';
 import { Publicacion } from './models/Publicacion.js';
 import { Imagen } from './models/Imagen.js';
 import { Usuario } from './models/Usuario.js';
 
-// Regex for validation.
-const regNombre = /^[a-zA-Zñ]{3,}(?: [a-zA-Z]+)*$/;
-const regMail = /^[a-zA-Z0-9](?:[\.-\w])*@\w+(?:-\w+)?(?:\.\w+(?:-\w+)?)+$/;
 
 // Server options
 const app = express();
@@ -51,9 +49,7 @@ app.get('/', (req, res) => {
 	res.render('homepage');
 });
 
-app.get('/login', (req, res) => {
-	res.render('login', {title:'FOTAZA | Login'});
-});
+app.use('/auth', authRouter);
 
 app.get('/post/:post_id', async (req, res) => {
 	// Get the post id, check if it's a number.
@@ -90,71 +86,9 @@ app.get('/newpost', (req, res) => {
 	res.render('newpost');
 });
 
-app.get('/newuser', (req, res) => {
-	res.render('newuser');
-});
-
 app.post('/upload', (req,res) => {
 	//Manejar la subida, investigar sobre multer
 	res.json(req.body);
-});
-
-app.post('/register', async (req,res) => {
-	//Manejar el registro
-	const nombre = req.body.nombre;
-	const email = req.body.email;
-	const password = req.body.password;
-	const password_conf = req.body.password_confirm;
-
-	// Validate
-	if ( [nombre,email,password,password_conf].some( (e) => { return (e === undefined); }) ||
-		!(password === password_conf) || 
-		(password.length < 6) ||
-		!(regMail.test(email)) || 
-		!(regNombre.test(nombre))) {
-		return res.render('error');
-	}
-
-	try {
-		const newUser = await Usuario.create({ 
-			nombre: nombre,
-			email: email,
-			phash: password //Hashes on hook
-		});
-	} catch (err) {
-		console.log(err);
-		return res.render('error', {error: "El usuario ya existe."});
-	}
-	return res.redirect('/');
-})
-
-app.post('/ingreso', async (req,res) => {
-	const mail = req.body.email
-	const password = req.body.password
-
-	// Get user by mail (unique)
-	try {
-		const user = await Usuario.findOne({
-			where: {
-				email: mail
-			}
-		});
-
-		if (!user) { // No se encuentra usuario
-			return res.render('error', {error: "Datos incorrectos."});
-		}	
-	
-		if (await user.verifyPassword(password)) {
-			req.session.user = {
-				id: user.id
-			}
-			return res.redirect('/');
-		} else {
-			return res.render('error', {error: "Datos incorrectos."});
-		}
-	} catch (error) {
-		return res.render('error', {error: "Datos incorrectos."});
-	}
 });
 
 // 404

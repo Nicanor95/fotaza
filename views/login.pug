@@ -1,7 +1,7 @@
 extends partials/layout
 
 block content 
-	form.center(action="/ingreso", method="post", enctype="application/json")
+	form.center(method="post", enctype="application/json")
 		label(for="email") Email
 		input#email(type="email", name="email")
 		span(hidden="true").error.startalign * Email invalido
@@ -10,7 +10,7 @@ block content
 		span(hidden="true").error.startalign * Ingrese contraseña
 		div.c_flex.botonera
 			button.center(type="submit", onclick="validate(event)") Ingresar 
-			a.center(href="/newuser") 
+			a.center(href="/auth/signup") 
 				button.center(type="button") Registrarse
 	
 	script(src="/script/login.js") 
