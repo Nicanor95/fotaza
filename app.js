@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import express, { json } from 'express';
 import pug from 'pug';
-import { hashPassword, verifyPassword } from './crypt.js';
 import sequelize from './models/config.js';
 import session from 'express-session';
 import ConnectSessionSequelize from "connect-session-sequelize";
