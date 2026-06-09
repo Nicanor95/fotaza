@@ -44,9 +44,10 @@ app.use(express.static("public"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(userMiddleware);
 
 // Routes
-app.get('/', userMiddleware, (req, res) => {
+app.get('/', (req, res) => {
 	res.render('homepage');
 });
 
