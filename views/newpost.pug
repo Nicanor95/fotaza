@@ -2,7 +2,7 @@ extends partials/layout
 include partials/wall
 
 block content
-	form.center(action="/upload", method="post", enctype="application/json") 
+	form.authform.center(action="/upload", method="post", enctype="application/json") 
 		div
 			label.center.endalign(for="title") Titulo:
 			input.center.startalign#title(type="text", name="title")

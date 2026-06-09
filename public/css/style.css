@@ -98,7 +98,7 @@ footer a i {
 	padding: 1rem;
 }
 
-form {
+.authform {
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
@@ -112,34 +112,34 @@ form {
 	box-shadow: 0 0 10px #101010;
 }
 
-form > div {
+.authform > div {
 	display: flex;
 	flex-direction: row;
 	gap: 1rem;
 }
 
-form > div > label {
+.authform > div > label {
 	min-width: 6rem;
 }
 
-form > div > label[for="description"] {
+.authform > div > label[for="description"] {
 	padding-top: 0.5rem;
 }
 
-form > div > input, form textarea {
+.authform > div > input, .authform textarea {
 	width: 100%;
 }
 
-form textarea {
+.authform textarea {
 	padding: 0.5rem;
 	resize:vertical;
 }
 
-form a {
+.authform a {
 	width: 100%;
 }
 
-form button {
+.authform button {
 	width: 50%;
 	height: 2rem;
 }
@@ -150,6 +150,19 @@ form button {
 
 #usuario {
 	margin-right: 2rem;
+	background-color: var(--background-dl);
+	padding: 0.5rem;
+	height: 1.5rem;
+	flex-direction: row;
+	display: flex;
+	gap: 0.5rem;
+	border-radius: 1rem;
+	border: 1px solid var(--border);
+	box-shadow: 2px 2px 3px #101010;
+}
+
+#usuario button {
+	height: 1.5rem;
 }
 
 #searchbar {
@@ -186,12 +199,12 @@ form button {
 
 .c_flex {
 	display: flex;
-	flex-direction: column;
+	flex-direction: column !important;
 }
 
 .r_flex {
 	display: flex;
-	flex-direction: row;
+	flex-direction: row !important;
 }
 
 .center {

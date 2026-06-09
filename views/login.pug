@@ -1,7 +1,7 @@
 extends partials/layout
 
 block content 
-	form.center(method="post", enctype="application/json")
+	form.authform.center(method="post", enctype="application/json")
 		label(for="email") Email
 		input#email(type="email", name="email")
 		span(hidden="true").error.startalign * Email invalido
