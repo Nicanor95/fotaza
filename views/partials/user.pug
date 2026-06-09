@@ -1,12 +1,18 @@
-- let user = {username: "Usuario1", validador: false, anonimo: true }
-
 // Boton para crear post.
 a(href="/newpost").newpost
 	button
 		i.fa-solid.fa-plus
 
 div#usuario
-	unless user.anonimo 
-		span #{user.username}
+	if user
+		
+		- var userpage = `/users/${user.id}`
+		
+		span
+			a(href=userpage) #{user.nombre}
+		form(action="/auth/logout", method="post")
+			button(type="submit")
+				i.fa-solid.fa-right-from-bracket
+				label Logout
 	else 
 		a(href="/auth/login") Login

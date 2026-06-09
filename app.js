@@ -9,6 +9,7 @@ import authRouter from './route/auth.js';
 import { Publicacion } from './models/Publicacion.js';
 import { Imagen } from './models/Imagen.js';
 import { Usuario } from './models/Usuario.js';
+import { authMiddleware, userMiddleware } from './middleware/auth.js';
 
 
 // Server options
@@ -45,7 +46,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.get('/', (req, res) => {
+app.get('/', userMiddleware, (req, res) => {
 	res.render('homepage');
 });
 
@@ -82,7 +83,7 @@ app.get('/search/:searchterms', (req, res) => {
 	res.render('searchresults', {})
 });
 
-app.get('/newpost', (req, res) => {
+app.get('/newpost', authMiddleware, (req, res) => {
 	res.render('newpost');
 });
 
