@@ -6,6 +6,7 @@ import session from 'express-session';
 import ConnectSessionSequelize from "connect-session-sequelize";
 import './models/models.js';
 import authRouter from './route/auth.js';
+import postRouter from './route/post.js';
 import { Publicacion } from './models/Publicacion.js';
 import { Imagen } from './models/Imagen.js';
 import { Usuario } from './models/Usuario.js';
@@ -53,44 +54,11 @@ app.get('/', (req, res) => {
 
 app.use('/auth', authRouter);
 
-app.get('/post/:post_id', async (req, res) => {
-	// Get the post id, check if it's a number.
-	const pid = parseInt(req.params.post_id, 10);
-	if (!pid) {
-		res.status(404).render('fourohfour');
-		return;
-	}
-	
-	// Make the two requests to the db
-	let pub = Publicacion.findByPk(pid);
-	let images = Imagen.findAll({
-		where: {
-			publicacion_id: pid
-		}
-	});
-
-	// Wait for  the results
-	pub = await pub;
-	images = await images;
-	if (pub === null || images === []) {
-		res.status(404).render('fourohfour');
-	} else {
-		res.render('post', {p:pub, img:images});
-	}
-});
+app.use('/post', postRouter);
 
 app.get('/search/:searchterms', (req, res) => {
 	// TODO: Do the search and get results
 	res.render('searchresults', {})
-});
-
-app.get('/newpost', authMiddleware, (req, res) => {
-	res.render('newpost');
-});
-
-app.post('/upload', (req,res) => {
-	//Manejar la subida, investigar sobre multer
-	res.json(req.body);
 });
 
 // 404
