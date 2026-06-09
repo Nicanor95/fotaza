@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { Router } from 'express';
-import { showLogin, showSignup, login, signup } from '../controller/auth.js';
+import { showLogin, showSignup, login, signup, logout } from '../controller/auth.js';
 
 const authRouter = Router();
 
@@ -11,5 +11,8 @@ authRouter.post("/login", login);
 //Signup
 authRouter.get("/signup", showSignup);
 authRouter.post("/signup", signup);
+
+//Logout
+authRouter.post("/logout", logout);
 
 export default authRouter;

@@ -70,3 +70,10 @@ export async function signup(req, res) {
 	}
 	return res.redirect('/');
 }
+
+export async function logout(req, res) {
+	req.user = null;
+	res.locals.user = null;
+	req.session.user = null;
+	return res.redirect("/");
+}
