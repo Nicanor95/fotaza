@@ -321,3 +321,24 @@ footer a i {
 .marginTop {
 	margin-top:1rem;
 }
+
+.comentario {
+	border: 1px solid var(--border);
+	padding: 1rem;
+	justify-content: center;
+	border-radius: 1rem;
+	margin-bottom: 10px;
+	box-shadow: 2px 2px 3px #101010;
+}
+
+.comentario p {
+	margin:0;
+}
+
+.first {
+	order:1;
+}
+
+.second {
+	order:2;
+}

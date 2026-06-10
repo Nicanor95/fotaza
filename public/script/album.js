@@ -1,11 +1,13 @@
 const slides = document.getElementsByClassName("slide");
 const descs = document.getElementsByClassName("description");
+const comments = document.getElementsByClassName("comments");
 const prev = document.getElementsByClassName("prev")[0];
 const next = document.getElementsByClassName("next")[0];
 let slideIndex = 0;
 
 slides[0].style.display = "flex";
 descs[0].style.display = "block";
+comments[0].hidden = false;
 
 if (prev) {
 	prev.hidden = true;
@@ -15,6 +17,7 @@ if (prev) {
 function moveSlide(n) {
 	slides[slideIndex].style.display = "none";
 	descs[slideIndex].style.display = "none";
+	comments[slideIndex].hidden = "true";
 	slideIndex += n;
 
 	if (slideIndex < 0) {
@@ -43,4 +46,5 @@ function moveSlide(n) {
 	}
 	slides[slideIndex].style.display = "flex";
 	descs[slideIndex].style.display = "block";
+	comments[slideIndex].hidden = false;
 }

@@ -2,6 +2,7 @@ import { Publicacion } from "../models/Publicacion.js";
 import { Imagen } from "../models/Imagen.js";
 import { Usuario } from "../models/Usuario.js";
 import { Tag } from "../models/Tag.js";
+import { Comentario } from "../models/Comentario.js";
 import multer from 'multer';
 
 export const storage = multer.memoryStorage(); // MemoryStorage for serverless. 
@@ -24,6 +25,9 @@ export async function retrieveImage(model_image) {
 export async function showAlbum(req,res) {
 	// Get the post id, check if it's a number.
 	const pid = parseInt(req.params.album_id, 10);
+	const imgId = parseInt(req.params.image_id, 10);
+	const auth = req.user ? true : false;
+	
 	if (!pid) {
 		res.status(404).render('fourohfour');
 		return;
@@ -44,16 +48,41 @@ export async function showAlbum(req,res) {
 
 	let img_array = []
 	for (let image of images) {
+		// Retrieve comments for the image.
+		let comments = await Comentario.findAll({
+			where: { parent_id: Number(image.id) },
+			include: [{ model: Usuario, attributes: ["id", "nombre"] }],
+			order: [["createdAt", "ASC"]]
+		});
+
+		// Shape the comments to send to pug
+		let shapedComments = comments.map((comment) => ({
+			id: comment.id,
+			content: comment.contenido,
+			user: comment.Usuario ? {id: comment.Usuario.id, name: comment.Usuario.nombre} : null,
+			date: comment.createdAt
+		}));
+
+		// Get all tags.
+		let tags = await image.getTags();
+		let shapedTags = tags.map((tag) => ({
+			id: tag.id,
+			name: tag.nombre
+		}));
+
 		img_array.push({
+			id: image.id,
 			data: await retrieveImage(image),
-			description: image.description
+			description: image.description,
+			comments: shapedComments,
+			tags: shapedTags
 		});
 	}
 
 	if (pub === null || images === []) {
 		res.status(404).render('fourohfour');
 	} else {
-		res.render('post', {title:pub.titulo, user: user, img_list:img_array});
+		res.render('post', {title:pub.titulo, album_id: pid, user: user, img_list:img_array, auth: auth});
 	}
 }
 
