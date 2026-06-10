@@ -20,13 +20,11 @@ function handleFiles() {
 		let label = document.createElement("label");
 		let imagePreview = document.createElement("img");
 		let description = document.createElement("textarea");
-		let imgB64 = document.createElement("textarea");
 
 		//Get base64
 		const reader = new FileReader();
 		reader.onload = (e) => {
 			imagePreview.src = e.target.result;
-			imgB64.textContent = e.target.result;
 		}
 		reader.readAsDataURL(img);
 
@@ -37,8 +35,6 @@ function handleFiles() {
 		imgContainer.setAttribute("class", "imgContainer");
 		description.setAttribute("id", `description-${index}`);
 		description.setAttribute("name", `description-${index}`);
-		imgB64.setAttribute("name", `imgBase64-${index}`);
-		imgB64.setAttribute("hidden", "true");
 
 		label.textContent = "Descripción:";
 
@@ -47,7 +43,6 @@ function handleFiles() {
 		descDiv.appendChild(description);
 		base.appendChild(imgContainer);
 		base.appendChild(descDiv);
-		descDiv.appendChild(imgB64);
 
 		previews.appendChild(base);
 	}

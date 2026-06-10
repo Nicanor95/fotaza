@@ -1,4 +1,14 @@
 import { Publicacion } from "../models/Publicacion.js";
+import multer from 'multer';
+
+export const storage = multer.memoryStorage(); // MemoryStorage for serverless. 
+export const upload = multer({ 
+	storage: storage, 
+	limits: {
+		files: 6,
+		fileSize: 1*1000*1000 // 1MB, in bytes.
+	}
+});
 
 export async function showAlbum(req,res) {
 	// Get the post id, check if it's a number.
@@ -32,5 +42,13 @@ export async function showNewPost(req,res) {
 
 export async function newPost(req,res) {
 	// TODO: this should add the new post to the database.
-	res.json(req.body);
+	let image_array = []
+	for (let file of req.files) {
+		let read = file.buffer.toString('base64');
+		read = `data:${file.mimetype};base64,${read}`
+		image_array.push(read);
+	}
+	
+	res.json({ body: req.body, files: image_array});
+	//res.json(req.body);
 }
