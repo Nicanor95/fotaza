@@ -24,8 +24,12 @@ export const Imagen = sequelize.define(
 		description: {
 			type: DataTypes.STRING
 		},
+		metadata: {
+			type: DataTypes. STRING,
+			allowNull: false
+		},
 		blob: {
-			type: DataTypes.BLOB,
+			type: DataTypes.BLOB('long'),
 			allowNull: false
 		}
   	},

@@ -1,4 +1,6 @@
 import { Publicacion } from "../models/Publicacion.js";
+import { Imagen } from "../models/Imagen.js";
+import { Usuario } from "../models/Usuario.js";
 import multer from 'multer';
 
 export const storage = multer.memoryStorage(); // MemoryStorage for serverless. 
@@ -41,14 +43,48 @@ export async function showNewPost(req,res) {
 }
 
 export async function newPost(req,res) {
-	// TODO: this should add the new post to the database.
+	// Get user
+	const user = await Usuario.findByPk(Number(req.user.id));
+	if (!user) {
+		return res.redirect("/auth/login");
+	}
+
 	let image_array = []
 	for (let file of req.files) {
-		let read = file.buffer.toString('base64');
-		read = `data:${file.mimetype};base64,${read}`
-		image_array.push(read);
+		//Check if mimetype matches images, not a real test but it'll have to do.
+		if (!file.mimetype.startsWith("image/")) {
+			return res.render('error', {error: "No reconocemos una de sus imagenes."});
+		}
+
+		let metadata = `data:${file.mimetype};base64,`;
+		image_array.push({metadata: metadata, buffer: file.buffer});
 	}
 	
-	res.json({ body: req.body, files: image_array});
-	//res.json(req.body);
+	if (!image_array) {
+		return res.render('error', {error: "No se subieron imágenes"});
+	}
+
+	// save album info
+	const publicacion = await Publicacion.create({
+		usuario_id: Number(user.id),
+		titulo: req.body.title
+	});
+
+	if (!publicacion) {
+		return res.render('error', {error: 'Ocurrio un error creando la publicación, intente nuevamente mas tarde.'});
+	}
+
+	// save images linked to album
+	for (let [index, img] of image_array.entries()) {
+		let description = req.body[`description-${index}`];
+		let image = await Imagen.create( {
+			publicacion_id: Number(publicacion.id),
+			usuario_id: Number(user.id),
+			description: description,
+			metadata: img.metadata,
+			blob: img.buffer
+		});
+	}
+
+	res.redirect('/');
 }
