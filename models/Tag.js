@@ -12,9 +12,6 @@ export const Tag = sequelize.define(
 		nombre: {
 			type: DataTypes.STRING,
 			unique: true,
-			validate: {
-				isAlpha: true
-			}
 		}
   	},
   	{

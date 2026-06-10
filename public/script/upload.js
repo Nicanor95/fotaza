@@ -17,9 +17,12 @@ function handleFiles() {
 		let base = document.createElement("div");
 		let descDiv = document.createElement("div");
 		let imgContainer = document.createElement("div");
-		let label = document.createElement("label");
+		let descripcionLabel = document.createElement("label");
 		let imagePreview = document.createElement("img");
 		let description = document.createElement("textarea");
+		let tags = document.createElement("textarea");
+		let tagsLabel = document.createElement("label");
+		let tagsInstructions = document.createElement("label");
 
 		//Get base64
 		const reader = new FileReader();
@@ -30,17 +33,28 @@ function handleFiles() {
 
 		base.setAttribute("class", "container r_flex");
 		descDiv.setAttribute("class", "descDiv c_flex");
-		label.setAttribute("for", "description");
-		label.setAttribute("class", "startalign");
+		descripcionLabel.setAttribute("for", `description-${index}`);
+		descripcionLabel.setAttribute("class", "startalign");
 		imgContainer.setAttribute("class", "imgContainer");
 		description.setAttribute("id", `description-${index}`);
 		description.setAttribute("name", `description-${index}`);
+		tagsLabel.setAttribute("for", `tags-${index}`);
+		tagsLabel.setAttribute("class", "startalign");
+		tags.setAttribute("id", `tags-${index}`);
+		tags.setAttribute("name", `tags-${index}`);
+		tagsInstructions.setAttribute("class", "startalign smallinstructions");
 
-		label.textContent = "Descripción:";
+
+		descripcionLabel.textContent = "Descripción:";
+		tagsLabel.textContent = "Tags:";
+		tagsInstructions.textContent = "*Comenzar tags con #. No importa capitalización Ex: #Paisaje = #pAisaJE";
 
 		imgContainer.appendChild(imagePreview);
-		descDiv.appendChild(label);
+		descDiv.appendChild(descripcionLabel);
 		descDiv.appendChild(description);
+		descDiv.appendChild(tagsLabel);
+		descDiv.appendChild(tags);
+		descDiv.appendChild(tagsInstructions);
 		base.appendChild(imgContainer);
 		base.appendChild(descDiv);
 

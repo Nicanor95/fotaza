@@ -1,6 +1,7 @@
 import { Publicacion } from "../models/Publicacion.js";
 import { Imagen } from "../models/Imagen.js";
 import { Usuario } from "../models/Usuario.js";
+import { Tag } from "../models/Tag.js";
 import multer from 'multer';
 
 export const storage = multer.memoryStorage(); // MemoryStorage for serverless. 
@@ -11,6 +12,8 @@ export const upload = multer({
 		fileSize: 1*1000*1000 // 1MB, in bytes.
 	}
 });
+
+const tagRegex = /#\w+/gmi;
 
 export async function showAlbum(req,res) {
 	// Get the post id, check if it's a number.
@@ -76,14 +79,26 @@ export async function newPost(req,res) {
 
 	// save images linked to album
 	for (let [index, img] of image_array.entries()) {
-		let description = req.body[`description-${index}`];
-		let image = await Imagen.create( {
+		let description = req.body[`description-${index}`]; // Get description
+		let tags = req.body[`tags-${index}`]; // Get tags text.
+		let image = await Imagen.create( { // Save image to bd.
 			publicacion_id: Number(publicacion.id),
 			usuario_id: Number(user.id),
 			description: description,
 			metadata: img.metadata,
 			blob: img.buffer
 		});
+
+		// If it all went well, we create and add the tags.
+		let tag_matches = tags.matchAll(tagRegex); // This returns an iterator.
+		for (let tagname of tag_matches) {
+			tagname = tagname.toString().toUpperCase(); // This way it'll be case-insensitive.
+			let [tag, _] = await Tag.findOrCreate({
+				where: { nombre: tagname },
+				default: { nombre: tagname }
+			});
+			await image.addTag(tag);
+		}
 	}
 
 	res.redirect('/');
