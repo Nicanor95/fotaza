@@ -1,14 +1,27 @@
 extends partials/layout
 
 block content
-	div.r_flex
+	div.r_flex.marginTop
 		// TODO: make carousel with all images of the post
-		img.post_image(src=img)
+		div.slides-container.center 
+			each image in img_list 
+				div.slide
+					img.post_image.center(src=image.data)
+			
+			- let multiple = img_list.length > 1;
+
+			if multiple
+				a.prev(onclick="moveSlide(-1)") &#10094;
+				a.next(onclick="moveSlide(1)") &#10095;
 		div.c_flex.post_details 
 			h2.center=title
-			div.comments 
+			each image in img_list
+				div.description 
+					p=image.description
+			div.comments.center
 				// each comment in comments.-
 				div.r_flex.sendcomment
 					input(type="text", name="")
 					button
 						i.fa-solid.fa-paper-plane
+	script(src="/script/album.js") 

@@ -7,7 +7,7 @@ import { showAlbum, showNewPost, newPost, storage, upload } from '../controller/
 const postRouter = Router();
 
 // Show publication
-postRouter.get("/album/:album_id", showAlbum);
+postRouter.get("/album/:album_id{-:img_id}", showAlbum);
 
 // New publication
 postRouter.get("/newpost", authMiddleware, showNewPost);

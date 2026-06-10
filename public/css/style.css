@@ -244,12 +244,18 @@ footer a i {
 	overflow: hidden;
 }
 
+.slide {
+	display: none;
+	flex-direction: column;
+}
+
 .post_image{
-	flex-grow: 3;
+	max-width: 600px;
 }
 
 .post_details {
 	flex-basis: 300px;
+	padding-left: 1rem;
 }
 
 .searchinput {
@@ -280,4 +286,38 @@ footer a i {
 .smallinstructions {
 	font-size: 11px;
 	margin-top:3px;
+}
+
+.description {
+	display: none;
+}
+
+.slides-container {
+	flex-grow: 3;
+	max-width: 720px;
+	position: relative;
+}
+
+.prev, .next {
+	position: absolute;
+	top: 50%;
+	padding: 1rem;
+	background-color: rgba(16, 16, 16, 0);
+}
+
+.prev:hover, .next:hover {
+	transition-duration: 1000ms;
+	background-color: rgba(16, 16, 16, 0.5);
+}
+
+.next {
+	right:0;
+}
+
+.prev {
+	left:0;
+}
+
+.marginTop {
+	margin-top:1rem;
 }

@@ -15,6 +15,12 @@ export const upload = multer({
 
 const tagRegex = /#\w+/gmi;
 
+export async function retrieveImage(model_image) {
+	const imgMetadata = model_image.metadata;
+	const imgB64 = model_image.blob.toString('base64');
+	return `${imgMetadata}${imgB64}`;
+} 
+
 export async function showAlbum(req,res) {
 	// Get the post id, check if it's a number.
 	const pid = parseInt(req.params.album_id, 10);
@@ -33,11 +39,21 @@ export async function showAlbum(req,res) {
 
 	// Wait for  the results
 	pub = await pub;
+	let user = await Usuario.findByPk(Number(pub.usuario_id), { attributes: ["id", "nombre"]});
 	images = await images;
+
+	let img_array = []
+	for (let image of images) {
+		img_array.push({
+			data: await retrieveImage(image),
+			description: image.description
+		});
+	}
+
 	if (pub === null || images === []) {
 		res.status(404).render('fourohfour');
 	} else {
-		res.render('post', {p:pub, img:images});
+		res.render('post', {title:pub.titulo, user: user, img_list:img_array});
 	}
 }
 
