@@ -11,6 +11,7 @@ import { Publicacion } from './models/Publicacion.js';
 import { Imagen } from './models/Imagen.js';
 import { Usuario } from './models/Usuario.js';
 import { authMiddleware, userMiddleware } from './middleware/auth.js';
+import { buildWall } from './controller/wall.js';
 
 
 // Server options
@@ -48,8 +49,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(userMiddleware);
 
 // Routes
-app.get('/', (req, res) => {
-	res.render('homepage');
+app.get('/', async (req, res) => {
+	let wall_posts = await buildWall({tags: []});
+	res.render('homepage', {wall_posts: wall_posts});
 });
 
 app.use('/auth', authRouter);
