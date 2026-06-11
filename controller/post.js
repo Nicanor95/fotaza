@@ -46,7 +46,7 @@ export async function showAlbum(req,res) {
 	let user = await Usuario.findByPk(Number(pub.usuario_id), { attributes: ["id", "nombre"]});
 	images = await images;
 
-	let img_array = []
+	let img_array = [];
 	for (let image of images) {
 		// Retrieve comments for the image.
 		let comments = await Comentario.findAll({
@@ -70,13 +70,19 @@ export async function showAlbum(req,res) {
 			name: tag.nombre
 		}));
 
-		img_array.push({
+		let img_info = {
 			id: image.id,
 			data: await retrieveImage(image),
 			description: image.description,
 			comments: shapedComments,
 			tags: shapedTags
-		});
+		}
+
+		if (imgId != image.id) {
+			img_array.push(img_info);
+		} else {
+			img_array.splice(0, 0, img_info);
+		}
 	}
 
 	if (pub === null || images === []) {
