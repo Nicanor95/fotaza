@@ -19,12 +19,14 @@ block content
 					div.description.startalign.first 
 						div.post_author
 							a(href=`/users/${uploader.id}`)=uploader.nombre
-							if follows
-								form(action=`/users/${uploader.id}/unfollow`, method="post")
-									button(type="submit").unfollow Dejar de seguir
-							else 
-								form(action=`/users/${uploader.id}`, method="post")
-									button(type="submit").follow Seguir
+							if user
+								if uploader.id != user.id
+									if follows
+										form(action=`/users/${uploader.id}/unfollow`, method="post")
+											button(type="submit").unfollow Dejar de seguir
+									else 
+										form(action=`/users/${uploader.id}`, method="post")
+											button(type="submit").follow Seguir
 						div.rating 
 							form(action=`/post/album/${album_id}/${image.id}/valorate`, method="post").ratingForm
 								button(type="submit" name="valor", value="1").ratingButton 1
