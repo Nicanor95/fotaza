@@ -1,40 +1,41 @@
 extends partials/layout
 
 block content
-	div.r_flex.marginTop
-		div.slides-container.center 
-			each image in img_list 
-				div.slide
-					img.post_image.center(src=image.data)
-			
-			- let multiple = img_list? img_list.length > 1 : false;
+	div.r_flex.marginTop.center
+		div.album.r_flex.center
+			div.slides-container.center 
+				each image in img_list 
+					div.slide
+						img.post_image.center(src=image.data)
 
-			if multiple
-				a.prev(onclick="moveSlide(-1)") &#10094;
-				a.next(onclick="moveSlide(1)") &#10095;
-		div.c_flex.post_details 
-			h2.center=title
-			each image in img_list
-				div.description.startalign.first 
-					p=image.description
-					each tag in image.tags
-						span.tag=tag.name
-				div.comments.center.second(hidden)
-					h3 Comentarios 
-					each comment in image.comments 
-						div.comentario.startalign.c_flex 
-							a.comment_author(href=`/users/${comment.user.id}`)=comment.user.name
-							p=comment.content
-					
-					if auth
-						form.r_flex.sendcomment(method="POST", action=("/post/album/" + album_id + "/" + image.id))
-							input(type="text", name="contenido", required=true, placeholder="Escribe un comentario...")
-							button(type="submit")
-								i.fa-solid.fa-paper-plane
-					else
-						div.notice
-							a(href="/auth/login") Inicia sesión para comentarform.r_flex.sendcomment()
-							input(type="text", name="comment")
-							button
-								i.fa-solid.fa-paper-plane
+				- let multiple = img_list? img_list.length > 1 : false;
+
+				if multiple
+					a.prev(onclick="moveSlide(-1)") &#10094;
+					a.next(onclick="moveSlide(1)") &#10095;
+			div.c_flex.post_details 
+				h2.center=title
+				each image in img_list
+					div.description.startalign.first 
+						p=image.description
+						each tag in image.tags
+							span.tag=tag.name
+					div.comments.center.second(hidden)
+						h3 Comentarios 
+						each comment in image.comments 
+							div.comentario.startalign.c_flex 
+								a.comment_author(href=`/users/${comment.user.id}`)=comment.user.name
+								p=comment.content
+
+						if auth
+							form.r_flex.sendcomment(method="POST", action=("/post/album/" + album_id + "/" + image.id))
+								input(type="text", name="contenido", required=true, placeholder="Escribe un comentario...")
+								button(type="submit")
+									i.fa-solid.fa-paper-plane
+						else
+							div.notice
+								a(href="/auth/login") Inicia sesión para comentarform.r_flex.sendcomment()
+								input(type="text", name="comment")
+								button
+									i.fa-solid.fa-paper-plane
 	script(src="/script/album.js") 

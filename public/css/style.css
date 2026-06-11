@@ -18,7 +18,7 @@
 }
 
 body {
-	width: 80%;
+	width: 90%;
 	margin: auto;
 	background-color: var(--background);
 	color: var(--foreground);
@@ -80,7 +80,7 @@ header nav ul {
 main {
 	margin-left: auto;
 	margin-right: auto;
-	width: 80%;
+	width: 100%;
 }
 
 footer {
@@ -254,8 +254,9 @@ footer a i {
 }
 
 .post_details {
-	flex-basis: 300px;
-	padding-left: 1rem;
+	flex-basis: 350px;
+	padding-left: 2rem;
+	font-size: 0.8rem;
 }
 
 .searchinput {
@@ -290,12 +291,15 @@ footer a i {
 
 .description {
 	display: none;
+	border-bottom: 1px solid var(--border);
+	padding-bottom: 1rem;
 }
 
 .slides-container {
 	flex-grow: 3;
 	max-width: 720px;
 	position: relative;
+	background-color: var(--background-dark);
 }
 
 .prev, .next {
@@ -341,4 +345,31 @@ footer a i {
 
 .second {
 	order:2;
+}
+
+.wall {
+	flex-wrap: wrap;
+}
+
+.album {
+	margin-left: 5rem;
+	margin-right: 5rem;
+	padding-left: 2rem;
+	padding-right: 2rem;
+	border-radius: 1rem;
+	border: 1px solid var(--border);
+	box-shadow: 2px 2px 5px #101010;
+	width: 80%;
+}
+
+.comments {
+	width: 95%;
+}
+
+.tag {
+	margin: 0 0.2rem;
+	padding: 0.3rem;
+	border-radius: 1rem;
+	border: 1px solid var(--border);
+	box-shadow: 2px 2px 3px #101010;
 }
