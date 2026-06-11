@@ -3,8 +3,9 @@ import { Imagen } from "../models/Imagen.js";
 import { Usuario } from "../models/Usuario.js";
 import { Tag } from "../models/Tag.js";
 import { Comentario } from "../models/Comentario.js";
-import multer from 'multer';
 import { follows } from "./user.js";
+import { getAvgValoration } from "./valoracion.js";
+import multer from 'multer';
 
 export const storage = multer.memoryStorage(); // MemoryStorage for serverless. 
 export const upload = multer({ 
@@ -71,12 +72,17 @@ export async function showAlbum(req,res) {
 			name: tag.nombre
 		}));
 
+		// Get avg rating
+		let rating = await getAvgValoration(image.id);
+		rating = Number(rating).toFixed(2);
+
 		let img_info = {
 			id: image.id,
 			data: await retrieveImage(image),
 			description: image.description,
 			comments: shapedComments,
-			tags: shapedTags
+			tags: shapedTags,
+			rating: rating
 		}
 
 		if (imgId != image.id) {
