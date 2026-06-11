@@ -1,0 +1,10 @@
+extends partials/layout
+include partials/wall
+
+block content
+	div.profile 
+		h1=user.nombre 
+		form(method="post", enctype="application/json")
+			button(type="submit") Follow
+	hr
+	+wall(wall_posts)
