@@ -2,5 +2,5 @@ mixin wall(wall_posts)
 	div.r_flex.center.wall
 		each p in wall_posts
 			div.post
-				img(src=p.img, width=300, height=600)
+				img(src=`${p.img_b64}`, width=300, height=600)
 				h3 #{p.title}
