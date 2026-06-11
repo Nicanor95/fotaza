@@ -1,7 +1,7 @@
 
 import 'dotenv/config';
 import { Router } from 'express';
-import { authMiddleware } from '../middleware/auth.js';
+import { authMiddleware, userMiddleware } from '../middleware/auth.js';
 import { showAlbum, showNewPost, newPost, storage, upload } from '../controller/post.js';
 import { createComment } from '../controller/comment.js';
 

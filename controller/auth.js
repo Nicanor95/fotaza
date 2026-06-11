@@ -74,6 +74,6 @@ export async function signup(req, res) {
 export async function logout(req, res) {
 	req.user = null;
 	res.locals.user = null;
-	req.session.user = null;
+	req.session.destroy();
 	return res.redirect("/");
 }

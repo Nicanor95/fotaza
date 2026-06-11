@@ -88,7 +88,7 @@ export async function showAlbum(req,res) {
 	if (pub === null || images === []) {
 		res.status(404).render('fourohfour');
 	} else {
-		res.render('post', {title:pub.titulo, album_id: pid, user: user, img_list:img_array, auth: auth});
+		res.render('post', {title:pub.titulo, album_id: pid, uploader: user, img_list:img_array, auth: auth});
 	}
 }
 
