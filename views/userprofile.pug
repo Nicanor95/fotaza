@@ -3,8 +3,18 @@ include partials/wall
 
 block content
 	div.profile 
-		h1=user.nombre 
-		form(method="post", enctype="application/json")
-			button(type="submit") Follow
+		h1=profile_user.nombre 
+		if user
+			if !(user.id === profile_user.id)
+				if follows
+					form(action=`/users/${profile_user.id}/unfollow`, method="post")
+						button(type="submit").unfollow Dejar de seguir
+				else
+					form(method="post", enctype="application/json")
+						button(type="submit").follow Seguir
+		else 
+			div.notice
+				a(href="/auth/login") Inicia sesión para seguir
+
 	hr
 	+wall(wall_posts)

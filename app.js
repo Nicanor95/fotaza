@@ -8,6 +8,7 @@ import './models/models.js';
 import authRouter from './route/auth.js';
 import postRouter from './route/post.js';
 import searchRouter from './route/search.js';
+import userRouter from './route/user.js';
 import { Publicacion } from './models/Publicacion.js';
 import { Imagen } from './models/Imagen.js';
 import { Usuario } from './models/Usuario.js';
@@ -60,6 +61,8 @@ app.use('/auth', authRouter);
 app.use('/post', postRouter);
 
 app.use('/search', searchRouter);
+
+app.use('/users', userRouter);
 
 // 404
 app.use((req, res, next) => {

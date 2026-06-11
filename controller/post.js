@@ -4,6 +4,7 @@ import { Usuario } from "../models/Usuario.js";
 import { Tag } from "../models/Tag.js";
 import { Comentario } from "../models/Comentario.js";
 import multer from 'multer';
+import { follows } from "./user.js";
 
 export const storage = multer.memoryStorage(); // MemoryStorage for serverless. 
 export const upload = multer({ 
@@ -85,10 +86,15 @@ export async function showAlbum(req,res) {
 		}
 	}
 
+	let seguimos = false;
+	if (req.user) {
+		seguimos = await follows(req.user.id, user.id);
+	}
+
 	if (pub === null || images === []) {
 		res.status(404).render('fourohfour');
 	} else {
-		res.render('post', {title:pub.titulo, album_id: pid, uploader: user, img_list:img_array, auth: auth});
+		res.render('post', {title:pub.titulo, album_id: pid, uploader: user, follows: seguimos, img_list:img_array, auth: auth});
 	}
 }
 

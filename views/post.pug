@@ -17,6 +17,14 @@ block content
 				h2.center=title
 				each image in img_list
 					div.description.startalign.first 
+						div.post_author
+							a(href=`/users/${uploader.id}`)=uploader.nombre
+							if follows
+								form(action=`/users/${uploader.id}/unfollow`, method="post")
+									button(type="submit").unfollow Dejar de seguir
+							else 
+								form(action=`/users/${uploader.id}`, method="post")
+									button(type="submit").follow Seguir
 						p=image.description
 						each tag in image.tags
 							span.tag=tag.name
