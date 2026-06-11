@@ -14,7 +14,7 @@ export const upload = multer({
 	}
 });
 
-const tagRegex = /#\w+/gmi;
+export const tagRegex = /#\w+/gmi;
 
 export async function retrieveImage(model_image) {
 	const imgMetadata = model_image.metadata;

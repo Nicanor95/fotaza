@@ -1,4 +1,4 @@
-div.r_flex#searchbar
-	input.searchinput(type="search")
-	button(type="button") 
+form(action="/search/bytag", method="post", enctype="application/json").r_flex#searchbar
+	input.searchinput(type="text", name="terms")
+	button(type="submit") 
 		i.fa-solid.fa-magnifying-glass

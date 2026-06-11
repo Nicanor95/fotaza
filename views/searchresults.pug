@@ -3,7 +3,5 @@ include partials/wall
 
 block content
 	p.left_decoration Results of the search "#{search}"
-	// test results.
-	- let results = [{img:'', title:'Imagen1'}, {img:'', title:'Imagen2'}, {img:'', title:'Imagen3'}, {img:'', title:'Imagen4'}]
 
-	+wall(results)
+	+wall(wall_posts)

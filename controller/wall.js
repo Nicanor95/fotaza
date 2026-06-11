@@ -4,7 +4,7 @@ import { Publicacion } from "../models/Publicacion.js";
 import { Op, fn, col, where } from "sequelize";
 
 export async function buildWall(terms) {
-	const tags = terms.tags
+	const tags = terms.tags;
 
 	// Build object for the get all posts request.
 	const getAll = {
