@@ -2,6 +2,9 @@
 
 TPI de ULP 
 
+Video demo: https://youtu.be/xxNP13l4WBs
+hosteado en: https://fotaza-ciir.onrender.com/
+
 # Dependencias
 
 ## connect-session-sequelize
