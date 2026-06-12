@@ -1,6 +1,6 @@
 import { Publicacion } from "../models/Publicacion.js";
 import { Usuario } from "../models/Usuario.js"
-import { buildProfileWall } from "./wall.js";
+import { buildProfileWall, buildWallById } from "./wall.js";
 
 export async function follows(userId1, userId2) {
 	/**
@@ -61,4 +61,28 @@ export async function unfollowUser(req, res) {
 
 	await currentUser.removeFollowed(profileUser);
 	return res.redirect(`/users/${profile_user_id}`);
+}
+
+export async function followedPosts(req, res) {
+	// get current user
+	const current_user_id = Number(req.user.id);
+
+	const current_user = await Usuario.findByPk(current_user_id)
+	if (!current_user) {
+		res.redirect("/auth/login");
+	}
+
+	// get users followed by current user
+	const followed_list = await current_user.getFollowed({
+		attributes: ["id"],
+	})
+
+	// get images uploaded by followed users
+	let post_list = []
+	for ( let followed of followed_list ) {
+		let lista = await buildWallById(Number(followed.id));
+		post_list = post_list.concat(lista);
+	}
+
+	res.render('followed', {wall_posts: post_list});
 }

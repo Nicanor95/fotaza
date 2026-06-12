@@ -93,3 +93,32 @@ export async function buildProfileWall(terms) {
 
 	return { profile_user: shapedUser, wall_posts: shapedResults };
 }
+
+export async function buildWallById(userId) {
+	const user_id = Number(userId);
+	
+	const user_bd = await Usuario.findByPk(Number(user_id), {
+		attributes: [ "id", "nombre" ]
+	});
+	
+	const images = await Imagen.findAll({
+		where: {
+			usuario_id: Number(user_id)
+		},
+		include: [
+			{
+				model: Publicacion,
+				attributes: ['titulo']
+			}
+		]
+	})
+
+	let shapedResults = images.map((image) => ({
+		id: image.id,
+		publicacion_id: image.publicacion_id,
+		titulo: image.Publicacion.titulo,
+		img_b64: `${image.metadata}${image.blob.toString('base64')}`
+	}));
+
+	return shapedResults;
+}
