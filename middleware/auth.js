@@ -1,4 +1,5 @@
 import { Usuario } from "../models/Usuario.js";
+import { Moderador } from "../models/Moderador.js";
 
 export async function authMiddleware(req, res, next) {
 	const user = req.session.user;
@@ -45,7 +46,7 @@ export async function userMiddleware(req,res,next) {
 async function processUser(user) {
 	const userId = Number(user.id);
 	const dbUser = await Usuario.findByPk(userId, {
-		attributes: ["id", "nombre", "moderador"]
+		attributes: ["id", "nombre"]
 	});
 
 	if(!dbUser) {

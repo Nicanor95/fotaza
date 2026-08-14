@@ -45,10 +45,6 @@ Usuario.init(
 		phash: {
 			type: DataTypes.STRING,
 			allowNull: false,
-		},
-		moderador: {
-			type: DataTypes.BOOLEAN,
-			defaultValue: false,
 		}
   	},
   	{

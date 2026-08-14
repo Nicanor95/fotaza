@@ -9,6 +9,7 @@ import { Reporte } from './Reporte.js';
 import { Tag } from './Tag.js';
 import { Usuario } from './Usuario.js';
 import { Valoracion } from './Valoracion.js';
+import { Moderador } from './Moderador.js';
 
 //-*-*- Relations -*-*-
 // Chat
@@ -73,6 +74,10 @@ Imagen.hasMany(Valoracion, { foreignKey: 'img_id' });
 
 Valoracion.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 Usuario.hasMany(Valoracion, { foreignKey: 'usuario_id' });
+
+// Moderadores
+Usuario.hasOne(Moderador, { foreignKey: 'usuario_id' });
+Moderador.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 
 // Favoritos
 Imagen.belongsToMany(Usuario, { through: 'favoritos', foreignKey: 'img_id' });
