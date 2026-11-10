@@ -144,9 +144,15 @@ export async function newPost(req,res) {
 	for (let [index, img] of image_array.entries()) {
 		let description = req.body[`description-${index}`]; // Get description
 		let tags = req.body[`tags-${index}`]; // Get tags text.
+		let copyright = req.body[`copyright-${index}`]; // Get copyright value
+
+		// copyright can be 'on' or Undefined; we need a boolean.
+		copyright = copyright === 'on';
+
 		let image = await Imagen.create( { // Save image to bd.
 			publicacion_id: Number(publicacion.id),
 			usuario_id: Number(user.id),
+			copyright: copyright,
 			description: description,
 			metadata: img.metadata,
 			blob: img.buffer
