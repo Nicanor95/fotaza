@@ -97,7 +97,7 @@ export async function showAlbum(req,res) {
 		seguimos = await follows(req.user.id, user.id);
 	}
 
-	if (pub === null || images === []) {
+	if (pub === null || (await images).length === 0) {
 		res.status(404).render('fourohfour');
 	} else {
 		res.render('post', {title:pub.titulo, album_id: pid, uploader: user, follows: seguimos, img_list:img_array, auth: auth});
