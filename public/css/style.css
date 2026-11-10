@@ -378,3 +378,7 @@ footer a i {
 .navHeader > a {
 	margin: 0 0.2rem;
 }
+
+.copydiv {
+	align-items: center;
+}

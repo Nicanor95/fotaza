@@ -23,6 +23,11 @@ function handleFiles() {
 		let tags = document.createElement("textarea");
 		let tagsLabel = document.createElement("label");
 		let tagsInstructions = document.createElement("label");
+		let copyDiv = document.createElement("div");
+		let copyrightCheckbox = document.createElement("input");
+		let copyrightLabel = document.createElement("label");
+		let marcaDeAgua = document.createElement("textarea");
+		let marcaDeAguaLabel = document.createElement("label");
 
 		//Get base64
 		const reader = new FileReader();
@@ -43,18 +48,37 @@ function handleFiles() {
 		tags.setAttribute("id", `tags-${index}`);
 		tags.setAttribute("name", `tags-${index}`);
 		tagsInstructions.setAttribute("class", "startalign smallinstructions");
+		copyDiv.setAttribute("class", "r_flex copydiv");
+		copyrightCheckbox.setAttribute("type", "checkbox");
+		copyrightCheckbox.setAttribute("id", `copyright-${index}`);
+		copyrightCheckbox.setAttribute("name", `copyright-${index}`);
+		copyrightLabel.setAttribute("for", `copyright-${index}`);
+		copyrightLabel.setAttribute("class", "startalign");
+		marcaDeAgua.setAttribute("id", `mda-${index}`);
+		marcaDeAgua.setAttribute("name", `mda-${index}`);
+		marcaDeAgua.hidden = true;
+		marcaDeAguaLabel.setAttribute("for", `mda-${index}`);
+		marcaDeAguaLabel.setAttribute("class", "startalign");
+		marcaDeAguaLabel.hidden = true;
 
 
 		descripcionLabel.textContent = "Descripción:";
 		tagsLabel.textContent = "Tags:";
 		tagsInstructions.textContent = "*Comenzar tags con #. No importa capitalización Ex: #Paisaje = #pAisaJE";
+		copyrightLabel.textContent = "Copyright";
+		marcaDeAguaLabel.textContent = "Marca de agua:";
 
 		imgContainer.appendChild(imagePreview);
+		descDiv.appendChild(copyDiv);
+		copyDiv.appendChild(copyrightCheckbox);
+		copyDiv.appendChild(copyrightLabel);
 		descDiv.appendChild(descripcionLabel);
 		descDiv.appendChild(description);
 		descDiv.appendChild(tagsLabel);
 		descDiv.appendChild(tags);
 		descDiv.appendChild(tagsInstructions);
+		descDiv.appendChild(marcaDeAguaLabel);
+		descDiv.appendChild(marcaDeAgua);
 		base.appendChild(imgContainer);
 		base.appendChild(descDiv);
 
