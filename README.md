@@ -19,6 +19,10 @@ Mantiene sesiones y cookies
 
 Permite manejar la recepcion de POST requests en varias partes. Esto nos sirve para poder subir imagenes mas grandes y sin necesidad de convertirlas a base64 primero.
 
+## sharp
+
+Se usa para agregar marcas de agua a las imágenes subidas.
+
 ## sequelize
 
 Para simplificar manejo de la BD
