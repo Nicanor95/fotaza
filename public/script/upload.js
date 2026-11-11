@@ -56,10 +56,8 @@ function handleFiles() {
 		copyrightLabel.setAttribute("class", "startalign");
 		marcaDeAgua.setAttribute("id", `mda-${index}`);
 		marcaDeAgua.setAttribute("name", `mda-${index}`);
-		marcaDeAgua.hidden = true;
 		marcaDeAguaLabel.setAttribute("for", `mda-${index}`);
 		marcaDeAguaLabel.setAttribute("class", "startalign");
-		marcaDeAguaLabel.hidden = true;
 
 
 		descripcionLabel.textContent = "Descripción:";
