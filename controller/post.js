@@ -6,6 +6,7 @@ import { Comentario } from "../models/Comentario.js";
 import { follows } from "./user.js";
 import { getAvgValoration } from "./valoracion.js";
 import multer from 'multer';
+import sharp from 'sharp';
 
 export const storage = multer.memoryStorage(); // MemoryStorage for serverless. 
 export const upload = multer({ 
@@ -108,6 +109,36 @@ export async function showNewPost(req,res) {
 	res.render('newpost');
 }
 
+/* Necesitamos esto para no romper el xml usado para configurar el sharp */
+function escapeXml(text) {
+	return text.replace(/[&<>"']/g, (character) => ({
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&apos;'
+	})[character]);
+}
+
+async function addWatermark(buffer, text) {
+	const image = sharp(buffer);
+	const { width, height } = await image.metadata();
+	const fontSize = Math.max(1, Math.min(48, Math.round(Math.min(width, height) * 0.06))); //Para escalar el texto con la imagen; Minimo 1.
+	const margin = fontSize;
+	const textWidth = Math.max(1, width - margin * 2);
+	const watermark = Buffer.from(`
+		<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+			<text x="50%" y="50%" text-anchor="middle"
+				font-family="sans-serif" font-size="${fontSize}" font-weight="bold"
+				fill="white" stroke="black" stroke-width="${Math.max(1, fontSize * 0.08)}"
+				paint-order="stroke" textLength="${textWidth}" lengthAdjust="spacingAndGlyphs" 
+				style="opacity: 0.5;">${escapeXml(text)}</text>
+		</svg>
+	`);
+
+	return image.composite([{ input: watermark }]).png().toBuffer();
+}
+
 export async function newPost(req,res) {
 	// Get user
 	const user = await Usuario.findByPk(Number(req.user.id));
@@ -116,17 +147,31 @@ export async function newPost(req,res) {
 	}
 
 	let image_array = []
-	for (let file of req.files) {
+	for (let [index, file] of req.files.entries()) {
 		//Check if mimetype matches images, not a real test but it'll have to do.
 		if (!file.mimetype.startsWith("image/")) {
 			return res.render('error', {error: "No reconocemos una de sus imagenes."});
 		}
 
 		let metadata = `data:${file.mimetype};base64,`;
-		image_array.push({metadata: metadata, buffer: file.buffer});
+		const copyright = req.body[`copyright-${index}`] === 'on'; // it can be 'on' or Undefined; turn to boolean.
+		let watermarkText = req.body[`mda-${index}`];
+		watermarkText = watermarkText === '' ? user.nombre : watermarkText;
+
+		let buffer = file.buffer;
+		if (copyright && typeof watermarkText === 'string' && watermarkText.trim()) {
+			try {
+				buffer = await addWatermark(file.buffer, watermarkText.trim());
+				metadata = 'data:image/png;base64,';
+			} catch (error) {
+				console.error('Error adding watermark to uploaded image:', error);
+				return res.render('error', {error: "No se pudo procesar una de las imágenes."});
+			}
+		}
+		image_array.push({metadata: metadata, buffer: buffer, copyright: copyright});
 	}
 	
-	if (!image_array) {
+	if (image_array.length === 0) {
 		return res.render('error', {error: "No se subieron imágenes"});
 	}
 
@@ -144,15 +189,11 @@ export async function newPost(req,res) {
 	for (let [index, img] of image_array.entries()) {
 		let description = req.body[`description-${index}`]; // Get description
 		let tags = req.body[`tags-${index}`]; // Get tags text.
-		let copyright = req.body[`copyright-${index}`]; // Get copyright value
-
-		// copyright can be 'on' or Undefined; we need a boolean.
-		copyright = copyright === 'on';
 
 		let image = await Imagen.create( { // Save image to bd.
 			publicacion_id: Number(publicacion.id),
 			usuario_id: Number(user.id),
-			copyright: copyright,
+			copyright: img.copyright,
 			description: description,
 			metadata: img.metadata,
 			blob: img.buffer
