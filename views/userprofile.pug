@@ -4,6 +4,9 @@ include partials/wall
 block content
 	div.profile 
 		h1=profile_user.nombre 
+		div.profile-stats
+			span.stat-item <b>#{followers_count}</b> seguidores
+			span.stat-item <b>#{followed_count}</b> siguiendo
 		if user
 			if !(user.id === profile_user.id)
 				if follows

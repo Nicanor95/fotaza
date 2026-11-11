@@ -19,10 +19,23 @@ export async function showProfile(req, res) {
 	const profile_user_id = req.params.user_id
 	const contenido = await buildProfileWall({user_id: profile_user_id});
 	let siguiendo = false;
+	const profileUser = await Usuario.findByPk(Number(profile_user_id));
+	const [followers_count, followed_count] = await Promise.all([
+		profileUser.countFollower(),
+		profileUser.countFollowed()
+	]);
+
 	if (req.user) {
 		siguiendo = await follows(req.user.id, profile_user_id);
 	}
-	res.render('userprofile', {profile_user:contenido.profile_user, follows: siguiendo, wall_posts: contenido.wall_posts})
+
+	res.render('userprofile', {
+		profile_user: contenido.profile_user,
+		follows: siguiendo,
+		wall_posts: contenido.wall_posts,
+		followers_count,
+		followed_count
+	})
 }
 
 export async function followUser(req, res) {
