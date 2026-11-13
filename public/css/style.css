@@ -382,3 +382,36 @@ footer a i {
 .copydiv {
 	align-items: center;
 }
+
+#notificaciones {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-right: 2rem;
+}
+
+#btnNotificaciones {
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: var(--foreground);
+	font-size: 1.2rem;
+	padding: 0.4rem;
+}
+
+#btnNotificaciones:hover {
+	color: var(--accent-bright);
+}
+
+#contadorNotificaciones {
+	font-size: 0.7rem;
+	background-color: var(--accent-bright);
+	color: var(--background);
+	border-radius: 50%;
+	padding: 0.15rem 0.5rem;
+}
+
+.no-user {
+	font-size: 0.8rem;
+	color: var(--foreground);
+}

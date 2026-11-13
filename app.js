@@ -10,6 +10,7 @@ import postRouter from './route/post.js';
 import searchRouter from './route/search.js';
 import userRouter from './route/user.js';
 import chatRouter from './route/chat.js';
+import notificacionRouter from './route/notificacion.js';
 import { Publicacion } from './models/Publicacion.js';
 import { Imagen } from './models/Imagen.js';
 import { Usuario } from './models/Usuario.js';
@@ -66,6 +67,8 @@ app.use('/search', searchRouter);
 app.use('/users', userRouter);
 
 app.use('/chat', chatRouter);
+
+app.use('/notificaciones', notificacionRouter);
 
 // 404
 app.use((req, res, next) => {

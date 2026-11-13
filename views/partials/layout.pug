@@ -9,9 +9,11 @@ html(lang="en")
 				h1 F
 			include navigation.pug
 			include searchbar.pug
+			include notificaciones.pug
 			include user.pug
 		main
 			block content
 		footer
 			a(href="mailto://fotaza@foo.baz" title="Contact through Email")
 				i(class="fa-solid fa-envelope")
+	script(src="/script/notificaciones.js", defer=true)
