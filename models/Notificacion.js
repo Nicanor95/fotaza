@@ -19,7 +19,7 @@ export const Notificacion = sequelize.define(
 		},
 		visto: {
 			type: DataTypes.BOOLEAN,
-			defaultValue: true
+			defaultValue: false
 		}
   	},
   	{
