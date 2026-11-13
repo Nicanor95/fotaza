@@ -1,6 +1,9 @@
 #notificaciones
 	if user
-		button#btnNotificaciones(type="button", title="Notificaciones")
+		button#btnNotificaciones(type="button", title="Notificaciones", aria-expanded="false", aria-controls="panelNotificaciones")
 			i.fa-solid.fa-bell
 		span#contadorNotificaciones 0
-
+		div#panelNotificaciones.oculto(aria-hidden="true")
+			button#btnCerrarNotificaciones(type="button") ✕
+			h3 Notificaciones
+			div#notificacionesLista

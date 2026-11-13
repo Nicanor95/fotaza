@@ -415,3 +415,77 @@ footer a i {
 	font-size: 0.8rem;
 	color: var(--foreground);
 }
+
+.oculto {
+	display: none;
+}
+
+#panelNotificaciones {
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 26rem;
+	max-width: 90vw;
+	height: 100vh;
+	background-color: var(--background-light);
+	border-left: 1px solid var(--border);
+	border-bottom: 1px solid var(--border);
+	box-shadow: -2px 2px 10px #101010;
+	padding: 1rem;
+	overflow-y: auto;
+	z-index: 50;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+#panelNotificaciones.oculto {
+	display: none;
+}
+
+#panelNotificaciones h3 {
+	margin: 0;
+	font-size: 1.1rem;
+	color: var(--accent-bright);
+}
+
+#panelNotificaciones h4 {
+	margin: 0.5rem 0 0.25rem 0;
+	font-size: 0.9rem;
+	color: var(--foreground);
+}
+
+#panelNotificaciones ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+#panelNotificaciones li {
+	border: 1px solid var(--border);
+	border-radius: 1rem;
+	padding: 0.5rem 1rem;
+	background-color: var(--background-dark);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+#panelNotificaciones li button {
+	font-size: 0.7rem;
+	padding: 0.1rem 0.5rem;
+}
+
+#btnCerrarNotificaciones {
+	align-self: flex-end;
+	font-size: 1.2rem;
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: var(--foreground);
+	padding: 0;
+}
