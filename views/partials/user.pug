@@ -8,6 +8,8 @@ div#usuario
 		
 		- var userpage = `/users/${user.id}`
 		
+		form(action="/chat", method="get")
+			button(type="submit") Chats
 		span
 			a(href=userpage) #{user.nombre}
 		form(action="/auth/logout", method="post")
