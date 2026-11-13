@@ -1,0 +1,15 @@
+extends partials/layout
+
+block content
+	div.c_flex.center
+		h2 Tus chats
+		if chats.length
+			each chat in chats
+				a(href=`/chat/${chat.id}`)
+					div.r_flex.center
+						img.post_image(src=chat.imageData, alt="Imagen del chat")
+						div
+							h3= chat.otherParticipant ? chat.otherParticipant.nombre : "Chat"
+							p= chat.imageDescription || "Conversación sobre esta imagen"
+		else
+			p Todavía no tienes chats.

@@ -1,0 +1,14 @@
+extends partials/layout
+
+block content
+	div.c_flex.center
+		h2 Chat con #{otherParticipant.nombre}
+		img.post_image.center(src=imageData, alt="Imagen de interés")
+		div.chat_messages
+			each message in messages
+				div.chat_message
+					strong= message.Usuario ? message.Usuario.nombre : "Usuario"
+					p= message.contenido
+		form(action=`/chat/${chat.id}/messages`, method="post")
+			textarea(name="contenido", maxlength="255", required=true, placeholder="Escribe un mensaje...")
+			button(type="submit") Enviar
