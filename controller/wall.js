@@ -94,6 +94,33 @@ export async function buildProfileWall(terms) {
 	return { profile_user: shapedUser, wall_posts: shapedResults };
 }
 
+export async function buildFavouritesWall(terms) {
+	const user_id = Number(terms.user_id);
+
+	const images = await Imagen.findAll({
+		include: [
+			{
+				model: Usuario,
+				attributes: [],
+				through: { attributes: [] },
+				where: { id: user_id }
+			},
+			{
+				model: Publicacion,
+				attributes: ['titulo']
+			}
+		]
+	});
+
+	let shapedResults = images.map((image) => ({
+		id: image.id,
+		publicacion_id: image.publicacion_id,
+		titulo: image.Publicacion.titulo,
+		img_b64: `${image.metadata}${image.blob.toString('base64')}`
+	}));
+	return shapedResults;
+}
+
 export async function buildWallById(userId) {
 	const user_id = Number(userId);
 	
