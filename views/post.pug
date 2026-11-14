@@ -35,6 +35,9 @@ block content
 								button(type="submit" name="valor", value="4").ratingButton 4
 								button(type="submit" name="valor", value="5").ratingButton 5
 							span=image.rating
+							if user
+								form(action=`/post/album/${album_id}/${image.id}/favourite`, method="post").favouriteForm
+									button(type="submit").favourite Añadir a favoritos
 						form(action=`/chat/${image.id}`, method="post")
 							button(type="submit") Me Interesa
 						p=image.description

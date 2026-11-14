@@ -1,6 +1,7 @@
 import { Publicacion } from "../models/Publicacion.js";
-import { Usuario } from "../models/Usuario.js"
-import { buildProfileWall, buildWallById } from "./wall.js";
+import { Imagen } from "../models/Imagen.js";
+import { Usuario } from "../models/Usuario.js";
+import { buildProfileWall, buildWallById, buildFavouritesWall } from "./wall.js";
 
 export async function follows(userId1, userId2) {
 	/**
@@ -25,6 +26,12 @@ export async function showProfile(req, res) {
 		profileUser.countFollowed()
 	]);
 
+	let fav_posts = [];
+	const isOwner = req.user && Number(req.user.id) === Number(profile_user_id);
+	if (isOwner) {
+		fav_posts = await buildFavouritesWall({user_id: profile_user_id});
+	}
+
 	if (req.user) {
 		siguiendo = await follows(req.user.id, profile_user_id);
 	}
@@ -33,9 +40,29 @@ export async function showProfile(req, res) {
 		profile_user: contenido.profile_user,
 		follows: siguiendo,
 		wall_posts: contenido.wall_posts,
+		fav_posts,
 		followers_count,
 		followed_count
 	})
+}
+
+export async function addFavourite(req, res) {
+	const user_id = Number(req.user.id);
+	const image_id = Number(req.params.image_id);
+	const album_id = Number(req.params.album_id);
+
+	const user = await Usuario.findByPk(user_id);
+	const image = await Imagen.findByPk(image_id);
+
+	if (!user || !image) {
+		return res.status(404).send('No encontrado');
+	}
+
+	if (!(await user.hasImagen(image))) {
+		await user.addImagen(image);
+	}
+
+	return res.redirect(`/post/album/${album_id}/${image_id}`);
 }
 
 export async function followUser(req, res) {
