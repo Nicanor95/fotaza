@@ -26,12 +26,6 @@ export async function showProfile(req, res) {
 		profileUser.countFollowed()
 	]);
 
-	let fav_posts = [];
-	const isOwner = req.user && Number(req.user.id) === Number(profile_user_id);
-	if (isOwner) {
-		fav_posts = await buildFavouritesWall({user_id: profile_user_id});
-	}
-
 	if (req.user) {
 		siguiendo = await follows(req.user.id, profile_user_id);
 	}
@@ -40,9 +34,26 @@ export async function showProfile(req, res) {
 		profile_user: contenido.profile_user,
 		follows: siguiendo,
 		wall_posts: contenido.wall_posts,
-		fav_posts,
 		followers_count,
 		followed_count
+	})
+}
+
+export async function showFavourites(req, res) {
+	const user_id = req.params.user_id;
+
+	const fav_posts = await buildFavouritesWall({user_id: user_id});
+	const profileUser = await Usuario.findByPk(Number(user_id), {
+		attributes: ["id", "nombre"]
+	});
+
+	if (!profileUser) {
+		return res.status(404).render('fourohfour');
+	}
+
+	res.render('favorites', {
+		profile_user: profileUser,
+		fav_posts
 	})
 }
 

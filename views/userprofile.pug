@@ -8,11 +8,14 @@ block content
 			span.stat-item <b>#{followers_count}</b> seguidores
 			span.stat-item <b>#{followed_count}</b> siguiendo
 		if user
-			if !(user.id === profile_user.id)
+			if user.id === profile_user.id
+				a(href=`/users/${profile_user.id}/favoritos`).favoritos-link
+					button(type="button").favoritos Mis favoritos
+			else
 				if follows
 					form(action=`/users/${profile_user.id}/unfollow`, method="post")
 						button(type="submit").unfollow Dejar de seguir
-				else
+				else 
 					form(method="post", enctype="application/json")
 						button(type="submit").follow Seguir
 		else 
