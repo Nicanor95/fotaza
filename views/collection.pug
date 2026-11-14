@@ -1,0 +1,9 @@
+extends partials/layout
+include partials/wall
+
+block content
+	div.profile
+		h1= collection.title
+		a(href=`/users/${profile_user.id}`) Volver al perfil
+	hr
+	+wall(images)
