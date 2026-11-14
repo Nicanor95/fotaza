@@ -1,0 +1,19 @@
+extends partials/layout
+
+block content
+	div.profile
+		h1 Añadir a colección
+		form(method="post", action=`/users/${user.id}/colecciones`)
+			input(type="hidden", name="image_id", value=image_id)
+			input(type="hidden", name="album_id", value=album_id)
+			input(type="text", name="title", required=true, placeholder="Nombre de la nueva colección")
+			button(type="submit") Crear colección y añadir
+		hr
+		h3 Colecciones existentes
+		if colecciones.length
+			each c in colecciones
+				form(method="post", action=`/users/${user.id}/colecciones/${c.id}/imagenes/${image_id}?album_id=${album_id}`)
+					button(type="submit") #{c.title}
+		else
+			p Todavía no tienes colecciones. Crea una para guardar esta imagen.
+		a(href=`/post/album/${album_id}/${image_id}`) Volver
