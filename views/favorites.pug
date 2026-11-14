@@ -1,0 +1,10 @@
+extends partials/layout
+include partials/wall
+
+block content
+	div.profile 
+		h1= profile_user.nombre 
+		span.subtitle Favoritos
+		a(href=`/users/${profile_user.id}`) Volver al perfil
+	hr
+	+wall(fav_posts)
