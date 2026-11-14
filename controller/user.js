@@ -1,6 +1,7 @@
 import { Publicacion } from "../models/Publicacion.js";
 import { Imagen } from "../models/Imagen.js";
 import { Usuario } from "../models/Usuario.js";
+import { Coleccion } from "../models/Coleccion.js";
 import { buildProfileWall, buildWallById, buildFavouritesWall } from "./wall.js";
 
 export async function follows(userId1, userId2) {
@@ -30,10 +31,18 @@ export async function showProfile(req, res) {
 		siguiendo = await follows(req.user.id, profile_user_id);
 	}
 
+	let colecciones = [];
+	if (req.user && Number(req.user.id) === Number(profile_user_id)) {
+		colecciones = await Coleccion.findAll({
+			where: { usuario_id: profile_user_id }
+		});
+	}
+
 	res.render('userprofile', {
 		profile_user: contenido.profile_user,
 		follows: siguiendo,
 		wall_posts: contenido.wall_posts,
+		colecciones,
 		followers_count,
 		followed_count
 	})
@@ -69,11 +78,121 @@ export async function addFavourite(req, res) {
 		return res.status(404).send('No encontrado');
 	}
 
-	if (!(await user.hasImagen(image))) {
-		await user.addImagen(image);
+	if (!(await user.hasFavoriteImage(image))) {
+		await user.addFavoriteImage(image);
 	}
 
 	return res.redirect(`/post/album/${album_id}/${image_id}`);
+}
+
+export async function showAddToCollectionForm(req, res) {
+	const user_id = req.user.id;
+	const image_id = Number(req.params.image_id);
+	const album_id = req.query.album_id;
+
+	const colecciones = await Coleccion.findAll({
+		where: { usuario_id: user_id }
+	});
+
+	res.render('add_to_collection', {
+		colecciones,
+		image_id,
+		album_id
+	});
+}
+
+export async function addToCollection(req, res) {
+	const user_id = req.user.id;
+	const col_id = Number(req.params.col_id);
+	const image_id = Number(req.params.image_id);
+	const album_id = req.query.album_id;
+
+	const coleccion = await Coleccion.findByPk(col_id);
+	const image = await Imagen.findByPk(image_id);
+
+	if (!coleccion || !image || Number(coleccion.usuario_id) !== Number(user_id)) {
+		return res.status(404).send('No encontrado');
+	}
+
+	if (!(await coleccion.hasImagen(image))) {
+		await coleccion.addImagen(image);
+	}
+
+	return res.redirect(`/post/album/${album_id}/${image_id}`);
+}
+
+export async function createCollection(req, res) {
+	const user_id = req.user.id;
+	const image_id = Number(req.body.image_id);
+	const album_id = req.body.album_id;
+	const { title } = req.body;
+
+	const image = await Imagen.findByPk(image_id);
+	if (!image) {
+		return res.status(404).send('No encontrado');
+	}
+
+	const coleccion = await Coleccion.create({
+		usuario_id: user_id,
+		title
+	});
+
+	await coleccion.addImagen(image);
+
+	return res.redirect(`/post/album/${album_id}/${image_id}`);
+}
+
+export async function showCollections(req, res) {
+	const user_id = req.params.user_id;
+
+	if (!req.user || Number(req.user.id) !== Number(user_id)) {
+		return res.redirect(`/users/${user_id}`);
+	}
+
+	const profileUser = await Usuario.findByPk(user_id);
+	const colecciones = await Coleccion.findAll({
+		where: { usuario_id: user_id }
+	});
+
+	res.render('collections', {
+		profile_user: profileUser,
+		colecciones
+	});
+}
+
+export async function showCollection(req, res) {
+	const user_id = req.params.user_id;
+	const col_id = Number(req.params.col_id);
+
+	if (Number(req.user.id) !== Number(user_id)) {
+		return res.redirect(`/users/${user_id}`);
+	}
+
+	const coleccion = await Coleccion.findByPk(col_id);
+	if (!coleccion || Number(coleccion.usuario_id) !== Number(user_id)) {
+		return res.status(404).render('fourohfour');
+	}
+
+	const user = await Usuario.findByPk(coleccion.usuario_id, {
+		attributes: ["id", "nombre"]
+	});
+
+	const images = await coleccion.getImagens({
+		include: [{ model: Publicacion, attributes: ["titulo"] }]
+	});
+
+	const shapedImages = images.map((image) => ({
+		id: image.id,
+		publicacion_id: image.publicacion_id,
+		titulo: image.Publicacion?.titulo || "Sin título",
+		img_b64: `${image.metadata}${image.blob.toString("base64")}`
+	}));
+
+	res.render("collection", {
+		profile_user: user,
+		collection: coleccion,
+		images: shapedImages
+	});
 }
 
 export async function followUser(req, res) {
