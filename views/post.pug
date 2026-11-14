@@ -38,6 +38,8 @@ block content
 							if user
 								form(action=`/post/album/${album_id}/${image.id}/favourite`, method="post").favouriteForm
 									button(type="submit").favourite Añadir a favoritos
+								a(href=`/users/${user.id}/coleccion/agregar/${image.id}?album_id=${album_id}`).add-collection
+									button(type="button") Añadir a colección
 						form(action=`/chat/${image.id}`, method="post")
 							button(type="submit") Me Interesa
 						p=image.description
