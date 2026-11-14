@@ -101,6 +101,7 @@ export async function buildFavouritesWall(terms) {
 		include: [
 			{
 				model: Usuario,
+				as: 'FavoritedBy',
 				attributes: [],
 				through: { attributes: [] },
 				where: { id: user_id }

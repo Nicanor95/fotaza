@@ -80,8 +80,8 @@ Usuario.hasOne(Moderador, { foreignKey: 'usuario_id' });
 Moderador.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 
 // Favoritos
-Imagen.belongsToMany(Usuario, { through: 'favoritos', foreignKey: 'img_id' });
-Usuario.belongsToMany(Imagen, { through: 'favoritos', foreignKey: 'usuario_id' });
+Imagen.belongsToMany(Usuario, { as: 'FavoritedBy', through: 'favoritos', foreignKey: 'img_id', otherKey: 'usuario_id' });
+Usuario.belongsToMany(Imagen, { as: 'FavoriteImages', through: 'favoritos', foreignKey: 'usuario_id', otherKey: 'img_id' });
 
 // Follows
 Usuario.belongsToMany(Usuario, { as: 'follower', through: 'follows', foreignKey: 'follower'});
