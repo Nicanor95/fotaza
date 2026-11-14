@@ -11,6 +11,8 @@ block content
 			if user.id === profile_user.id
 				a(href=`/users/${profile_user.id}/favoritos`).favoritos-link
 					button(type="button").favoritos Mis favoritos
+				a(href=`/users/${profile_user.id}/colecciones`).colecciones-link
+					button(type="button").colecciones Mis colecciones
 			else
 				if follows
 					form(action=`/users/${profile_user.id}/unfollow`, method="post")
