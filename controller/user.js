@@ -85,6 +85,25 @@ export async function addFavourite(req, res) {
 	return res.redirect(`/post/album/${album_id}/${image_id}`);
 }
 
+export async function removeFavourite(req, res) {
+	const user_id = Number(req.user.id);
+	const image_id = Number(req.params.image_id);
+	const album_id = Number(req.params.album_id);
+
+	const user = await Usuario.findByPk(user_id);
+	const image = await Imagen.findByPk(image_id);
+
+	if (!user || !image) {
+		return res.status(404).send('No encontrado');
+	}
+
+	if (await user.hasFavoriteImage(image)) {
+		await user.removeFavoriteImage(image);
+	}
+
+	return res.redirect(`/post/album/${album_id}/${image_id}`);
+}
+
 export async function showAddToCollectionForm(req, res) {
 	const user_id = req.user.id;
 	const image_id = Number(req.params.image_id);

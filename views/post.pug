@@ -36,8 +36,12 @@ block content
 								button(type="submit" name="valor", value="5").ratingButton 5
 							span=image.rating
 							if user
-								form(action=`/post/album/${album_id}/${image.id}/favourite`, method="post").favouriteForm
-									button(type="submit").favourite Añadir a favoritos
+								if !image.favoritos
+									form(action=`/post/album/${album_id}/${image.id}/favourite`, method="post").favouriteForm
+										button(type="submit").favourite Añadir a favoritos
+								else
+									form(action=`/post/album/${album_id}/${image.id}/unfavourite`, method="post").favouriteForm
+										button(type="submit").favourite Quitar de favoritos
 								a(href=`/users/${user.id}/coleccion/agregar/${image.id}?album_id=${album_id}`).add-collection
 									button(type="button") Añadir a colección
 						form(action=`/chat/${image.id}`, method="post")

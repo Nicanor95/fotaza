@@ -5,7 +5,7 @@ import { authMiddleware } from '../middleware/auth.js';
 import { showAlbum, showNewPost, newPost, storage, upload } from '../controller/post.js';
 import { createComment } from '../controller/comment.js';
 import { newValoration } from '../controller/valoracion.js';
-import { addFavourite } from '../controller/user.js';
+import { addFavourite, removeFavourite } from '../controller/user.js';
 
 const postRouter = Router();
 
@@ -20,6 +20,9 @@ postRouter.post('/album/:album_id/:image_id/valorate', authMiddleware, newValora
 
 // Add image to favourites
 postRouter.post('/album/:album_id/:image_id/favourite', authMiddleware, addFavourite);
+
+// Remove image from favourites
+postRouter.post('/album/:album_id/:image_id/unfavourite', authMiddleware, removeFavourite);
 
 // New publication
 postRouter.get("/newpost", authMiddleware, showNewPost);

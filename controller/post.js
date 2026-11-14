@@ -77,13 +77,20 @@ export async function showAlbum(req,res) {
 		let rating = await getAvgValoration(image.id);
 		rating = Number(rating).toFixed(2);
 
+		// Get favorite boolean
+		let favoritos = false;
+		if (user) {
+			favoritos = await user.hasFavoriteImage(image)
+		}
+
 		let img_info = {
 			id: image.id,
 			data: await retrieveImage(image),
 			description: image.description,
 			comments: shapedComments,
 			tags: shapedTags,
-			rating: rating
+			rating: rating,
+			favoritos: favoritos
 		}
 
 		if (imgId != image.id) {
