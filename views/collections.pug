@@ -1,0 +1,17 @@
+extends partials/layout
+include partials/wall
+
+block content
+	div.profile
+		h1= profile_user.nombre 
+		span.subtitle Mis colecciones
+		a(href=`/users/${profile_user.id}`) Volver al perfil
+	hr
+	div.r_flex.center.wall
+		if colecciones.length
+			each c in colecciones
+				a(href=`/users/${profile_user.id}/colecciones/${c.id}`)
+					div.post
+						h3 #{c.title}
+		else
+			p Todavía no tienes colecciones.
