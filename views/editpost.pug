@@ -5,6 +5,23 @@ block content
 		div
 			label.center.endalign(for="title") Titulo:
 			input.center.startalign#title(type="text", name="title", value=title, required=true)
+
+		h3.center Imágenes del álbum
+		ul.center.image-list
+			each image in images
+				li.center.marginBottom
+					img.edit-thumb(src=image.data)
+					div
+						label Descripción:
+						input(type="text", name=`description-${image.id}`, value=image.description)
+					div.marginTop
+						label Etiquetas:
+						input(type="text", name=`tags-${image.id}`, value=image.tags, placeholder="#etiqueta1 #etiqueta2")
+					div.marginTop
+						label
+							input(type="checkbox", name=`copyright-${image.id}` id=`copyright-${image.id}` checked=image.copyright)
+							| Derechos de autor
+
 		button.center(type="submit") Guardar cambios
 
 	div.center.marginTop

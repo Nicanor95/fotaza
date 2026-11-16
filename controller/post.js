@@ -5,6 +5,7 @@ import { Tag } from "../models/Tag.js";
 import { Comentario } from "../models/Comentario.js";
 import { follows } from "./user.js";
 import { getAvgValoration } from "./valoracion.js";
+import sequelize from "../models/config.js";
 import multer from 'multer';
 import sharp from 'sharp';
 
@@ -134,7 +135,70 @@ export async function editPost(req,res) {
 		return res.status(403).render('error', { error: "No tienes permiso para editar esta publicación." });
 	}
 
-	res.render('editpost', { title: pub.titulo, publication_id: pub.id });
+	const images = await Imagen.findAll({
+		where: { publicacion_id: pid }
+	});
+
+	const imageData = await Promise.all(images.map(async (image) => ({
+		id: image.id,
+		data: await retrieveImage(image),
+		description: image.description,
+		copyright: image.copyright,
+		tags: (await image.getTags()).map((tag) => tag.nombre).join(" ")
+	})));
+
+	res.render('editpost', { title: pub.titulo, publication_id: pub.id, images: imageData });
+}
+
+export async function updatePost(req, res) {
+	if (!req.user) {
+		return res.redirect('/auth/login');
+	}
+
+	const pid = parseInt(req.params.album_id, 10);
+	if (!pid) {
+		return res.status(404).render('fourohfour');
+	}
+
+	const pub = await Publicacion.findByPk(pid);
+	if (!pub) {
+		return res.status(404).render('fourohfour');
+	}
+
+	if (Number(pub.usuario_id) !== Number(req.user.id)) {
+		return res.status(403).render('error', { error: "No tienes permiso para editar esta publicación." });
+	}
+
+	if (typeof req.body.title !== 'string' || !req.body.title.trim()) {
+		return res.status(400).render('error', { error: "El título de la publicación es obligatorio." });
+	}
+
+	const images = await Imagen.findAll({ where: { publicacion_id: pid } });
+	await sequelize.transaction(async (transaction) => {
+		await pub.update({ titulo: req.body.title.trim() }, { transaction });
+
+		for (const image of images) {
+			const id = image.id;
+			const tagNames = [...new Set((req.body[`tags-${id}`] || "").match(tagRegex) || [])]
+				.map((tag) => tag.toUpperCase());
+			const tags = await Promise.all(tagNames.map(async (nombre) => {
+				const [tag] = await Tag.findOrCreate({
+					where: { nombre },
+					defaults: { nombre },
+					transaction
+				});
+				return tag;
+			}));
+
+			await image.update({
+				description: req.body[`description-${id}`] || "",
+				copyright: req.body[`copyright-${id}`] === "on"
+			}, { transaction });
+			await image.setTags(tags, { transaction });
+		}
+	});
+
+	res.redirect(`/post/album/${pid}`);
 }
 
 /* Necesitamos esto para no romper el xml usado para configurar el sharp */
