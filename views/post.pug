@@ -38,7 +38,7 @@ block content
 									else 
 										form(action=`/users/${uploader.id}`, method="post")
 											button(type="submit").follow Seguir
-						div.rating 
+						div.rating
 							form(action=`/post/album/${album_id}/${image.id}/valorate`, method="post").ratingForm
 								button(type="submit" name="valor", value="1").ratingButton 1
 								button(type="submit" name="valor", value="2").ratingButton 2
@@ -46,17 +46,22 @@ block content
 								button(type="submit" name="valor", value="4").ratingButton 4
 								button(type="submit" name="valor", value="5").ratingButton 5
 							span=image.rating
-							if user
-								if !image.favoritos
-									form(action=`/post/album/${album_id}/${image.id}/favourite`, method="post").favouriteForm
-										button(type="submit").favourite Añadir a favoritos
-								else
-									form(action=`/post/album/${album_id}/${image.id}/unfavourite`, method="post").favouriteForm
-										button(type="submit").favourite Quitar de favoritos
-								a(href=`/users/${user.id}/coleccion/agregar/${image.id}?album_id=${album_id}`).add-collection
-									button(type="button") Añadir a colección
-						form(action=`/chat/${image.id}`, method="post")
-							button(type="submit") Me Interesa
+						div.image-action-bar
+							div.image-action-group
+								if user
+									if !image.favoritos
+										form(action=`/post/album/${album_id}/${image.id}/favourite`, method="post").image-action-form
+											button(type="submit", title="Añadir a favoritos", aria-label="Añadir a favoritos").image-action
+												i.fa-solid.fa-heart(aria-hidden="true")
+									else
+										form(action=`/post/album/${album_id}/${image.id}/unfavourite`, method="post").image-action-form
+											button(type="submit", title="Quitar de favoritos", aria-label="Quitar de favoritos").image-action.is-favorite
+												i.fa-solid.fa-heart(aria-hidden="true")
+									a(href=`/users/${user.id}/coleccion/agregar/${image.id}?album_id=${album_id}`, title="Añadir a colección", aria-label="Añadir a colección").image-action
+										i.fa-solid.fa-folder-plus(aria-hidden="true")
+								form(action=`/chat/${image.id}`, method="post").image-action-form
+									button(type="submit", title="Me interesa", aria-label="Me interesa").image-action
+										i.fa-solid.fa-dollar-sign(aria-hidden="true")
 						p=image.description
 						each tag in image.tags
 							span.tag=tag.name
