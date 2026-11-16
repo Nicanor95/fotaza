@@ -1,0 +1,10 @@
+extends partials/layout
+
+block content
+	form.authform.center(method="post")
+		h2.center Reportar #{reportType}
+		if error
+			p.center=error
+		label(for="motivo") Motivo:
+		textarea#motivo(name="motivo", rows="5", maxlength="255", required=true)=typeof motivo === 'string' ? motivo : ''
+		button.center(type="submit") Enviar reporte
