@@ -27,6 +27,8 @@ postRouter.post('/album/:album_id/:image_id/unfavourite', authMiddleware, remove
 // Edit post
 postRouter.get('/edit/:album_id', authMiddleware, editPost);
 postRouter.post('/edit/:album_id', authMiddleware, updatePost);
+postRouter.post('/edit/:album_id/image/delete', authMiddleware, removeImage);
+postRouter.post('/edit/:album_id/delete', authMiddleware, removeAlbum);
 
 // New publication
 postRouter.get("/newpost", authMiddleware, showNewPost);

@@ -201,6 +201,59 @@ export async function updatePost(req, res) {
 	res.redirect(`/post/album/${pid}`);
 }
 
+export async function removeImage(req, res) {
+	const pid = parseInt(req.params.album_id, 10);
+	const imageId = parseInt(req.body.image_id, 10);
+	if (!Number.isInteger(pid) || pid < 1 || !Number.isInteger(imageId) || imageId < 1) {
+		return res.status(404).render('fourohfour');
+	}
+
+	const pub = await Publicacion.findByPk(pid);
+
+	if (!pub) {
+		return res.status(404).render('fourohfour');
+	}
+	if (Number(pub.usuario_id) !== Number(req.user.id)) {
+		return res.status(403).render('error', { error: "No tienes permiso para editar esta publicación." });
+	}
+
+	const image = await Imagen.findOne({ where: { id: imageId, publicacion_id: pid } });
+	if (!image) {
+		return res.status(404).render('fourohfour');
+	}
+
+	await image.destroy();
+	return res.redirect(`/post/edit/${pid}`);
+}
+
+export async function removeAlbum(req, res) {
+	const pid = parseInt(req.params.album_id, 10);
+	if (!Number.isInteger(pid) || pid < 1) {
+		return res.status(404).render('fourohfour');
+	}
+
+	const pub = await Publicacion.findByPk(pid);
+
+	if (!pub) {
+		return res.status(404).render('fourohfour');
+	}
+	if (Number(pub.usuario_id) !== Number(req.user.id)) {
+		return res.status(403).render('error', { error: "No tienes permiso para editar esta publicación." });
+	}
+	if (typeof req.body.confirmation !== 'string' || req.body.confirmation.trim() !== pub.titulo) {
+		return res.status(400).render('error', { error: "El nombre del álbum no coincide." });
+	}
+
+	await sequelize.transaction(async (transaction) => {
+		await Imagen.destroy({
+			where: { publicacion_id: pid },
+			transaction
+		});
+		await pub.destroy({ transaction });
+	});
+	return res.redirect('/');
+}
+
 /* Necesitamos esto para no romper el xml usado para configurar el sharp */
 function escapeXml(text) {
 	return text.replace(/[&<>"']/g, (character) => ({

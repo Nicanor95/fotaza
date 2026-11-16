@@ -25,5 +25,10 @@ block content
 
 		button.center(type="submit") Guardar cambios
 
+	form.authform.center(method="post", action=`/post/edit/${publication_id}/delete`)
+		label(for="album-confirmation") Para eliminar el álbum, escribe su nombre: #{title}
+		input#album-confirmation(type="text", name="confirmation", required=true)
+		button(type="submit") Eliminar álbum
+
 	div.center.marginTop
 		a(href=`/post/album/${publication_id}`) Volver a la publicación
