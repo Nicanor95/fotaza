@@ -116,6 +116,27 @@ export async function showNewPost(req,res) {
 	res.render('newpost');
 }
 
+export async function editPost(req,res) {
+	// Only logged-in users can reach the edit view.
+	if (!req.user) {
+		return res.redirect('/auth/login');
+	}
+
+	const pid = parseInt(req.params.album_id, 10);
+	const pub = await Publicacion.findByPk(pid);
+
+	if (!pub) {
+		return res.status(404).render('fourohfour');
+	}
+
+	// Make sure the current user is the one who made the publication.
+	if (Number(pub.usuario_id) !== Number(req.user.id)) {
+		return res.status(403).render('error', { error: "No tienes permiso para editar esta publicación." });
+	}
+
+	res.render('editpost', { title: pub.titulo, publication_id: pub.id });
+}
+
 /* Necesitamos esto para no romper el xml usado para configurar el sharp */
 function escapeXml(text) {
 	return text.replace(/[&<>"']/g, (character) => ({

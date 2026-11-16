@@ -2,7 +2,7 @@
 import 'dotenv/config';
 import { Router } from 'express';
 import { authMiddleware } from '../middleware/auth.js';
-import { showAlbum, showNewPost, newPost, storage, upload } from '../controller/post.js';
+import { showAlbum, showNewPost, newPost, storage, upload, editPost } from '../controller/post.js';
 import { createComment } from '../controller/comment.js';
 import { newValoration } from '../controller/valoracion.js';
 import { addFavourite, removeFavourite } from '../controller/user.js';
@@ -23,6 +23,9 @@ postRouter.post('/album/:album_id/:image_id/favourite', authMiddleware, addFavou
 
 // Remove image from favourites
 postRouter.post('/album/:album_id/:image_id/unfavourite', authMiddleware, removeFavourite);
+
+// Edit post
+postRouter.get('/edit/:album_id', authMiddleware, editPost);
 
 // New publication
 postRouter.get("/newpost", authMiddleware, showNewPost);

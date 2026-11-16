@@ -1,0 +1,11 @@
+extends partials/layout
+
+block content
+	form.authform.center(method="post")
+		div
+			label.center.endalign(for="title") Titulo:
+			input.center.startalign#title(type="text", name="title", value=title, required=true)
+		button.center(type="submit") Guardar cambios
+
+	div.center.marginTop
+		a(href=`/post/album/${publication_id}`) Volver a la publicación
