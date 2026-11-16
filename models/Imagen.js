@@ -21,6 +21,11 @@ export const Imagen = sequelize.define(
 			type: DataTypes.BOOLEAN,
 			defaultValue: false
 		},
+		comments_enabled: {
+			type: DataTypes.BOOLEAN,
+			allowNull: false,
+			defaultValue: true
+		},
 		description: {
 			type: DataTypes.STRING
 		},
@@ -35,6 +40,7 @@ export const Imagen = sequelize.define(
   	},
   	{
 		timestamps: true,
+		paranoid: true,
 		tableName: 'imagenes'
   	},
 );

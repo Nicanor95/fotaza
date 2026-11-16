@@ -17,8 +17,11 @@ export async function createComment(req, res) {
     }
 
     const image = await Imagen.findByPk(imageId);
-    if (!image) {
+    if (!image || Number(image.publicacion_id) !== albumId) {
         return res.render('error', { error: `No se encontró la imagen con id: ${imageId} :(` });
+    }
+    if (!image.comments_enabled) {
+        return res.status(403).render('error', { error: 'Los comentarios están deshabilitados para esta imagen.' });
     }
 
     try {

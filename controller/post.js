@@ -37,18 +37,21 @@ export async function showAlbum(req,res) {
 		return;
 	}
 	
-	// Make the two requests to the db
-	let pub = Publicacion.findByPk(pid);
-	let images = Imagen.findAll({
+	const pub = await Publicacion.findByPk(pid);
+	if (!pub) {
+		return res.status(404).render('fourohfour');
+	}
+
+	let images = await Imagen.findAll({
 		where: {
 			publicacion_id: pid
 		}
 	});
 
-	// Wait for  the results
-	pub = await pub;
 	let user = await Usuario.findByPk(Number(pub.usuario_id), { attributes: ["id", "nombre"]});
-	images = await images;
+	if (images.length === 0) {
+		return res.status(404).render('fourohfour');
+	}
 
 	let img_array = [];
 	for (let image of images) {
@@ -88,6 +91,7 @@ export async function showAlbum(req,res) {
 			id: image.id,
 			data: await retrieveImage(image),
 			description: image.description,
+			comments_enabled: image.comments_enabled,
 			comments: shapedComments,
 			tags: shapedTags,
 			rating: rating,
@@ -106,12 +110,8 @@ export async function showAlbum(req,res) {
 		seguimos = await follows(req.user.id, user.id);
 	}
 
-	if (pub === null || (await images).length === 0) {
-		res.status(404).render('fourohfour');
-	} else {
 		res.render('post', {title:pub.titulo, album_id: pid, uploader: user, follows: seguimos, img_list:img_array, auth: auth});
 	}
-}
 
 export async function showNewPost(req,res) {
 	res.render('newpost');

@@ -18,9 +18,10 @@ block content
 						div.edit-field-row
 							label(for=`tags-${image.id}`) Etiquetas:
 							input(type="text", id=`tags-${image.id}`, name=`tags-${image.id}`, value=image.tags, placeholder="#etiqueta1 #etiqueta2")
-						label.edit-copyright(for=`copyright-${image.id}`)
-							input(type="checkbox", name=`copyright-${image.id}` id=`copyright-${image.id}` checked=image.copyright)
-							| Derechos de autor
+						label(for=`comments-enabled-${image.id}`)
+							input(type="checkbox", name=`comments-enabled-${image.id}` id=`comments-enabled-${image.id}` checked=image.comments_enabled)
+							| Comentarios habilitados
+						button(type="submit", formaction=`/post/edit/${publication_id}/image/delete`, formmethod="post", name="image_id", value=image.id) Quitar imagen
 
 		button.center(type="submit") Guardar cambios
 
