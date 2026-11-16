@@ -1,15 +1,15 @@
-import { Sequelize, DataTypes } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import sequelize from './config.js';
 
-export const Reporte = sequelize.define(
-	'Reporte',
+export const ReporteComentario = sequelize.define(
+	'ReporteComentario',
 	{
 		id: {
 			type: DataTypes.BIGINT,
 			autoIncrement: true,
 			primaryKey: true
 		},
-		img_id: {
+		comentario_id: {
 			type: DataTypes.BIGINT,
 			allowNull: false
 		},
@@ -22,7 +22,7 @@ export const Reporte = sequelize.define(
 		}
   	},
   	{
-		timestamps: true, // Adds createdAt and updatedAt.
-		tableName: 'reportes'
+		timestamps: true,
+		tableName: 'reportes_comentarios'
   	},
 );

@@ -5,7 +5,8 @@ import { Imagen } from './Imagen.js';
 import { Mensaje } from './Mensaje.js';
 import { Notificacion } from './Notificacion.js';
 import { Publicacion } from './Publicacion.js';
-import { Reporte } from './Reporte.js';
+import { ReporteImagen } from './ReporteImagen.js';
+import { ReporteComentario } from './ReporteComentario.js';
 import { Tag } from './Tag.js';
 import { Usuario } from './Usuario.js';
 import { Valoracion } from './Valoracion.js';
@@ -57,12 +58,19 @@ Imagen.hasMany(Comentario, { foreignKey: 'parent_id' });
 Comentario.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 Usuario.hasMany(Comentario, { foreignKey: 'usuario_id' });
 
-// Reportes
-Reporte.belongsTo(Imagen, { foreignKey: 'img_id' });
-Imagen.hasMany(Reporte, { foreignKey: 'img_id' });
+// Reportes de imágenes
+ReporteImagen.belongsTo(Imagen, { foreignKey: 'img_id' });
+Imagen.hasMany(ReporteImagen, { foreignKey: 'img_id' });
 
-Reporte.belongsTo(Usuario, { foreignKey: 'usuario_id' });
-Usuario.hasMany(Reporte, { foreignKey: 'usuario_id' });
+ReporteImagen.belongsTo(Usuario, { foreignKey: 'usuario_id' });
+Usuario.hasMany(ReporteImagen, { foreignKey: 'usuario_id' });
+
+// Reportes de comentarios
+ReporteComentario.belongsTo(Comentario, { foreignKey: 'comentario_id' });
+Comentario.hasMany(ReporteComentario, { foreignKey: 'comentario_id' });
+
+ReporteComentario.belongsTo(Usuario, { foreignKey: 'usuario_id' });
+Usuario.hasMany(ReporteComentario, { foreignKey: 'usuario_id' });
 
 // Notificaciones
 Notificacion.belongsTo(Usuario, { foreignKey: 'usuario_id' });

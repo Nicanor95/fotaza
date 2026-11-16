@@ -8,10 +8,12 @@ import { Imagen } from './models/Imagen.js';
 import { Mensaje } from './models/Mensaje.js';
 import { Notificacion } from './models/Notificacion.js';
 import { Publicacion } from './models/Publicacion.js';
-import { Reporte } from './models/Reporte.js';
+import { ReporteComentario } from './models/ReporteComentario.js';
+import { ReporteImagen } from './models/ReporteImagen.js';
 import { Tag } from './models/Tag.js';
 import { Usuario } from './models/Usuario.js';
 import { Valoracion } from './models/Valoracion.js';
+import { Moderador } from './models/Moderador.js';
 
 const regNombre = /^[a-zA-Zñ]{3,}(?: [a-zA-Z]+)*$/;
 const regMail = /^[a-zA-Z0-9](?:[\.-\w])*@\w+(?:-\w+)?(?:\.\w+(?:-\w+)?)+$/;
@@ -32,6 +34,12 @@ const usuarios = [
 	{
 		nombre: "Mariela Gomez",
 		email: "mariela@correo.com",
+		password: "hunter2",
+		password_confirm: "hunter2"
+	},
+	{
+		nombre: "Administrador Lopez",
+		email: "admin@correo.com",
 		password: "hunter2",
 		password_confirm: "hunter2"
 	}
@@ -140,6 +148,12 @@ async function signup(user) {
 			email: email,
 			phash: password //Hashes on hook
 		});
+
+		if (newUser.email === "admin@correo.com") {
+			await Moderador.create({
+				usuario_id: newUser.id
+			});
+		}
 
 		return newUser;
 	} catch (err) {
