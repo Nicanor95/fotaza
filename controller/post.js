@@ -110,8 +110,8 @@ export async function showAlbum(req,res) {
 		seguimos = await follows(req.user.id, user.id);
 	}
 
-		res.render('post', {title:pub.titulo, album_id: pid, uploader: user, follows: seguimos, img_list:img_array, auth: auth});
-	}
+	res.render('post', {title:pub.titulo, album_id: pid, uploader: user, follows: seguimos, img_list:img_array, auth: auth});
+}
 
 export async function showNewPost(req,res) {
 	res.render('newpost');
@@ -291,6 +291,10 @@ export async function newPost(req,res) {
 		return res.redirect("/auth/login");
 	}
 
+	if (typeof req.body.title !== 'string' || !req.body.title.trim()) {
+		return res.status(400).render('error', { error: "El título de la publicación es obligatorio." });
+	}
+
 	let image_array = []
 	for (let [index, file] of req.files.entries()) {
 		//Check if mimetype matches images, not a real test but it'll have to do.
@@ -323,7 +327,7 @@ export async function newPost(req,res) {
 	// save album info
 	const publicacion = await Publicacion.create({
 		usuario_id: Number(user.id),
-		titulo: req.body.title
+		titulo: req.body.title.trim()
 	});
 
 	if (!publicacion) {

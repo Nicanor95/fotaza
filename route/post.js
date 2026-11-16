@@ -2,7 +2,7 @@
 import 'dotenv/config';
 import { Router } from 'express';
 import { authMiddleware } from '../middleware/auth.js';
-import { showAlbum, showNewPost, newPost, storage, upload, editPost, updatePost } from '../controller/post.js';
+import { showAlbum, showNewPost, newPost, storage, upload, editPost, updatePost, removeImage, removeAlbum } from '../controller/post.js';
 import { createComment } from '../controller/comment.js';
 import { newValoration } from '../controller/valoracion.js';
 import { addFavourite, removeFavourite } from '../controller/user.js';

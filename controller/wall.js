@@ -12,7 +12,8 @@ export async function buildWall(terms) {
 		include: [
 			{
 				model: Publicacion,
-				attributes: ['titulo']
+				attributes: ['titulo'],
+				required: true
 			}
 		]
 	};
@@ -32,7 +33,8 @@ export async function buildWall(terms) {
 			},
 			{
 				model: Publicacion,
-				attributes: ['titulo']
+				attributes: ['titulo'],
+				required: true
 			}
 		],
 		group: ['Imagen.id', 'Publicacion.id'],
@@ -73,7 +75,8 @@ export async function buildProfileWall(terms) {
 		include: [
 			{
 				model: Publicacion,
-				attributes: ['titulo']
+				attributes: ['titulo'],
+				required: true
 			}
 		]
 	})
@@ -108,7 +111,8 @@ export async function buildFavouritesWall(terms) {
 			},
 			{
 				model: Publicacion,
-				attributes: ['titulo']
+				attributes: ['titulo'],
+				required: true
 			}
 		]
 	});
@@ -136,7 +140,8 @@ export async function buildWallById(userId) {
 		include: [
 			{
 				model: Publicacion,
-				attributes: ['titulo']
+				attributes: ['titulo'],
+				required: true
 			}
 		]
 	})
