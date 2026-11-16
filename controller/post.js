@@ -143,7 +143,7 @@ export async function editPost(req,res) {
 		id: image.id,
 		data: await retrieveImage(image),
 		description: image.description,
-		copyright: image.copyright,
+		comments_enabled: image.comments_enabled,
 		tags: (await image.getTags()).map((tag) => tag.nombre).join(" ")
 	})));
 
@@ -192,7 +192,7 @@ export async function updatePost(req, res) {
 
 			await image.update({
 				description: req.body[`description-${id}`] || "",
-				copyright: req.body[`copyright-${id}`] === "on"
+				comments_enabled: req.body[`comments-enabled-${id}`] === "on"
 			}, { transaction });
 			await image.setTags(tags, { transaction });
 		}
