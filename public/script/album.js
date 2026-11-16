@@ -48,3 +48,42 @@ function moveSlide(n) {
 	descs[slideIndex].style.display = "block";
 	comments[slideIndex].hidden = false;
 }
+
+// Menú de opciones de comentarios (abrir/cerrar dropdown)
+document.querySelectorAll(".options-button").forEach((btn) => {
+	btn.addEventListener("click", (e) => {
+		e.stopPropagation();
+		const menu = btn.nextElementSibling;
+		const isOpen = !menu.classList.contains("hidden");
+
+		// Cerrar todos los demás menús abiertos
+		document.querySelectorAll(".options-menu:not(.hidden)").forEach((m) => {
+			m.classList.add("hidden");
+			m.previousElementSibling.setAttribute("aria-expanded", "false");
+		});
+
+		if (!isOpen) {
+			menu.classList.remove("hidden");
+			btn.setAttribute("aria-expanded", "true");
+		}
+	});
+});
+
+// Cerrar menús al hacer clic fuera
+document.addEventListener("click", () => {
+	document.querySelectorAll(".options-menu:not(.hidden)").forEach((m) => {
+		m.classList.add("hidden");
+		m.previousElementSibling.setAttribute("aria-expanded", "false");
+	});
+});
+
+document.addEventListener("keydown", (e) => {
+	if (e.key === "Escape") {
+		document.querySelectorAll(".options-menu:not(.hidden)").forEach((menu) => {
+			menu.classList.add("hidden");
+			const button = menu.previousElementSibling;
+			button.setAttribute("aria-expanded", "false");
+			button.focus();
+		});
+	}
+});
