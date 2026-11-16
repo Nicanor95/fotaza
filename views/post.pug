@@ -1,25 +1,25 @@
 extends partials/layout
 
 block content
-	div.r_flex.marginTop.center
-		div.album.r_flex.center
-			div.slides-container.center 
+	div.post-page
+		div.post-card
+			div.slides-container
 				each image in img_list 
 					div.slide
-						img.post_image.center(src=image.data)
+						img.post_image(src=image.data)
 
 				- let multiple = img_list? img_list.length > 1 : false;
 
 				if multiple
 					a.prev(onclick="moveSlide(-1)") &#10094;
 					a.next(onclick="moveSlide(1)") &#10095;
-			div.c_flex.post_details 
-				h2.center=title
+			div.post-details
+				h2=title
 				if user && user.id === uploader.id
 					a(href=`/post/edit/${album_id}`).edit-post
 						button(type="button") Editar publicación
 				each image in img_list
-					div.description.startalign.first 
+					div.description.post-description.first
 						div.options-wrapper.image-options
 							button.options-button(type="button", aria-label="Opciones de la imagen", aria-expanded="false", aria-controls=`image-options-${image.id}`)
 								i.fa-solid.fa-ellipsis-vertical(aria-hidden="true")
@@ -65,10 +65,10 @@ block content
 						p=image.description
 						each tag in image.tags
 							span.tag=tag.name
-					div.comments.center.second(hidden)
+					div.comments.post-comments.second(hidden)
 						h3 Comentarios 
 						each comment in image.comments 
-							div.comentario.startalign.c_flex 
+							div.comentario.comment-card
 								div.comment-header
 									a.comment_author(href=`/users/${comment.user.id}`)=comment.user.name
 									div.options-wrapper.comment-options

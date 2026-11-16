@@ -247,16 +247,18 @@ footer a i {
 .slide {
 	display: none;
 	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: 32rem;
 }
 
-.post_image{
-	max-width: 600px;
-}
-
-.post_details {
-	flex-basis: 350px;
-	padding-left: 2rem;
-	font-size: 0.8rem;
+.post_image {
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	max-height: 72vh;
+	object-fit: contain;
 }
 
 .searchinput {
@@ -292,15 +294,17 @@ footer a i {
 
 .description {
 	display: none;
-	border-bottom: 1px solid var(--border);
-	padding-bottom: 1rem;
 }
 
 .slides-container {
-	flex-grow: 3;
-	max-width: 720px;
 	position: relative;
-	background-color: var(--background-dark);
+	display: grid;
+	min-width: 0;
+	min-height: 32rem;
+	place-items: center;
+	overflow: hidden;
+	background: var(--background-dark);
+	border-radius: 1.15rem 0 0 1.15rem;
 }
 
 .prev, .next {
@@ -352,20 +356,200 @@ footer a i {
 	flex-wrap: wrap;
 }
 
-.album {
-	position: relative;
-	margin-left: 5rem;
-	margin-right: 5rem;
-	padding-left: 2rem;
-	padding-right: 2rem;
-	border-radius: 1rem;
+.post-page {
+	width: min(1200px, 94%);
+	margin: 1.5rem auto;
+}
+
+.post-card {
+	box-sizing: border-box;
+	display: grid;
+	grid-template-columns: minmax(0, 1.2fr) minmax(19rem, 0.8fr);
+	align-items: stretch;
+	width: 100%;
 	border: 1px solid var(--border);
-	box-shadow: 2px 2px 5px #101010;
-	width: 80%;
+	border-radius: 1.25rem;
+	background: var(--background-light);
+	box-shadow: 0 12px 36px #0006;
+}
+
+.post-details {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	padding: 1.75rem 1.5rem 1.25rem;
+	font-size: 0.95rem;
+}
+
+.post-details > h2 {
+	margin: 0 2.5rem 1.25rem 0;
+	font-size: 1.65rem;
+	line-height: 1.2;
+	text-align: left;
+	overflow-wrap: anywhere;
+}
+
+.post-details > .edit-post {
+	margin: -0.5rem 0 1rem;
+}
+
+.post-details > .edit-post button {
+	width: 100%;
+	min-height: 2.4rem;
+}
+
+.post-description {
+	border: 0;
+	padding: 0;
+}
+
+.post_author {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	margin-bottom: 1rem;
+	font-size: 1rem;
+}
+
+.post_author form {
+	margin: 0;
+}
+
+.rating {
+	display: flex;
+	align-items: center;
+	gap: 0.65rem;
+	margin-bottom: 0.25rem;
+}
+
+.ratingForm {
+	display: flex;
+	gap: 0.2rem;
+}
+
+.ratingButton {
+	padding: 0.2rem 0.45rem;
+	box-shadow: none;
+}
+
+.post-description > p {
+	margin: 0.75rem 0 1rem;
+	line-height: 1.55;
+	overflow-wrap: anywhere;
+}
+
+.post-description .tag {
+	display: inline-block;
+	margin: 0 0.3rem 0.35rem 0;
+	padding: 0.25rem 0.65rem;
+	border-radius: 999px;
+	background: var(--background-dl);
+	box-shadow: none;
+	font-size: 0.8rem;
+}
+
+.post-comments {
+	width: 100%;
+	text-align: left;
+}
+
+.post-comments > h3 {
+	margin: 1rem 0 0.75rem;
+	font-size: 1.1rem;
+}
+
+.comment-card {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	margin-bottom: 0.65rem;
+	padding: 0.75rem 0.9rem;
+	background: var(--background);
+	border: 1px solid var(--border);
+	border-radius: 0.75rem;
+	box-shadow: none;
+	text-align: left;
+}
+
+.comment-card > p {
+	margin-top: 0.25rem;
+	line-height: 1.45;
+	overflow-wrap: anywhere;
+}
+
+.post-comments .sendcomment {
+	width: 100%;
+	margin-top: 0.75rem;
+}
+
+.post-comments .sendcomment > input {
+	flex: 1;
+	min-width: 0;
+}
+
+.post-comments .notice {
+	margin-top: 0.75rem;
+	padding: 0.75rem;
+	border-radius: 0.65rem;
+	background: var(--background);
+	text-align: center;
+}
+
+@media (max-width: 900px) {
+	.post-card {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.slides-container {
+		min-height: clamp(20rem, 65vw, 36rem);
+		border-radius: 1.15rem 1.15rem 0 0;
+	}
+
+	.slide {
+		min-height: clamp(20rem, 65vw, 36rem);
+	}
+
+	.post_image {
+		max-height: 65vh;
+	}
+
+	.post-details {
+		padding: 1.5rem;
+	}
+}
+
+@media (max-width: 560px) {
+	.post-page {
+		width: 96%;
+		margin: 0.75rem auto;
+	}
+
+	.post-card {
+		border-radius: 0.9rem;
+	}
+
+	.slides-container {
+		min-height: clamp(16rem, 72vw, 25rem);
+		border-radius: 0.85rem 0.85rem 0 0;
+	}
+
+	.slide {
+		min-height: clamp(16rem, 72vw, 25rem);
+	}
+
+	.post-details {
+		padding: 1rem;
+	}
+
+	.post-details > h2 {
+		font-size: 1.4rem;
+	}
 }
 
 .comments {
-	width: 95%;
+	width: 100%;
 }
 
 .tag {
