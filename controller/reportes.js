@@ -136,31 +136,16 @@ export async function listarReportesImagen(req, res) {
 
 export async function listarReportesComentario(req, res) {
 	const id = parseTargetId(req.params.id);
-	if (!id) {
+	const target = id && await getCommentReportTarget(id);
+	if (!target) {
 		return res.status(404).json({ error: 'Comentario no encontrado.' });
 	}
-
-	const comment = await Comentario.findByPk(id);
-	if (!comment) {
-		return res.status(404).json({ error: 'Comentario no encontrado.' });
-	}
-
-	const image = await Imagen.findByPk(comment.parent_id, {
-		attributes: ['publicacion_id']
-	});
-	const publication = image && await Publicacion.findByPk(image.publicacion_id, {
-		attributes: ['usuario_id']
-	});
-	if (!publication) {
-		return res.status(404).json({ error: 'Publicación no encontrada.' });
-	}
-
-	if (!req.user?.moderador && Number(publication.usuario_id) !== Number(req.user.id)) {
+	if (!canManageCommentReports(req, target)) {
 		return res.status(403).json({ error: 'No tienes permiso para consultar estos reportes.' });
 	}
 
 	const reports = await ReporteComentario.findAll({
-		where: { comentario_id: id },
+		where: { comentario_id: target.comment.id },
 		attributes: ['id', 'motivo', 'createdAt'],
 		include: [{ model: Usuario, attributes: ['nombre'] }],
 		order: [['createdAt', 'DESC']]
