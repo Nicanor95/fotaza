@@ -6,7 +6,7 @@ import { Comentario } from "../models/Comentario.js";
 import { ReporteComentario } from "../models/ReporteComentario.js";
 import { ReporteImagen } from "../models/ReporteImagen.js";
 import { follows } from "./user.js";
-import { getAvgValoration } from "./valoracion.js";
+import { getAvgValoration, getUserValoration } from "./valoracion.js";
 import sequelize from "../models/config.js";
 import multer from 'multer';
 import sharp from 'sharp';
@@ -119,6 +119,9 @@ export async function showAlbum(req,res) {
 		// Get avg rating
 		let rating = await getAvgValoration(image.id);
 		rating = Number(rating).toFixed(2);
+		const userRating = req.user
+			? await getUserValoration(req.user.id, image.id)
+			: null;
 
 		// Get favorite boolean
 		let favoritos = false;
@@ -134,6 +137,7 @@ export async function showAlbum(req,res) {
 			comments: shapedComments,
 			tags: shapedTags,
 			rating: rating,
+			userRating: userRating,
 			favoritos: favoritos
 		}
 
@@ -156,6 +160,7 @@ export async function showAlbum(req,res) {
 		follows: seguimos,
 		img_list: img_array,
 		auth: auth,
+		canRate: Boolean(req.user && Number(req.user.id) !== Number(user.id)),
 		canEditPublication,
 		canViewReportCounts
 	});
