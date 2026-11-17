@@ -4,6 +4,7 @@ import {
 	createReport,
 	descartarReportesImagen,
 	eliminarImagenReportada,
+	listarReportesComentario,
 	listarReportesImagen,
 	showReport
 } from '../controller/reportes.js';
@@ -11,6 +12,7 @@ import {
 const reportesRouter = Router();
 
 reportesRouter.use(authMiddleware);
+reportesRouter.get('/comentario/:id/reportes', listarReportesComentario);
 reportesRouter.get('/moderacion/imagenes', moderatorMiddleware, listarReportesImagen);
 reportesRouter.post('/moderacion/imagenes/:id/eliminar', moderatorMiddleware, eliminarImagenReportada);
 reportesRouter.post('/moderacion/imagenes/:id/descartar', moderatorMiddleware, descartarReportesImagen);
