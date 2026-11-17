@@ -1,5 +1,6 @@
 import { Comentario } from '../models/Comentario.js';
 import { Imagen } from '../models/Imagen.js';
+import { ImagenEliminada } from '../models/ImagenEliminada.js';
 import { Publicacion } from '../models/Publicacion.js';
 import { ReporteComentario } from '../models/ReporteComentario.js';
 import { ReporteImagen } from '../models/ReporteImagen.js';
@@ -194,7 +195,7 @@ export async function eliminarComentarioReportado(req, res) {
 	return res.json({ ok: true });
 }
 
-async function getModeratedImageId(value) {
+async function getModeratedImage(value) {
 	const id = parseTargetId(value);
 	if (!id) {
 		return null;
@@ -206,29 +207,34 @@ async function getModeratedImageId(value) {
 	}
 
 	const count = await ReporteImagen.count({ where: { img_id: id } });
-	return count >= 3 ? id : null;
+	return count >= 3 ? image : null;
 }
 
 export async function eliminarImagenReportada(req, res) {
-	const id = await getModeratedImageId(req.params.id);
-	if (!id) {
+	const image = await getModeratedImage(req.params.id);
+	if (!image) {
 		return res.status(404).json({ error: 'Imagen reportada no encontrada.' });
 	}
 
 	await sequelize.transaction(async (transaction) => {
-		await ReporteImagen.destroy({ where: { img_id: id }, transaction });
-		await Imagen.destroy({ where: { id }, transaction });
+		await ImagenEliminada.create({
+			id: image.id,
+			user_id: image.usuario_id,
+			moderator_id: req.user.id
+		}, { transaction });
+		await ReporteImagen.destroy({ where: { img_id: image.id }, transaction });
+		await image.destroy({ transaction });
 	});
 
 	return res.json({ ok: true });
 }
 
 export async function descartarReportesImagen(req, res) {
-	const id = await getModeratedImageId(req.params.id);
-	if (!id) {
+	const image = await getModeratedImage(req.params.id);
+	if (!image) {
 		return res.status(404).json({ error: 'Imagen reportada no encontrada.' });
 	}
 
-	await ReporteImagen.destroy({ where: { img_id: id } });
+	await ReporteImagen.destroy({ where: { img_id: image.id } });
 	return res.json({ ok: true });
 }
