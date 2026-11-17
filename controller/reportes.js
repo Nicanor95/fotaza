@@ -2,6 +2,7 @@ import { Comentario } from '../models/Comentario.js';
 import { Imagen } from '../models/Imagen.js';
 import { ReporteComentario } from '../models/ReporteComentario.js';
 import { ReporteImagen } from '../models/ReporteImagen.js';
+import sequelize from '../models/config.js';
 
 async function getTarget(type, id) {
 	if (type === 'imagen') {
@@ -68,4 +69,39 @@ export async function createReport(req, res) {
 	}
 
 	return res.redirect(`/post/album/${target.image.publicacion_id}/${target.image.id}`);
+}
+
+export async function listarReportesImagen(req, res) {
+	const reportes = await ReporteImagen.findAll({
+		attributes: ['img_id', [sequelize.fn('COUNT', sequelize.col('img_id')), 'cantidad']],
+		group: ['img_id'],
+		having: sequelize.literal('COUNT(*) >= 3'),
+		order: [[sequelize.literal('COUNT(*)'), 'DESC']]
+	});
+
+	const counts = new Map(reportes.map((reporte) => [
+		Number(reporte.img_id),
+		Number(reporte.get('cantidad'))
+	]));
+	if (counts.size === 0) {
+		return res.json([]);
+	}
+
+	const images = await Imagen.findAll({
+		where: { id: [...counts.keys()] },
+		attributes: ['id', 'publicacion_id', 'metadata', 'blob', 'description']
+	});
+	const imageById = new Map(images.map((image) => [Number(image.id), image]));
+	const result = [...counts].flatMap(([id, cantidad]) => {
+		const image = imageById.get(id);
+		return image ? [{
+			id,
+			publicacion_id: image.publicacion_id,
+			data: `${image.metadata}${image.blob.toString('base64')}`,
+			description: image.description,
+			cantidad
+		}] : [];
+	});
+
+	return res.json(result);
 }

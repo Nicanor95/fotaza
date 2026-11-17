@@ -588,7 +588,28 @@ footer a i {
 	color: var(--accent-bright);
 }
 
-#contadorNotificaciones {
+#reportes {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-right: 1rem;
+}
+
+#btnReportes {
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: var(--foreground);
+	font-size: 1.2rem;
+	padding: 0.4rem;
+}
+
+#btnReportes:hover {
+	color: var(--accent-bright);
+}
+
+#contadorNotificaciones,
+#contadorReportes {
 	font-size: 0.7rem;
 	background-color: var(--accent-bright);
 	color: var(--background);
@@ -626,6 +647,73 @@ footer a i {
 
 #panelNotificaciones.oculto {
 	display: none;
+}
+
+#panelReportes {
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 30rem;
+	max-width: 90vw;
+	height: 100vh;
+	box-sizing: border-box;
+	background-color: var(--background-light);
+	border-left: 1px solid var(--border);
+	box-shadow: -2px 2px 10px #101010;
+	padding: 1rem;
+	overflow-y: auto;
+	z-index: 51;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+#panelReportes.oculto {
+	display: none;
+}
+
+#panelReportes h3 {
+	margin: 0;
+	font-size: 1.1rem;
+	color: var(--accent-bright);
+}
+
+#btnCerrarReportes {
+	align-self: flex-end;
+	font-size: 1.2rem;
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: var(--foreground);
+	padding: 0;
+}
+
+#reportesLista {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.reporte-imagen {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	padding: 0.75rem;
+	background-color: var(--background-dark);
+	border: 1px solid var(--border);
+	border-radius: 0.75rem;
+}
+
+.reporte-imagen img {
+	width: 100%;
+	max-height: 16rem;
+	object-fit: contain;
+	background-color: var(--background);
+}
+
+.reporte-acciones {
+	display: flex;
+	gap: 0.5rem;
 }
 
 #panelNotificaciones h3 {
