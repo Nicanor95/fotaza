@@ -37,6 +37,19 @@ export async function getAvgValoration(img_id) {
 	}
 }
 
+export async function getUserValoration(user_id, img_id) {
+	const valoration = await Valoracion.findOne({
+		attributes: ['valor'],
+		where: {
+			usuario_id: Number(user_id),
+			img_id: Number(img_id)
+		},
+		raw: true
+	});
+
+	return valoration?.valor ?? null;
+}
+
 export async function newValoration(req, res) {
 	const albumId = Number(req.params.album_id);
 	const imageId = Number(req.params.image_id);
@@ -47,14 +60,17 @@ export async function newValoration(req, res) {
 	
 	const value = Number(req.body.valor);
 	
-	if (!value || value < 1 || value > 5) {
+	if (!Number.isInteger(value) || value < 1 || value > 5) {
 		return res.redirect(`/post/album/${albumId}/${imageId}`);
 	}
 	
 	// Check if image exists
 	const image = await Imagen.findByPk(imageId);
 	if (!image) {
-		return res.render('error', { error: `No se encontró la imagen con id: ${imageId} :(` });
+		return res.status(404).render('error', { error: `No se encontró la imagen con id: ${imageId} :(` });
+	}
+	if (Number(image.usuario_id) === Number(req.user.id)) {
+		return res.status(403).render('error', { error: 'No puedes valorar tu propia imagen.' });
 	}
 	
 	try {
