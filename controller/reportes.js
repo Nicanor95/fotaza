@@ -1,7 +1,9 @@
 import { Comentario } from '../models/Comentario.js';
 import { Imagen } from '../models/Imagen.js';
+import { Publicacion } from '../models/Publicacion.js';
 import { ReporteComentario } from '../models/ReporteComentario.js';
 import { ReporteImagen } from '../models/ReporteImagen.js';
+import { Usuario } from '../models/Usuario.js';
 import sequelize from '../models/config.js';
 
 async function getTarget(type, id) {
@@ -104,6 +106,46 @@ export async function listarReportesImagen(req, res) {
 	});
 
 	return res.json(result);
+}
+
+export async function listarReportesComentario(req, res) {
+	const id = parseTargetId(req.params.id);
+	if (!id) {
+		return res.status(404).json({ error: 'Comentario no encontrado.' });
+	}
+
+	const comment = await Comentario.findByPk(id);
+	if (!comment) {
+		return res.status(404).json({ error: 'Comentario no encontrado.' });
+	}
+
+	const image = await Imagen.findByPk(comment.parent_id, {
+		attributes: ['publicacion_id']
+	});
+	const publication = image && await Publicacion.findByPk(image.publicacion_id, {
+		attributes: ['usuario_id']
+	});
+	if (!publication) {
+		return res.status(404).json({ error: 'Publicación no encontrada.' });
+	}
+
+	if (!req.user?.moderador && Number(publication.usuario_id) !== Number(req.user.id)) {
+		return res.status(403).json({ error: 'No tienes permiso para consultar estos reportes.' });
+	}
+
+	const reports = await ReporteComentario.findAll({
+		where: { comentario_id: id },
+		attributes: ['id', 'motivo', 'createdAt'],
+		include: [{ model: Usuario, attributes: ['nombre'] }],
+		order: [['createdAt', 'DESC']]
+	});
+
+	return res.json(reports.map((report) => ({
+		id: report.id,
+		motivo: report.motivo,
+		fecha: report.createdAt,
+		reportante: report.Usuario?.nombre || 'Usuario'
+	})));
 }
 
 async function getModeratedImageId(value) {
