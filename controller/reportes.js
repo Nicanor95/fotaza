@@ -73,6 +73,20 @@ export async function createReport(req, res) {
 		return res.status(404).render('fourohfour');
 	}
 
+	if (req.params.type === 'imagen' && await ReporteImagen.findOne({
+		where: {
+			img_id: target.image.id,
+			usuario_id: req.user.id
+		}
+	})) {
+		return res.status(409).render('report', {
+			reportType: req.params.type,
+			targetId: id,
+			motivo: req.body.motivo,
+			error: 'Ya reportaste esta imagen.'
+		});
+	}
+
 	const motivo = typeof req.body.motivo === 'string' ? req.body.motivo.trim() : '';
 	if (!motivo || motivo.length > 255) {
 		return res.status(400).render('report', {
