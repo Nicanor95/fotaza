@@ -105,3 +105,32 @@ export async function listarReportesImagen(req, res) {
 
 	return res.json(result);
 }
+
+async function getModeratedImageId(value) {
+	const id = parseTargetId(value);
+	if (!id) {
+		return null;
+	}
+
+	const image = await Imagen.findByPk(id);
+	if (!image) {
+		return null;
+	}
+
+	const count = await ReporteImagen.count({ where: { img_id: id } });
+	return count >= 3 ? id : null;
+}
+
+export async function eliminarImagenReportada(req, res) {
+	const id = await getModeratedImageId(req.params.id);
+	if (!id) {
+		return res.status(404).json({ error: 'Imagen reportada no encontrada.' });
+	}
+
+	await sequelize.transaction(async (transaction) => {
+		await ReporteImagen.destroy({ where: { img_id: id }, transaction });
+		await Imagen.destroy({ where: { id }, transaction });
+	});
+
+	return res.json({ ok: true });
+}
