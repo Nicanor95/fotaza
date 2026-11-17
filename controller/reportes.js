@@ -4,6 +4,7 @@ import { ImagenEliminada } from '../models/ImagenEliminada.js';
 import { Publicacion } from '../models/Publicacion.js';
 import { ReporteComentario } from '../models/ReporteComentario.js';
 import { ReporteImagen } from '../models/ReporteImagen.js';
+import { Rule } from '../models/Rule.js';
 import { Usuario } from '../models/Usuario.js';
 import sequelize from '../models/config.js';
 
@@ -63,7 +64,13 @@ export async function showReport(req, res) {
 		return res.status(404).render('fourohfour');
 	}
 
-	return res.render('report', { reportType: req.params.type, targetId: id });
+	const rules = await Rule.findAll({ order: [['id', 'ASC']] });
+	return res.render('report', {
+		reportType: req.params.type,
+		targetId: id,
+		rules,
+		selectedRuleIds: []
+	});
 }
 
 export async function createReport(req, res) {
@@ -73,6 +80,13 @@ export async function createReport(req, res) {
 		return res.status(404).render('fourohfour');
 	}
 
+	const rules = await Rule.findAll({ order: [['id', 'ASC']] });
+	const formData = {
+		reportType: req.params.type,
+		targetId: id,
+		rules,
+		selectedRuleIds: []
+	};
 	if (req.params.type === 'imagen' && await ReporteImagen.findOne({
 		where: {
 			img_id: target.image.id,
@@ -80,20 +94,40 @@ export async function createReport(req, res) {
 		}
 	})) {
 		return res.status(409).render('report', {
-			reportType: req.params.type,
-			targetId: id,
-			motivo: req.body.motivo,
+			...formData,
 			error: 'Ya reportaste esta imagen.'
 		});
 	}
 
-	const motivo = typeof req.body.motivo === 'string' ? req.body.motivo.trim() : '';
-	if (!motivo || motivo.length > 255) {
+	const submittedRuleValues = Array.isArray(req.body.rules)
+		? req.body.rules
+		: typeof req.body.rules === 'string' ? [req.body.rules] : [];
+	const selectedRuleIds = [...new Set(submittedRuleValues.map(String))];
+	formData.selectedRuleIds = selectedRuleIds;
+	const parsedRuleIds = selectedRuleIds.map(Number);
+	if (
+		parsedRuleIds.length === 0 ||
+		parsedRuleIds.some((ruleId) => !Number.isSafeInteger(ruleId) || ruleId < 1)
+	) {
 		return res.status(400).render('report', {
-			reportType: req.params.type,
-			targetId: id,
-			motivo: req.body.motivo,
-			error: 'El motivo es obligatorio y no puede superar los 255 caracteres.'
+			...formData,
+			error: 'Selecciona al menos una regla de la comunidad.'
+		});
+	}
+
+	const selectedRules = await Rule.findAll({ where: { id: parsedRuleIds } });
+	if (selectedRules.length !== parsedRuleIds.length) {
+		return res.status(400).render('report', {
+			...formData,
+			error: 'La selección contiene una regla inválida.'
+		});
+	}
+	const ruleTextById = new Map(selectedRules.map((rule) => [Number(rule.id), rule.text]));
+	const motivo = parsedRuleIds.map((ruleId) => ruleTextById.get(ruleId)).join('; ');
+	if (motivo.length > 255) {
+		return res.status(400).render('report', {
+			...formData,
+			error: 'La selección de reglas supera el límite permitido.'
 		});
 	}
 
@@ -134,6 +168,20 @@ export async function listarReportesImagen(req, res) {
 		where: { id: [...counts.keys()] },
 		attributes: ['id', 'publicacion_id', 'metadata', 'blob', 'description']
 	});
+	const reports = await ReporteImagen.findAll({
+		where: { img_id: [...counts.keys()] },
+		attributes: ['img_id', 'motivo'],
+		order: [['createdAt', 'DESC']]
+	});
+	const reasonsByImage = new Map();
+	for (const report of reports) {
+		const id = Number(report.img_id);
+		const reasons = reasonsByImage.get(id) || [];
+		if (report.motivo && !reasons.includes(report.motivo)) {
+			reasons.push(report.motivo);
+		}
+		reasonsByImage.set(id, reasons);
+	}
 	const imageById = new Map(images.map((image) => [Number(image.id), image]));
 	const result = [...counts].flatMap(([id, cantidad]) => {
 		const image = imageById.get(id);
@@ -142,7 +190,8 @@ export async function listarReportesImagen(req, res) {
 			publicacion_id: image.publicacion_id,
 			data: `${image.metadata}${image.blob.toString('base64')}`,
 			description: image.description,
-			cantidad
+			cantidad,
+			motivos: reasonsByImage.get(id) || []
 		}] : [];
 	});
 
