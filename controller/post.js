@@ -3,6 +3,7 @@ import { Imagen } from "../models/Imagen.js";
 import { Usuario } from "../models/Usuario.js";
 import { Tag } from "../models/Tag.js";
 import { Comentario } from "../models/Comentario.js";
+import { ReporteComentario } from "../models/ReporteComentario.js";
 import { follows } from "./user.js";
 import { getAvgValoration } from "./valoracion.js";
 import sequelize from "../models/config.js";
@@ -52,6 +53,9 @@ export async function showAlbum(req,res) {
 	if (images.length === 0) {
 		return res.status(404).render('fourohfour');
 	}
+	const canViewReportCounts = Boolean(req.user && (
+		Number(req.user.id) === Number(user.id) || req.user.moderador
+	));
 
 	let img_array = [];
 	for (let image of images) {
@@ -62,12 +66,26 @@ export async function showAlbum(req,res) {
 			order: [["createdAt", "ASC"]]
 		});
 
+		let reportCounts = new Map();
+		if (canViewReportCounts && comments.length > 0) {
+			const counts = await ReporteComentario.findAll({
+				attributes: ['comentario_id', [sequelize.fn('COUNT', sequelize.col('comentario_id')), 'cantidad']],
+				where: { comentario_id: comments.map((comment) => comment.id) },
+				group: ['comentario_id']
+			});
+			reportCounts = new Map(counts.map((report) => [
+				Number(report.comentario_id),
+				Number(report.get('cantidad'))
+			]));
+		}
+
 		// Shape the comments to send to pug
 		let shapedComments = comments.map((comment) => ({
 			id: comment.id,
 			content: comment.contenido,
 			user: comment.Usuario ? {id: comment.Usuario.id, name: comment.Usuario.nombre} : null,
-			date: comment.createdAt
+			date: comment.createdAt,
+			...(canViewReportCounts ? { reportCount: reportCounts.get(Number(comment.id)) || 0 } : {})
 		}));
 
 		// Get all tags.
@@ -110,7 +128,15 @@ export async function showAlbum(req,res) {
 		seguimos = await follows(req.user.id, user.id);
 	}
 
-	res.render('post', {title:pub.titulo, album_id: pid, uploader: user, follows: seguimos, img_list:img_array, auth: auth});
+	res.render('post', {
+		title: pub.titulo,
+		album_id: pid,
+		uploader: user,
+		follows: seguimos,
+		img_list: img_array,
+		auth: auth,
+		canViewReportCounts
+	});
 }
 
 export async function showNewPost(req,res) {
