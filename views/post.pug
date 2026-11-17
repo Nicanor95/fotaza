@@ -20,14 +20,15 @@ block content
 						button(type="button") Editar publicación
 				each image in img_list
 					div.description.post-description.first
-						div.options-wrapper.image-options
-							button.options-button(type="button", aria-label="Opciones de la imagen", aria-expanded="false", aria-controls=`image-options-${image.id}`)
-								i.fa-solid.fa-ellipsis-vertical(aria-hidden="true")
-							ul.options-menu.hidden(id=`image-options-${image.id}`)
-								li
-									a.report-option(href=`/reportes/imagen/${image.id}`)
-										i.fa-solid.fa-flag(aria-hidden="true")
-										span Reportar imagen
+						if image.canReport
+							div.options-wrapper.image-options
+								button.options-button(type="button", aria-label="Opciones de la imagen", aria-expanded="false", aria-controls=`image-options-${image.id}`)
+									i.fa-solid.fa-ellipsis-vertical(aria-hidden="true")
+								ul.options-menu.hidden(id=`image-options-${image.id}`)
+									li
+										a.report-option(href=`/reportes/imagen/${image.id}`)
+											i.fa-solid.fa-flag(aria-hidden="true")
+											span Reportar imagen
 						div.post_author
 							a(href=`/users/${uploader.id}`)=uploader.nombre
 							if user
@@ -74,14 +75,15 @@ block content
 									a.comment_author(href=`/users/${comment.user.id}`)=comment.user.name
 									if canViewReportCounts
 										button.comment-report-count(type="button", data-comment-id=comment.id, aria-expanded="false", aria-controls="panelComentarioReportes")= `${comment.reportCount} reportes`
-									div.options-wrapper.comment-options
-										button.options-button(type="button", aria-label="Opciones del comentario", aria-expanded="false", aria-controls=`comment-options-${comment.id}`)
-											i.fa-solid.fa-ellipsis-vertical
-										ul.options-menu.hidden(id=`comment-options-${comment.id}`)
-											li
-												a.report-option(href=`/reportes/comentario/${comment.id}`)
-													i.fa-solid.fa-flag(aria-hidden="true")
-													span Reportar comentario
+									if comment.canReport
+										div.options-wrapper.comment-options
+											button.options-button(type="button", aria-label="Opciones del comentario", aria-expanded="false", aria-controls=`comment-options-${comment.id}`)
+												i.fa-solid.fa-ellipsis-vertical
+											ul.options-menu.hidden(id=`comment-options-${comment.id}`)
+												li
+													a.report-option(href=`/reportes/comentario/${comment.id}`)
+														i.fa-solid.fa-flag(aria-hidden="true")
+														span Reportar comentario
 								p=comment.content
 
 						if auth && image.comments_enabled

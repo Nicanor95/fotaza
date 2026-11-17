@@ -105,6 +105,7 @@ export async function showAlbum(req,res) {
 			id: comment.id,
 			content: comment.contenido,
 			user: comment.Usuario ? {id: comment.Usuario.id, name: comment.Usuario.nombre} : null,
+			canReport: Boolean(req.user && Number(req.user.id) !== Number(comment.usuario_id)),
 			date: comment.createdAt,
 			...(canViewReportCounts ? { reportCount: reportCounts.get(Number(comment.id)) || 0 } : {})
 		}));
@@ -132,6 +133,7 @@ export async function showAlbum(req,res) {
 		let img_info = {
 			id: image.id,
 			data: await retrieveImage(image),
+			canReport: Boolean(req.user && Number(req.user.id) !== Number(image.usuario_id)),
 			description: image.description,
 			comments_enabled: image.comments_enabled,
 			comments: shapedComments,

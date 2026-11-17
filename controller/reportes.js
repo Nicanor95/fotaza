@@ -31,6 +31,18 @@ function parseTargetId(value) {
 	return Number.isSafeInteger(id) && id > 0 ? id : null;
 }
 
+function isOwnReportTarget(req, type, target) {
+	const ownerId = type === 'imagen'
+		? target.image.usuario_id
+		: target.comment.usuario_id;
+	return Number(ownerId) === Number(req.user.id);
+}
+
+function ownReportError(type) {
+	const targetName = type === 'imagen' ? 'tu propia imagen' : 'tu propio comentario';
+	return `No puedes reportar ${targetName}.`;
+}
+
 async function getCommentReportTarget(id) {
 	const comment = await Comentario.findByPk(id);
 	if (!comment) {
@@ -63,6 +75,11 @@ export async function showReport(req, res) {
 	if (!target) {
 		return res.status(404).render('fourohfour');
 	}
+	if (isOwnReportTarget(req, req.params.type, target)) {
+		return res.status(403).render('error', {
+			error: ownReportError(req.params.type)
+		});
+	}
 
 	const rules = await Rule.findAll({ order: [['id', 'ASC']] });
 	return res.render('report', {
@@ -78,6 +95,11 @@ export async function createReport(req, res) {
 	const target = id && await getTarget(req.params.type, id);
 	if (!target) {
 		return res.status(404).render('fourohfour');
+	}
+	if (isOwnReportTarget(req, req.params.type, target)) {
+		return res.status(403).render('error', {
+			error: ownReportError(req.params.type)
+		});
 	}
 
 	const rules = await Rule.findAll({ order: [['id', 'ASC']] });
@@ -102,6 +124,17 @@ export async function createReport(req, res) {
 		return res.status(409).render('report', {
 			...formData,
 			error: 'Ya reportaste esta imagen.'
+		});
+	}
+	if (req.params.type === 'comentario' && await ReporteComentario.findOne({
+		where: {
+			comentario_id: target.comment.id,
+			usuario_id: req.user.id
+		}
+	})) {
+		return res.status(409).render('report', {
+			...formData,
+			error: 'Ya reportaste este comentario.'
 		});
 	}
 
