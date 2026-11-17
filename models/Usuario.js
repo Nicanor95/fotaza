@@ -45,6 +45,11 @@ Usuario.init(
 		phash: {
 			type: DataTypes.STRING,
 			allowNull: false,
+		},
+		banned: {
+			type: DataTypes.BOOLEAN,
+			allowNull: false,
+			defaultValue: false
 		}
   	},
   	{

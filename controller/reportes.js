@@ -222,6 +222,16 @@ export async function eliminarImagenReportada(req, res) {
 			user_id: image.usuario_id,
 			moderator_id: req.user.id
 		}, { transaction });
+		const removedImageCount = await ImagenEliminada.count({
+			where: { user_id: image.usuario_id },
+			transaction
+		});
+		if (removedImageCount >= 3) {
+			await Usuario.update(
+				{ banned: true },
+				{ where: { id: image.usuario_id }, transaction }
+			);
+		}
 		await ReporteImagen.destroy({ where: { img_id: image.id }, transaction });
 		await image.destroy({ transaction });
 	});

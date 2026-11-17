@@ -60,10 +60,10 @@ export async function userMiddleware(req,res,next) {
 async function processUser(user) {
 	const userId = Number(user.id);
 	const dbUser = await Usuario.findByPk(userId, {
-		attributes: ["id", "nombre"]
+		attributes: ["id", "nombre", "banned"]
 	});
 
-	if(!dbUser) {
+	if(!dbUser || dbUser.banned) {
 		return null;
 	}
 

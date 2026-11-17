@@ -25,18 +25,24 @@ export async function login(req, res) {
 			}
 		});
 
-		if (!user) { // No se encuentra usuario
+		if (!user) {
 			return res.render('error', {error: "Datos incorrectos."});
 		}	
 	
-		if (await user.verifyPassword(password)) {
-			req.session.user = {
-				id: user.id
-			}
-			return res.redirect('/');
-		} else {
+		if (!(await user.verifyPassword(password))) {
 			return res.render('error', {error: "Datos incorrectos."});
 		}
+
+		if (user.banned) {
+			return res.render('error', {
+				error: "You have been banned from the community."
+			});
+		}
+
+		req.session.user = {
+			id: user.id
+		}
+		return res.redirect('/');
 	} catch (error) {
 		return res.render('error', {error: "Datos incorrectos."});
 	}
