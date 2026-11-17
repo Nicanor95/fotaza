@@ -8,6 +8,7 @@ import { Notificacion } from './Notificacion.js';
 import { Publicacion } from './Publicacion.js';
 import { ReporteImagen } from './ReporteImagen.js';
 import { ReporteComentario } from './ReporteComentario.js';
+import { Rule } from './Rule.js';
 import { Tag } from './Tag.js';
 import { Usuario } from './Usuario.js';
 import { Valoracion } from './Valoracion.js';
