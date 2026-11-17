@@ -753,6 +753,29 @@ footer a i {
 	overflow-wrap: anywhere;
 }
 
+.reporte-comentario-acciones {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	margin-top: auto;
+	padding-top: 1rem;
+	border-top: 1px solid var(--border);
+}
+
+.reporte-comentario-acciones button {
+	min-height: 2.4rem;
+}
+
+.reporte-comentario-acciones button:disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
+#btnEliminarComentarioReportado {
+	border-color: #ff8a80;
+	color: #ffb4ab;
+}
+
 .image-list {
 	display: flex;
 	flex-direction: column;

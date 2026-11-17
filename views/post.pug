@@ -66,7 +66,7 @@ block content
 						each tag in image.tags
 							span.tag=tag.name
 					div.comments.post-comments.second(hidden)
-						h3 Comentarios 
+						h3(tabindex="-1") Comentarios
 						each comment in image.comments 
 							div.comentario.comment-card
 								div.comment-header
@@ -99,6 +99,9 @@ block content
 				h3#tituloPanelComentarioReportes Reportes del comentario
 				p#estadoPanelComentarioReportes(aria-live="polite") Selecciona un comentario para consultar sus reportes.
 				ul#listaReportesComentario(aria-label="Detalles de los reportes del comentario")
+				div#accionesReportesComentario.reporte-comentario-acciones
+					button#btnDescartarReportesComentario(type="button") Descartar reportes
+					button#btnEliminarComentarioReportado(type="button") Eliminar comentario
 
 	script(src="/script/album.js")
 	if canViewReportCounts
