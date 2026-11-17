@@ -10,6 +10,7 @@ import { Notificacion } from './models/Notificacion.js';
 import { Publicacion } from './models/Publicacion.js';
 import { ReporteComentario } from './models/ReporteComentario.js';
 import { ReporteImagen } from './models/ReporteImagen.js';
+import { Rule } from './models/Rule.js';
 import { Tag } from './models/Tag.js';
 import { Usuario } from './models/Usuario.js';
 import { Valoracion } from './models/Valoracion.js';
@@ -95,6 +96,15 @@ async function initialize() {
 	}
 	// Sync database
 	await sequelize.sync({ force: true, alter: true });
+
+	const communityRules = [
+		'No harassment or hate speech',
+		'No sexual or explicit content',
+		'No violence or graphic content',
+		'No spam, scams, or impersonation',
+		'No illegal or copyright-infringing content'
+	];
+	await Rule.bulkCreate(communityRules.map((text) => ({ text })));
 
 	//Create users
 	let user_array = []
