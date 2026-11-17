@@ -97,7 +97,8 @@ block content
 			div#panelComentarioReportes.side-panel.oculto(aria-hidden="true", role="dialog", aria-modal="false", aria-labelledby="tituloPanelComentarioReportes")
 				button#btnCerrarPanelComentarioReportes.side-panel-close(type="button", aria-label="Cerrar reportes del comentario") ✕
 				h3#tituloPanelComentarioReportes Reportes del comentario
-				p#estadoPanelComentarioReportes Selecciona un comentario para consultar sus reportes.
+				p#estadoPanelComentarioReportes(aria-live="polite") Selecciona un comentario para consultar sus reportes.
+				ul#listaReportesComentario(aria-label="Detalles de los reportes del comentario")
 
 	script(src="/script/album.js")
 	if canViewReportCounts
