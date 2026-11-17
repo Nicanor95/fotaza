@@ -2,6 +2,7 @@ import { Chat } from './Chat.js';
 import { Coleccion } from './Coleccion.js';
 import { Comentario } from './Comentario.js';
 import { Imagen } from './Imagen.js';
+import { ImagenEliminada } from './ImagenEliminada.js';
 import { Mensaje } from './Mensaje.js';
 import { Notificacion } from './Notificacion.js';
 import { Publicacion } from './Publicacion.js';
@@ -47,6 +48,9 @@ Imagen.belongsTo(Publicacion, { foreignKey: 'publicacion_id' });
 Imagen.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 Usuario.hasMany(Imagen, { foreignKey: 'usuario_id' });
 
+ImagenEliminada.belongsTo(Usuario, { foreignKey: 'user_id' });
+Usuario.hasMany(ImagenEliminada, { foreignKey: 'user_id' });
+
 // Tags
 Imagen.belongsToMany(Tag, { through: 'img_tag', foreignKey: 'img_id', timestamps: false });
 Tag.belongsToMany(Imagen, { through: 'img_tag', foreignKey: 'tag_id', timestamps: false });
@@ -86,6 +90,8 @@ Usuario.hasMany(Valoracion, { foreignKey: 'usuario_id' });
 // Moderadores
 Usuario.hasOne(Moderador, { foreignKey: 'usuario_id' });
 Moderador.belongsTo(Usuario, { foreignKey: 'usuario_id' });
+Moderador.hasMany(ImagenEliminada, { foreignKey: 'moderator_id' });
+ImagenEliminada.belongsTo(Moderador, { foreignKey: 'moderator_id' });
 
 // Favoritos
 Imagen.belongsToMany(Usuario, { as: 'FavoritedBy', through: 'favoritos', foreignKey: 'img_id', otherKey: 'usuario_id' });
