@@ -5,6 +5,10 @@ block content
 		h2.center Reportar #{reportType}
 		if error
 			p.center=error
-		label(for="motivo") Motivo:
-		textarea#motivo(name="motivo", rows="5", maxlength="255", required=true)=typeof motivo === 'string' ? motivo : ''
+		fieldset.report-rules
+			legend Selecciona todas las reglas de la comunidad que se incumplieron:
+			each rule in rules
+				label.report-rule(for=`rule-${rule.id}`)
+					input(type="checkbox", id=`rule-${rule.id}`, name="rules", value=rule.id, checked=selectedRuleIds.includes(String(rule.id)))
+					span=rule.text
 		button.center(type="submit") Enviar reporte
