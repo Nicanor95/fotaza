@@ -29,6 +29,25 @@ function parseTargetId(value) {
 	return Number.isSafeInteger(id) && id > 0 ? id : null;
 }
 
+async function getCommentReportTarget(id) {
+	const comment = await Comentario.findByPk(id);
+	if (!comment) {
+		return null;
+	}
+
+	const image = await Imagen.findByPk(comment.parent_id, {
+		attributes: ['id', 'publicacion_id']
+	});
+	if (!image) {
+		return null;
+	}
+
+	const publication = await Publicacion.findByPk(image.publicacion_id, {
+		attributes: ['usuario_id']
+	});
+	return publication ? { comment, image, publication } : null;
+}
+
 export async function showReport(req, res) {
 	const id = parseTargetId(req.params.id);
 	const target = id && await getTarget(req.params.type, id);
@@ -146,6 +165,26 @@ export async function listarReportesComentario(req, res) {
 		fecha: report.createdAt,
 		reportante: report.Usuario?.nombre || 'Usuario'
 	})));
+}
+export async function eliminarComentarioReportado(req, res) {
+	const id = parseTargetId(req.params.id);
+	const target = id && await getCommentReportTarget(id);
+	if (!target) {
+		return res.status(404).json({ error: 'Comentario no encontrado.' });
+	}
+	if (!canManageCommentReports(req, target)) {
+		return res.status(403).json({ error: 'No tienes permiso para eliminar este comentario.' });
+	}
+
+	await sequelize.transaction(async (transaction) => {
+		await ReporteComentario.destroy({
+			where: { comentario_id: target.comment.id },
+			transaction
+		});
+		await target.comment.destroy({ transaction });
+	});
+
+	return res.json({ ok: true });
 }
 
 async function getModeratedImageId(value) {
