@@ -41,6 +41,15 @@ document.addEventListener("DOMContentLoaded", () => {
 		const count = document.createElement("strong");
 		count.textContent = `${report.cantidad} reportes`;
 
+		const reasonsTitle = document.createElement("p");
+		reasonsTitle.textContent = "Reglas denunciadas:";
+		const reasons = document.createElement("ul");
+		for (const motivo of report.motivos || []) {
+			const reason = document.createElement("li");
+			reason.textContent = motivo;
+			reasons.append(reason);
+		}
+
 		const actions = document.createElement("div");
 		actions.className = "reporte-acciones";
 		const removeButton = document.createElement("button");
@@ -52,7 +61,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		dismissButton.textContent = "Descartar reportes";
 		dismissButton.addEventListener("click", () => performAction(report.id, "descartar"));
 		actions.append(removeButton, dismissButton);
-		card.append(imageLink, count, description, actions);
+		card.append(imageLink, count, description);
+		if (reasons.childElementCount > 0) {
+			card.append(reasonsTitle, reasons);
+		}
+		card.append(actions);
 		return card;
 	}
 

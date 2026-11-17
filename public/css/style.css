@@ -45,6 +45,24 @@ input, textarea {
 	padding: 0 1rem;
 }
 
+fieldset.report-rules {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	border: 1px solid var(--border);
+	border-radius: 0.5rem;
+}
+
+.report-rule {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.report-rule input {
+	height: auto;
+}
+
 button {
 	background-color: var(--background-light);
 	padding: 0 1rem;
