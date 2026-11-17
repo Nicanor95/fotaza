@@ -4,9 +4,19 @@ document.addEventListener("DOMContentLoaded", () => {
 	const status = document.getElementById("estadoPanelComentarioReportes");
 	const list = document.getElementById("listaReportesComentario");
 	const closeButton = document.getElementById("btnCerrarPanelComentarioReportes");
+	const dismissButton = document.getElementById("btnDescartarReportesComentario");
+	const deleteButton = document.getElementById("btnEliminarComentarioReportado");
 	const badges = document.querySelectorAll(".comment-report-count");
 	let activeBadge = null;
 	let requestSequence = 0;
+	let reportsLoaded = false;
+	let reportCount = null;
+	let actionPending = false;
+
+	function updateActionButtons() {
+		dismissButton.disabled = actionPending || !reportsLoaded || reportCount === 0;
+		deleteButton.disabled = actionPending || !reportsLoaded;
+	}
 
 	function setOpen(open) {
 		panel.classList.toggle("oculto", !open);
@@ -49,6 +59,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	async function loadReports(commentId) {
 		const currentRequest = ++requestSequence;
+		reportsLoaded = false;
+		reportCount = null;
+		updateActionButtons();
 		status.textContent = "Cargando reportes...";
 		list.replaceChildren();
 
@@ -63,21 +76,85 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 
 			if (reports.length === 0) {
+				reportsLoaded = true;
+				reportCount = 0;
+				updateActionButtons();
+				if (activeBadge) {
+					activeBadge.textContent = "0 reportes";
+				}
 				status.textContent = "Este comentario todavía no tiene reportes.";
 				return;
 			}
 
+			reportsLoaded = true;
+			reportCount = reports.length;
+			updateActionButtons();
+			if (activeBadge) {
+				activeBadge.textContent = `${reports.length} ${reports.length === 1 ? "reporte" : "reportes"}`;
+			}
 			status.textContent = `${reports.length} ${reports.length === 1 ? "reporte" : "reportes"}`;
 			list.replaceChildren(...reports.map(createReportItem));
 		} catch (error) {
 			if (currentRequest === requestSequence) {
 				status.textContent = error.message;
+				updateActionButtons();
 			}
+		}
+	}
+
+	async function performAction(action) {
+		if (!activeBadge || actionPending || !reportsLoaded) {
+			return;
+		}
+
+		const deletingComment = action === "eliminar";
+		const confirmation = deletingComment
+			? "¿Eliminar este comentario y todos sus reportes? Esta acción no se puede deshacer."
+			: "¿Descartar todos los reportes de este comentario?";
+		if (!window.confirm(confirmation)) {
+			return;
+		}
+
+		const badge = activeBadge;
+		const commentId = badge.dataset.commentId;
+		actionPending = true;
+		updateActionButtons();
+		status.textContent = deletingComment ? "Eliminando comentario..." : "Descartando reportes...";
+
+		try {
+			const response = await fetch(`/reportes/comentario/${encodeURIComponent(commentId)}/${action}`, {
+				method: "POST"
+			});
+			const result = await response.json();
+			if (!response.ok) {
+				throw new Error(result.error || "No se pudo completar la acción.");
+			}
+
+			if (deletingComment) {
+				const card = badge.closest(".comment-card");
+				const focusTarget = card?.nextElementSibling?.querySelector(".comment-report-count")
+					|| card?.previousElementSibling?.querySelector(".comment-report-count")
+					|| card?.closest(".post-comments")?.querySelector("h3");
+				setOpen(false);
+				card?.remove();
+				focusTarget?.focus();
+			} else {
+				badge.textContent = "0 reportes";
+				await loadReports(commentId);
+			}
+		} catch (error) {
+			status.textContent = error.message;
+		} finally {
+			actionPending = false;
+			updateActionButtons();
 		}
 	}
 
 	badges.forEach((badge) => {
 		badge.addEventListener("click", () => {
+			if (actionPending) {
+				return;
+			}
 			if (activeBadge && activeBadge !== badge) {
 				activeBadge.setAttribute("aria-expanded", "false");
 			}
@@ -89,6 +166,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	});
 
+	dismissButton.addEventListener("click", () => performAction("descartar"));
+	deleteButton.addEventListener("click", () => performAction("eliminar"));
 	closeButton.addEventListener("click", () => setOpen(false));
 	document.addEventListener("keydown", (event) => {
 		if (event.key === "Escape" && !panel.classList.contains("oculto")) {
