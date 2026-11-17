@@ -10,6 +10,7 @@ html(lang="en")
 			include navigation.pug
 			include searchbar.pug
 			include notificaciones.pug
+			include reportes.pug
 			include user.pug
 		main
 			block content
@@ -17,3 +18,5 @@ html(lang="en")
 			a(href="mailto://fotaza@foo.baz" title="Contact through Email")
 				i(class="fa-solid fa-envelope")
 	script(src="/script/notificaciones.js", defer=true)
+	if user && user.moderador
+		script(src="/script/reportes.js", defer=true)
