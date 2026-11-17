@@ -22,6 +22,20 @@ export async function authMiddleware(req, res, next) {
 	next();
 }
 
+export async function moderatorMiddleware(req, res, next) {
+	if (!req.user?.moderador) {
+		return res.status(403).json({ error: 'Acceso reservado para moderadores.' });
+	}
+
+	// Si tiene el valor, chequeamos igualmente
+	const moderador = await Moderador.findByPk(req.user.id);
+	if (!moderador) {
+		return res.status(403).json({ error: 'Acceso reservado para moderadores.' });
+	}
+
+	next();
+}
+
 export async function userMiddleware(req,res,next) {
 	const user = req.session.user;
 
@@ -53,6 +67,7 @@ async function processUser(user) {
 		return null;
 	}
 
+	dbUser.moderador = Boolean(await Moderador.findByPk(userId));
 	console.log(dbUser.toJSON());
 	return dbUser;
 }
