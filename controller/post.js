@@ -4,6 +4,7 @@ import { Usuario } from "../models/Usuario.js";
 import { Tag } from "../models/Tag.js";
 import { Comentario } from "../models/Comentario.js";
 import { ReporteComentario } from "../models/ReporteComentario.js";
+import { ReporteImagen } from "../models/ReporteImagen.js";
 import { follows } from "./user.js";
 import { getAvgValoration } from "./valoracion.js";
 import sequelize from "../models/config.js";
@@ -20,6 +21,24 @@ export const upload = multer({
 });
 
 export const tagRegex = /#\w+/gmi;
+
+async function hasReportedImage(publicationId) {
+	const reportCount = await ReporteImagen.count({
+		include: [{
+			model: Imagen,
+			attributes: [],
+			where: { publicacion_id: publicationId },
+			required: true
+		}]
+	});
+	return reportCount > 0;
+}
+
+function rejectReportedPublication(res) {
+	return res.status(403).render('error', {
+		error: "No puedes modificar una publicación que contiene imágenes denunciadas."
+	});
+}
 
 export async function retrieveImage(model_image) {
 	const imgMetadata = model_image.metadata;
@@ -56,6 +75,8 @@ export async function showAlbum(req,res) {
 	const canViewReportCounts = Boolean(req.user && (
 		Number(req.user.id) === Number(user.id) || req.user.moderador
 	));
+	const canEditPublication = Number(req.user?.id) === Number(user.id)
+		&& !(await hasReportedImage(pid));
 
 	let img_array = [];
 	for (let image of images) {
@@ -135,6 +156,7 @@ export async function showAlbum(req,res) {
 		follows: seguimos,
 		img_list: img_array,
 		auth: auth,
+		canEditPublication,
 		canViewReportCounts
 	});
 }
@@ -159,6 +181,9 @@ export async function editPost(req,res) {
 	// Make sure the current user is the one who made the publication.
 	if (Number(pub.usuario_id) !== Number(req.user.id)) {
 		return res.status(403).render('error', { error: "No tienes permiso para editar esta publicación." });
+	}
+	if (await hasReportedImage(pid)) {
+		return rejectReportedPublication(res);
 	}
 
 	const images = await Imagen.findAll({
@@ -193,6 +218,9 @@ export async function updatePost(req, res) {
 
 	if (Number(pub.usuario_id) !== Number(req.user.id)) {
 		return res.status(403).render('error', { error: "No tienes permiso para editar esta publicación." });
+	}
+	if (await hasReportedImage(pid)) {
+		return rejectReportedPublication(res);
 	}
 
 	if (typeof req.body.title !== 'string' || !req.body.title.trim()) {
@@ -242,6 +270,9 @@ export async function removeImage(req, res) {
 	if (Number(pub.usuario_id) !== Number(req.user.id)) {
 		return res.status(403).render('error', { error: "No tienes permiso para editar esta publicación." });
 	}
+	if (await hasReportedImage(pid)) {
+		return rejectReportedPublication(res);
+	}
 
 	const image = await Imagen.findOne({ where: { id: imageId, publicacion_id: pid } });
 	if (!image) {
@@ -265,6 +296,9 @@ export async function removeAlbum(req, res) {
 	}
 	if (Number(pub.usuario_id) !== Number(req.user.id)) {
 		return res.status(403).render('error', { error: "No tienes permiso para editar esta publicación." });
+	}
+	if (await hasReportedImage(pid)) {
+		return rejectReportedPublication(res);
 	}
 	if (typeof req.body.confirmation !== 'string' || req.body.confirmation.trim() !== pub.titulo) {
 		return res.status(400).render('error', { error: "El nombre del álbum no coincide." });

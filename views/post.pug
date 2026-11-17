@@ -15,7 +15,7 @@ block content
 					a.next(onclick="moveSlide(1)") &#10095;
 			div.post-details
 				h2=title
-				if user && user.id === uploader.id
+				if canEditPublication
 					a(href=`/post/edit/${album_id}`).edit-post
 						button(type="button") Editar publicación
 				each image in img_list
