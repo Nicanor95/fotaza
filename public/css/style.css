@@ -63,6 +63,22 @@ fieldset.report-rules {
 	height: auto;
 }
 
+.report-reason-label {
+	display: block;
+	margin-top: 1rem;
+}
+
+textarea.report-reason {
+	box-sizing: border-box;
+	display: block;
+	height: auto;
+	margin: 0.5rem 0 1rem;
+	min-height: 6rem;
+	padding: 0.75rem 1rem;
+	resize: vertical;
+	width: 100%;
+}
+
 button {
 	background-color: var(--background-light);
 	padding: 0 1rem;

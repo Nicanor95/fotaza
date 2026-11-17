@@ -11,4 +11,6 @@ block content
 				label.report-rule(for=`rule-${rule.id}`)
 					input(type="checkbox", id=`rule-${rule.id}`, name="rules", value=rule.id, checked=selectedRuleIds.includes(String(rule.id)))
 					span=rule.text
+		label.report-reason-label(for="motivo") Motivo del reporte:
+		textarea#motivo.report-reason(name="motivo", rows="4", maxlength="255", required=true)= motivo
 		button.center(type="submit") Enviar reporte

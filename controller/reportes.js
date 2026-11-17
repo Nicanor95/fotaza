@@ -85,8 +85,14 @@ export async function createReport(req, res) {
 		reportType: req.params.type,
 		targetId: id,
 		rules,
-		selectedRuleIds: []
+		selectedRuleIds: [],
+		motivo: typeof req.body.motivo === 'string' ? req.body.motivo : ''
 	};
+	const submittedRuleValues = Array.isArray(req.body.rules)
+		? req.body.rules
+		: typeof req.body.rules === 'string' ? [req.body.rules] : [];
+	const selectedRuleIds = [...new Set(submittedRuleValues.map(String))];
+	formData.selectedRuleIds = selectedRuleIds;
 	if (req.params.type === 'imagen' && await ReporteImagen.findOne({
 		where: {
 			img_id: target.image.id,
@@ -99,11 +105,6 @@ export async function createReport(req, res) {
 		});
 	}
 
-	const submittedRuleValues = Array.isArray(req.body.rules)
-		? req.body.rules
-		: typeof req.body.rules === 'string' ? [req.body.rules] : [];
-	const selectedRuleIds = [...new Set(submittedRuleValues.map(String))];
-	formData.selectedRuleIds = selectedRuleIds;
 	const parsedRuleIds = selectedRuleIds.map(Number);
 	if (
 		parsedRuleIds.length === 0 ||
@@ -122,12 +123,22 @@ export async function createReport(req, res) {
 			error: 'La selección contiene una regla inválida.'
 		});
 	}
+	const userReason = formData.motivo.trim();
+	if (!userReason) {
+		return res.status(400).render('report', {
+			...formData,
+			error: 'Escribe el motivo del reporte.'
+		});
+	}
 	const ruleTextById = new Map(selectedRules.map((rule) => [Number(rule.id), rule.text]));
-	const motivo = parsedRuleIds.map((ruleId) => ruleTextById.get(ruleId)).join('; ');
+	const motivo = [
+		...parsedRuleIds.map((ruleId) => `- ${ruleTextById.get(ruleId)}`),
+		`- USER: ${userReason}`
+	].join('\n');
 	if (motivo.length > 255) {
 		return res.status(400).render('report', {
 			...formData,
-			error: 'La selección de reglas supera el límite permitido.'
+			error: 'El motivo del reporte y las reglas seleccionadas superan el límite de 255 caracteres.'
 		});
 	}
 
