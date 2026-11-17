@@ -134,3 +134,13 @@ export async function eliminarImagenReportada(req, res) {
 
 	return res.json({ ok: true });
 }
+
+export async function descartarReportesImagen(req, res) {
+	const id = await getModeratedImageId(req.params.id);
+	if (!id) {
+		return res.status(404).json({ error: 'Imagen reportada no encontrada.' });
+	}
+
+	await ReporteImagen.destroy({ where: { img_id: id } });
+	return res.json({ ok: true });
+}
