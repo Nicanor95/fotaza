@@ -95,4 +95,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	button.addEventListener("click", () => setOpen(!isOpen));
 	closeButton.addEventListener("click", () => setOpen(false));
+	loadReports();
 });
