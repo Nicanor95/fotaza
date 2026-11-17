@@ -426,12 +426,59 @@ footer a i {
 
 .ratingForm {
 	display: flex;
-	gap: 0.2rem;
+	gap: 0.15rem;
 }
 
 .ratingButton {
-	padding: 0.2rem 0.45rem;
+	display: grid;
+	place-items: center;
+	width: 2rem;
+	height: 2rem;
+	padding: 0;
+	border-color: transparent;
+	background: transparent;
+	color: var(--border);
 	box-shadow: none;
+	cursor: pointer;
+	transition: color 120ms ease, transform 120ms ease;
+}
+
+.ratingButton.is-average {
+	color: #78bdf2;
+}
+
+.ratingForm:has(.ratingButton:is(:hover, :focus-visible)) .ratingButton.is-average {
+	color: var(--border);
+}
+
+.ratingButton.is-selected,
+.ratingForm:has(.ratingButton:nth-child(1):is(:hover, :focus-visible)) .ratingButton:nth-child(-n+1),
+.ratingForm:has(.ratingButton:nth-child(2):is(:hover, :focus-visible)) .ratingButton:nth-child(-n+2),
+.ratingForm:has(.ratingButton:nth-child(3):is(:hover, :focus-visible)) .ratingButton:nth-child(-n+3),
+.ratingForm:has(.ratingButton:nth-child(4):is(:hover, :focus-visible)) .ratingButton:nth-child(-n+4),
+.ratingForm:has(.ratingButton:nth-child(5):is(:hover, :focus-visible)) .ratingButton:nth-child(-n+5) {
+	color: #ffc857;
+}
+
+.ratingButton:hover {
+	transform: scale(1.12);
+}
+
+.ratingButton:focus-visible {
+	outline: 2px solid #ffc857;
+	outline-offset: 2px;
+}
+
+.rating-average {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	color: #ffc857;
+	font-variant-numeric: tabular-nums;
+}
+
+.rating-average span {
+	color: var(--foreground);
 }
 
 .post-description > p {

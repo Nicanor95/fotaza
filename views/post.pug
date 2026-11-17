@@ -39,13 +39,14 @@ block content
 										form(action=`/users/${uploader.id}`, method="post")
 											button(type="submit").follow Seguir
 						div.rating
-							form(action=`/post/album/${album_id}/${image.id}/valorate`, method="post").ratingForm
-								button(type="submit" name="valor", value="1").ratingButton 1
-								button(type="submit" name="valor", value="2").ratingButton 2
-								button(type="submit" name="valor", value="3").ratingButton 3
-								button(type="submit" name="valor", value="4").ratingButton 4
-								button(type="submit" name="valor", value="5").ratingButton 5
-							span=image.rating
+							if canRate
+								form(action=`/post/album/${album_id}/${image.id}/valorate`, method="post", aria-label="Valorar imagen").ratingForm
+									each value in [1, 2, 3, 4, 5]
+										button(type="submit", name="valor", value=value, aria-label=`Valorar con ${value} estrellas`, title=`${value} estrellas`, class=`ratingButton${image.userRating !== null ? (image.userRating >= value ? ' is-selected' : '') : (Math.floor(Number(image.rating)) >= value ? ' is-average' : '')}`)
+											i.fa-solid.fa-star(aria-hidden="true")
+							div.rating-average(title="Promedio de valoraciones")
+								i.fa-solid.fa-star(aria-hidden="true")
+								span= `${image.rating} / 5`
 						div.image-action-bar
 							div.image-action-group
 								if user
