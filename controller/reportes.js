@@ -48,6 +48,13 @@ async function getCommentReportTarget(id) {
 	return publication ? { comment, image, publication } : null;
 }
 
+function canManageCommentReports(req, target) {
+	return Boolean(
+		req.user?.moderador ||
+		Number(target.publication.usuario_id) === Number(req.user?.id)
+	);
+}
+
 export async function showReport(req, res) {
 	const id = parseTargetId(req.params.id);
 	const target = id && await getTarget(req.params.type, id);
@@ -166,6 +173,21 @@ export async function listarReportesComentario(req, res) {
 		reportante: report.Usuario?.nombre || 'Usuario'
 	})));
 }
+
+export async function descartarReportesComentario(req, res) {
+	const id = parseTargetId(req.params.id);
+	const target = id && await getCommentReportTarget(id);
+	if (!target) {
+		return res.status(404).json({ error: 'Comentario no encontrado.' });
+	}
+	if (!canManageCommentReports(req, target)) {
+		return res.status(403).json({ error: 'No tienes permiso para descartar estos reportes.' });
+	}
+
+	await ReporteComentario.destroy({ where: { comentario_id: target.comment.id } });
+	return res.json({ ok: true });
+}
+
 export async function eliminarComentarioReportado(req, res) {
 	const id = parseTargetId(req.params.id);
 	const target = id && await getCommentReportTarget(id);
