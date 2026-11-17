@@ -72,7 +72,7 @@ block content
 								div.comment-header
 									a.comment_author(href=`/users/${comment.user.id}`)=comment.user.name
 									if canViewReportCounts
-										span.comment-report-count= `${comment.reportCount} reportes`
+										button.comment-report-count(type="button", data-comment-id=comment.id, aria-expanded="false", aria-controls="panelComentarioReportes")= `${comment.reportCount} reportes`
 									div.options-wrapper.comment-options
 										button.options-button(type="button", aria-label="Opciones del comentario", aria-expanded="false", aria-controls=`comment-options-${comment.id}`)
 											i.fa-solid.fa-ellipsis-vertical
@@ -93,5 +93,12 @@ block content
 								a(href="/auth/login") Inicia sesión para comentar
 						else
 							div.notice Comentarios deshabilitados
-								
-	script(src="/script/album.js") 
+		if canViewReportCounts
+			div#panelComentarioReportes.side-panel.oculto(aria-hidden="true", role="dialog", aria-modal="false", aria-labelledby="tituloPanelComentarioReportes")
+				button#btnCerrarPanelComentarioReportes.side-panel-close(type="button", aria-label="Cerrar reportes del comentario") ✕
+				h3#tituloPanelComentarioReportes Reportes del comentario
+				p#estadoPanelComentarioReportes Selecciona un comentario para consultar sus reportes.
+
+	script(src="/script/album.js")
+	if canViewReportCounts
+		script(src="/script/comentario-reportes.js")
