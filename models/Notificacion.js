@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, BOOLEAN } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import sequelize from './config.js';
 
 export const Notificacion = sequelize.define(
@@ -16,6 +16,10 @@ export const Notificacion = sequelize.define(
 		contenido: {
 			type: DataTypes.STRING,
 			allowNull: false
+		},
+		link: {
+			type: DataTypes.STRING,
+			allowNull: true // Existing notifications may not have a destination.
 		},
 		visto: {
 			type: DataTypes.BOOLEAN,
