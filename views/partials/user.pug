@@ -1,8 +1,9 @@
 div#usuario
-	a.newpost.header-action-button(href="/post/newpost", title="Crear publicación", aria-label="Crear publicación")
-		i.fa-solid.fa-plus(aria-hidden="true")
-	include notificaciones.pug
-	include reportes.pug
+	if user
+		a.newpost.header-action-button(href="/post/newpost", title="Crear publicación", aria-label="Crear publicación")
+			i.fa-solid.fa-plus(aria-hidden="true")
+		include notificaciones.pug
+		include reportes.pug
 
 	if user
 		

@@ -24,6 +24,10 @@ body {
 	color: var(--foreground);
 }
 
+a {
+	text-decoration: none;
+}
+
 a:visited {
 	color: var(--accent-dark);
 }
@@ -213,8 +217,8 @@ footer a i {
 	box-shadow: 2px 2px 3px #101010;
 }
 
-#usuario button:not(.header-action-button) {
-	height: 1.5rem;
+#usuario button:not(.header-action-button) { /* Logout */
+	height: 2.5rem;
 }
 
 #usuario form {
