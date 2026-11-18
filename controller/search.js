@@ -1,9 +1,10 @@
 import { tagRegex } from "./post.js" 
-import { buildWall } from "./wall.js";
+import { buildSearchWall } from "./wall.js";
 
 const possibleTagRegex = /\w+/gmi;
 
 export async function searchByTags(req,res) {
+	const title = req.body.terms.trim();
 	let terms = req.body.terms.toUpperCase();
 	let tags = terms.match(tagRegex); //Proper tags
 	if (!tags) {
@@ -25,7 +26,11 @@ export async function searchByTags(req,res) {
 	// Join it all
 	tags = tags.concat(foundtags);
 
-	// Find the posts with these tags
-	const posts = await buildWall({tags: tags, isLoggedIn: Boolean(req.user)});
+	// Search with the same phrase in titles as well as with the parsed tags.
+	const posts = await buildSearchWall({
+		tags,
+		title,
+		isLoggedIn: Boolean(req.user)
+	});
 	res.render('searchresults.pug', {wall_posts: posts});
 }

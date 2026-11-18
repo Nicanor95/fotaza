@@ -56,13 +56,51 @@ export async function buildWall(terms) {
 
 	const images = await Imagen.findAll(request);
 
-	let shapedResults = images.map((image) => ({
+	return shapeWallPosts(images);
+}
+
+function shapeWallPosts(images) {
+	return images.map((image) => ({
 		id: image.id,
 		publicacion_id: image.publicacion_id,
 		titulo: image.Publicacion.titulo,
 		img_b64: `${image.metadata}${image.blob.toString('base64')}`
 	}));
-	return shapedResults;
+}
+
+export async function buildSearchWall(terms) {
+	const tags = terms.tags;
+	const title = terms.title.trim();
+	const isLoggedIn = terms.isLoggedIn;
+	const hasTags = Array.isArray(tags) && tags.length > 0;
+
+	// Keep the existing requirement that an image matches every parsed tag.
+	const tagPosts = hasTags
+		? await buildWall({ tags, isLoggedIn })
+		: [];
+
+	if (!title) {
+		return hasTags ? tagPosts : buildWall({ tags: [], isLoggedIn });
+	}
+
+	const imageVisibility = isLoggedIn ? {} : { copyright: false };
+	const titleImages = await Imagen.findAll({
+		where: imageVisibility,
+		include: [
+			{
+				model: Publicacion,
+				attributes: ['titulo'],
+				required: true,
+				where: {
+					titulo: { [Op.iLike]: `%${title}%` }
+				}
+			}
+		]
+	});
+
+	// Combine both match sets, keeping images that match both only once.
+	const titlePosts = shapeWallPosts(titleImages);
+	return [...new Map([...tagPosts, ...titlePosts].map((post) => [post.id, post])).values()];
 }
 
 export async function buildProfileWall(terms) {
