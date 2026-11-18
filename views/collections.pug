@@ -2,10 +2,10 @@ extends partials/layout
 include partials/wall
 
 block content
-	div.profile
-		h1= profile_user.nombre 
-		span.subtitle Mis colecciones
-		a(href=`/users/${profile_user.id}`) Volver al perfil
+	- const profile_section = "collections";
+	- const profile_section_title = "Mis colecciones";
+	include partials/profile_header
+
 	hr
 	div.r_flex.center.wall
 		if colecciones.length

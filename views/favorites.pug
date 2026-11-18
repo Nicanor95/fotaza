@@ -2,9 +2,9 @@ extends partials/layout
 include partials/wall
 
 block content
-	div.profile 
-		h1= profile_user.nombre 
-		span.subtitle Favoritos
-		a(href=`/users/${profile_user.id}`) Volver al perfil
+	- const profile_section = "favorites";
+	- const profile_section_title = "Favoritos";
+	include partials/profile_header
+
 	hr
 	+wall(fav_posts, pagination)

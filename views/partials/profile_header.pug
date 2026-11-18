@@ -1,0 +1,41 @@
+div.profile.profile-page
+	div.profile-header
+		div.profile-heading
+			p.profile-eyebrow= profile_section_title
+			h1= profile_user.nombre
+			div.profile-stats(aria-label="Estadísticas del perfil")
+				div.stat-item
+					strong= followers_count
+					span seguidores
+				div.stat-item
+					strong= followed_count
+					span siguiendo
+		if user
+			div.profile-actions
+				if user.id === profile_user.id
+					if profile_section !== "favorites"
+						a.profile-action.favoritos-link(href=`/users/${profile_user.id}/favoritos`)
+							i.fa-solid.fa-heart(aria-hidden="true")
+							span Mis favoritos
+					if profile_section !== "collections"
+						a.profile-action.colecciones-link(href=`/users/${profile_user.id}/colecciones`)
+							i.fa-solid.fa-images(aria-hidden="true")
+							span Mis colecciones
+					if profile_section !== "profile"
+						a.profile-action.profile-link(href=`/users/${profile_user.id}`)
+							i.fa-solid.fa-user(aria-hidden="true")
+							span Volver al perfil
+				else
+					if follows
+						form(action=`/users/${profile_user.id}/unfollow`, method="post")
+							button.profile-action.unfollow(type="submit")
+								i.fa-solid.fa-user-minus(aria-hidden="true")
+								span Dejar de seguir
+					else
+						form(method="post", enctype="application/json")
+							button.profile-action.follow(type="submit")
+								i.fa-solid.fa-user-plus(aria-hidden="true")
+								span Seguir
+		else
+			div.notice.profile-notice
+				a(href="/auth/login") Inicia sesión para seguir
