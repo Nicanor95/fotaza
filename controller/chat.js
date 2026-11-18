@@ -1,6 +1,7 @@
 import { Chat } from "../models/Chat.js";
 import { Imagen } from "../models/Imagen.js";
 import { Mensaje } from "../models/Mensaje.js";
+import { Notificacion } from "../models/Notificacion.js";
 import { Usuario } from "../models/Usuario.js";
 
 function getImageData(image) {
@@ -58,6 +59,13 @@ export async function meInteresa(req, res) {
 		chat = await Chat.create({ imagen_id: image.id });
 		await chat.addUsuarios([ownerId, currentUserId]);
 	}
+
+	await Notificacion.create({
+		usuario_id: ownerId,
+		contenido: `A ${req.user.nombre} le interesa la imagen #${image.id}.`,
+		link: `/chat/${chat.id}`,
+		visto: false
+	});
 
 	return res.redirect(`/chat/${chat.id}`);
 }

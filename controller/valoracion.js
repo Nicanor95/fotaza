@@ -1,5 +1,6 @@
 import { Valoracion } from "../models/Valoracion.js";
 import { Imagen } from "../models/Imagen.js";
+import { Notificacion } from "../models/Notificacion.js";
 import { Sequelize } from "sequelize";
 
 async function valorate(user_id, img_id, value) {
@@ -81,6 +82,19 @@ export async function newValoration(req, res) {
 	} catch (err) {
 		console.error('Error in newValoration:', err);
 		return res.render('error', { error: 'Ocurrió un error guardando la valoración.' });
+	}
+
+	try {
+		// Keep the rater anonymous in the notification text.
+		await Notificacion.create({
+			usuario_id: image.usuario_id,
+			contenido: 'Alguien valoró tu imagen.',
+			link: `/post/album/${image.publicacion_id}/${image.id}`,
+			visto: false
+		});
+	} catch (err) {
+		console.error('Error sending valoration notification:', err);
+		return res.render('error', { error: 'Ocurrió un error enviando la notificación.' });
 	}
 	
 	return res.redirect(`/post/album/${albumId}/${imageId}`);

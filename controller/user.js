@@ -1,6 +1,7 @@
 import { Publicacion } from "../models/Publicacion.js";
 import { Imagen } from "../models/Imagen.js";
 import { Usuario } from "../models/Usuario.js";
+import { Notificacion } from "../models/Notificacion.js";
 import { Coleccion } from "../models/Coleccion.js";
 import { buildProfileWall, buildWallById, buildFavouritesWall } from "./wall.js";
 
@@ -229,7 +230,15 @@ export async function followUser(req, res) {
 		return res.status(404).send('Usuario no encontrado');
 	}
 
-	await currentUser.addFollowed(profileUser);
+	if (!(await currentUser.hasFollowed(profileUser))) {
+		await currentUser.addFollowed(profileUser);
+		await Notificacion.create({
+			usuario_id: profileUser.id,
+			contenido: `${currentUser.nombre} empezó a seguirte.`,
+			link: `/users/${currentUser.id}`,
+			visto: false
+		});
+	}
 	return res.redirect(`/users/${profile_user_id}`);
 }
 

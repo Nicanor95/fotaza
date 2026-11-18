@@ -34,19 +34,22 @@ export async function createComment(req, res) {
         return res.render('error', { error: 'Ocurrió un error guardando el comentario.' });
     }
 
-    const usuario = await Usuario.findByPk(Number(req.user.id));
-    if (!usuario) {
-        return res.render('error', { error: `No se encontró el usuario, esta logueado? :(` });
-    }
+    if (Number(image.usuario_id) !== Number(req.user.id)) {
+        const usuario = await Usuario.findByPk(Number(req.user.id));
+        if (!usuario) {
+            return res.render('error', { error: `No se encontró el usuario, esta logueado? :(` });
+        }
 
-    try {
-        await Notificacion.create({
-            usuario_id: Number(image.usuario_id),
-            contenido: `A ${usuario.nombre} comentó en tu imagen!`,
-            visto: false
-        });
-    } catch (err) {
-        return res.render('error', { error: 'Ocurrió un error enviando la notificación.' });
+        try {
+            await Notificacion.create({
+                usuario_id: image.usuario_id,
+                contenido: `A ${usuario.nombre} comentó en tu imagen.`,
+                link: `/post/album/${albumId}/${imageId}`,
+                visto: false
+            });
+        } catch (err) {
+            return res.render('error', { error: 'Ocurrió un error enviando la notificación.' });
+        }
     }
 
     return res.redirect(`/post/album/${albumId}/${imageId}`);
