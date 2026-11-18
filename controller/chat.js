@@ -107,10 +107,22 @@ export async function sendMessage(req, res) {
 		return res.status(400).render("error", { error: "El mensaje debe tener entre 1 y 255 caracteres." });
 	}
 
+	const recipient = chat.Usuarios.find((participant) => Number(participant.id) !== Number(req.user.id));
+	if (!recipient) {
+		return res.status(404).render("fourohfour");
+	}
+
 	await Mensaje.create({
 		chat_id: chat.id,
 		usuario_id: req.user.id,
 		contenido: content
+	});
+
+	await Notificacion.create({
+		usuario_id: recipient.id,
+		contenido: `Tienes un nuevo mensaje de ${req.user.nombre}.`,
+		link: `/chat/${chat.id}`,
+		visto: false
 	});
 
 	return res.redirect(`/chat/${chat.id}`);
