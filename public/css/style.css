@@ -1116,6 +1116,32 @@ a.header-action-button:visited {
 	padding: 0;
 }
 
+.confirmation-dialog {
+	width: min(28rem, calc(100vw - 3rem));
+	padding: 1.5rem;
+	color: var(--foreground);
+	background: var(--background-light);
+	border: 1px solid var(--border);
+	border-radius: 0.75rem;
+	box-shadow: 0 8px 32px #0008;
+}
+
+.confirmation-dialog::backdrop {
+	background: #0009;
+}
+
+.confirmation-dialog h3 {
+	margin: 0 0 0.75rem;
+	color: var(--accent-bright);
+}
+
+.confirmation-dialog form {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5rem;
+	margin-top: 1.5rem;
+}
+
 #reportesLista {
 	display: flex;
 	flex-direction: column;

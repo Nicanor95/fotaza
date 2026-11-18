@@ -105,6 +105,12 @@ block content
 				div#accionesReportesComentario.reporte-comentario-acciones
 					button#btnDescartarReportesComentario(type="button") Descartar reportes
 					button#btnEliminarComentarioReportado(type="button") Eliminar comentario
+			dialog#confirmacionAccionComentario.confirmation-dialog(aria-labelledby="tituloConfirmacionComentario", aria-describedby="mensajeConfirmacionComentario")
+				h3#tituloConfirmacionComentario Confirmar acción
+				p#mensajeConfirmacionComentario
+				form(method="dialog")
+					button(type="submit", value="cancelar", autofocus) Cancelar
+					button(type="submit", value="confirmar") Confirmar
 
 	script(src="/script/album.js")
 	if canViewReportCounts

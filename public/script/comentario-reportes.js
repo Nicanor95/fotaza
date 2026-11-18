@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	const closeButton = document.getElementById("btnCerrarPanelComentarioReportes");
 	const dismissButton = document.getElementById("btnDescartarReportesComentario");
 	const deleteButton = document.getElementById("btnEliminarComentarioReportado");
+	const confirmationDialog = document.getElementById("confirmacionAccionComentario");
+	const confirmationMessage = document.getElementById("mensajeConfirmacionComentario");
 	const badges = document.querySelectorAll(".comment-report-count");
 	let activeBadge = null;
 	let requestSequence = 0;
@@ -17,6 +19,17 @@ document.addEventListener("DOMContentLoaded", () => {
 	function updateActionButtons() {
 		dismissButton.disabled = actionPending || !reportsLoaded || reportCount === 0;
 		deleteButton.disabled = actionPending || !reportsLoaded;
+	}
+
+	// Shows a styled confirmation dialog and resolves with the user's choice.
+	function confirmAction(message) {
+		confirmationMessage.textContent = message;
+		return new Promise((resolve) => {
+			confirmationDialog.addEventListener("close", () => {
+				resolve(confirmationDialog.returnValue === "confirmar");
+			}, { once: true });
+			confirmationDialog.showModal();
+		});
 	}
 
 	// Toggles the comment-report panel and manages focus.
@@ -116,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		const confirmation = deletingComment
 			? "¿Eliminar este comentario y todos sus reportes? Esta acción no se puede deshacer."
 			: "¿Descartar todos los reportes de este comentario?";
-		if (!window.confirm(confirmation)) {
+		if (!await confirmAction(confirmation)) {
 			return;
 		}
 
