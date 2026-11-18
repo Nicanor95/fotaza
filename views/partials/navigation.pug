@@ -5,3 +5,6 @@ nav
 				i( class="fa-solid fa-house")
 			a(href="/users/followed") Seguidos
 				i( class="fa-solid fa-heart")
+			if user
+				a(href=`/users/${user.id}/colecciones`) Mis colecciones
+					i(class="fa-solid fa-images")
