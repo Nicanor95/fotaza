@@ -3,8 +3,15 @@ import { Imagen } from "../models/Imagen.js";
 import { Publicacion } from "../models/Publicacion.js";
 import { Op, fn, col, where } from "sequelize";
 import { Usuario } from "../models/Usuario.js";
+import { Valoracion } from "../models/Valoracion.js";
+import { sortPostsByRating } from "../utils/wall-priority.js";
 
 export async function buildWall(terms) {
+	const posts = await getWallPosts(terms);
+	return prioritizeWallPosts(posts);
+}
+
+async function getWallPosts(terms) {
 	const tags = terms.tags;
 	// Copyrighted images are only visible to signed-in users.
 	const imageVisibility = terms.isLoggedIn ? {} : { copyright: false };
@@ -59,6 +66,30 @@ export async function buildWall(terms) {
 	return shapeWallPosts(images);
 }
 
+async function prioritizeWallPosts(posts) {
+	if (posts.length < 2) {
+		return posts;
+	}
+
+	// Fetch both metrics in one query instead of querying ratings separately for each image.
+	const ratings = await Valoracion.findAll({
+		attributes: [
+			'img_id',
+			[fn('COUNT', col('img_id')), 'rating_count'],
+			[fn('AVG', col('valor')), 'average_rating']
+		],
+		where: {
+			img_id: {
+				[Op.in]: posts.map((post) => post.id)
+			}
+		},
+		group: ['img_id'],
+		raw: true
+	});
+
+	return sortPostsByRating(posts, ratings);
+}
+
 function shapeWallPosts(images) {
 	return images.map((image) => ({
 		id: image.id,
@@ -76,11 +107,11 @@ export async function buildSearchWall(terms) {
 
 	// Keep the existing requirement that an image matches every parsed tag.
 	const tagPosts = hasTags
-		? await buildWall({ tags, isLoggedIn })
+		? await getWallPosts({ tags, isLoggedIn })
 		: [];
 
 	if (!title) {
-		return hasTags ? tagPosts : buildWall({ tags: [], isLoggedIn });
+		return hasTags ? prioritizeWallPosts(tagPosts) : buildWall({ tags: [], isLoggedIn });
 	}
 
 	const imageVisibility = isLoggedIn ? {} : { copyright: false };
@@ -100,7 +131,8 @@ export async function buildSearchWall(terms) {
 
 	// Combine both match sets, keeping images that match both only once.
 	const titlePosts = shapeWallPosts(titleImages);
-	return [...new Map([...tagPosts, ...titlePosts].map((post) => [post.id, post])).values()];
+	const posts = [...new Map([...tagPosts, ...titlePosts].map((post) => [post.id, post])).values()];
+	return prioritizeWallPosts(posts);
 }
 
 export async function buildProfileWall(terms) {
