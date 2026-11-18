@@ -55,5 +55,15 @@ Es posible el registro, tambien tiene estos para probar:
 {	nombre: "Mariela Gomez",
 	email: "mariela@correo.com",
 	password: "hunter2",
+},
+{
+	nombre: "Administrador Lopez",
+	email: "admin@correo.com",
+	password: "hunter2",
+	nota: "Este es un usuario validador"
 }
 ```
+
+# Reglas de la comunidad
+
+Las reglas de la comunidad se guardan en la tabla reglas como string. las mismas luego se usan para llenar los carteles de reporte. El `seed.js` incluye algunas genericas de base.
