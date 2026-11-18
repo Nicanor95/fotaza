@@ -55,7 +55,7 @@ app.use(userMiddleware);
 
 // Routes
 app.get('/', async (req, res) => {
-	let wall_posts = await buildWall({tags: []});
+	let wall_posts = await buildWall({tags: [], isLoggedIn: Boolean(req.user)});
 	res.render('homepage', {wall_posts: wall_posts});
 });
 

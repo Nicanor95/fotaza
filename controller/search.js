@@ -26,6 +26,6 @@ export async function searchByTags(req,res) {
 	tags = tags.concat(foundtags);
 
 	// Find the posts with these tags
-	const posts = await buildWall({tags: tags});
+	const posts = await buildWall({tags: tags, isLoggedIn: Boolean(req.user)});
 	res.render('searchresults.pug', {wall_posts: posts});
 }

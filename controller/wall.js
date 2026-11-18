@@ -6,9 +6,12 @@ import { Usuario } from "../models/Usuario.js";
 
 export async function buildWall(terms) {
 	const tags = terms.tags;
+	// Copyrighted images are only visible to signed-in users.
+	const imageVisibility = terms.isLoggedIn ? {} : { copyright: false };
 
 	// Build object for the get all posts request.
 	const getAll = {
+		where: imageVisibility,
 		include: [
 			{
 				model: Publicacion,
@@ -20,6 +23,7 @@ export async function buildWall(terms) {
 
 	// Build object for the get all posts according to tags request.
 	const getAccordingToTags = {
+		where: imageVisibility,
 		include: [ //Include the tags to the images found
 			{
 				model: Tag,
@@ -70,7 +74,8 @@ export async function buildProfileWall(terms) {
 	
 	const images = await Imagen.findAll({
 		where: {
-			usuario_id: Number(user_id)
+			usuario_id: Number(user_id),
+			...(terms.isLoggedIn ? {} : { copyright: false })
 		},
 		include: [
 			{

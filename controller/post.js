@@ -64,7 +64,9 @@ export async function showAlbum(req,res) {
 
 	let images = await Imagen.findAll({
 		where: {
-			publicacion_id: pid
+			publicacion_id: pid,
+			// Do not return copyrighted image data to logged-out users.
+			...(req.user ? {} : { copyright: false })
 		}
 	});
 

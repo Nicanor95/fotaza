@@ -20,7 +20,10 @@ export async function follows(userId1, userId2) {
 
 export async function showProfile(req, res) {
 	const profile_user_id = req.params.user_id
-	const contenido = await buildProfileWall({user_id: profile_user_id});
+	const contenido = await buildProfileWall({
+		user_id: profile_user_id,
+		isLoggedIn: Boolean(req.user)
+	});
 	let siguiendo = false;
 	const profileUser = await Usuario.findByPk(Number(profile_user_id));
 	const [followers_count, followed_count] = await Promise.all([
