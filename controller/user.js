@@ -70,9 +70,18 @@ export async function showFavourites(req, res) {
 		return res.status(404).render('fourohfour');
 	}
 
+	const [followers_count, followed_count, isFollowing] = await Promise.all([
+		profileUser.countFollower(),
+		profileUser.countFollowed(),
+		follows(req.user.id, user_id)
+	]);
+
 	const pagination = paginateItems(fav_posts, req.query.page);
 	res.render('favorites', {
 		profile_user: profileUser,
+		follows: isFollowing,
+		followers_count,
+		followed_count,
 		fav_posts: pagination.items,
 		pagination: {
 			...pagination,
@@ -184,6 +193,14 @@ export async function showCollections(req, res) {
 	}
 
 	const profileUser = await Usuario.findByPk(user_id);
+	if (!profileUser) {
+		return res.status(404).render('fourohfour');
+	}
+
+	const [followers_count, followed_count] = await Promise.all([
+		profileUser.countFollower(),
+		profileUser.countFollowed()
+	]);
 	const colecciones = await Coleccion.findAll({
 		where: { usuario_id: user_id }
 	});
@@ -204,6 +221,9 @@ export async function showCollections(req, res) {
 
 	res.render('collections', {
 		profile_user: profileUser,
+		follows: false,
+		followers_count,
+		followed_count,
 		colecciones: collectionsWithThumbnails
 	});
 }
