@@ -5,14 +5,17 @@ import { Usuario } from "../models/Usuario.js";
 const regNombre = /^[a-zA-Zñ]{3,}(?: [a-zA-Z]+)*$/;
 const regMail = /^[a-zA-Z0-9](?:[\.-\w])*@\w+(?:-\w+)?(?:\.\w+(?:-\w+)?)+$/;
 
+// Renders the login page.
 export async function showLogin(req, res) {
 	res.render('login', {title:'FOTAZA | Login'});
 }
 
+// Renders the registration page.
 export async function showSignup(req, res) {
 	res.render('signup');
 }
 
+// Authenticates a user and creates their session.
 export async function login(req, res) {
 	const mail = req.body.email
 	const password = req.body.password
@@ -48,6 +51,7 @@ export async function login(req, res) {
 	}
 }
 
+// Validates registration data and creates a new user.
 export async function signup(req, res) {
 	//Manejar el registro
 	const nombre = req.body.nombre;
@@ -77,6 +81,7 @@ export async function signup(req, res) {
 	return res.redirect('/');
 }
 
+// Ends the current session and redirects to the home page.
 export async function logout(req, res) {
 	req.user = null;
 	res.locals.user = null;

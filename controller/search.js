@@ -4,6 +4,7 @@ import { paginateItems } from "../utils/pagination.js";
 
 const possibleTagRegex = /\w+/gmi;
 
+// Parses search terms and renders matching albums.
 export async function searchByTags(req,res) {
 	const title = (req.method === 'POST' ? req.body.terms : req.query.terms || '').trim();
 	let terms = title.toUpperCase();

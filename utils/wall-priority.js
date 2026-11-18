@@ -1,5 +1,6 @@
 const RATING_THRESHOLD = 4;
 
+// Sorts wall posts using rating averages and count thresholds.
 export function sortPostsByRating(posts, ratings) {
 	const ratingsByImageId = new Map(
 		ratings.map(({ img_id, rating_count, average_rating }) => [

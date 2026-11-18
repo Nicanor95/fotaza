@@ -6,6 +6,7 @@ import { Coleccion } from "../models/Coleccion.js";
 import { buildProfileWall, buildWallById, buildFavouritesWall } from "./wall.js";
 import { paginateItems } from "../utils/pagination.js";
 
+// Checks whether one user follows another.
 export async function follows(userId1, userId2) {
 	/**
 	 * returns true if user1 follows user2
@@ -19,6 +20,7 @@ export async function follows(userId1, userId2) {
 	return isFollowing;
 }
 
+// Displays a user's profile and paginated uploaded posts.
 export async function showProfile(req, res) {
 	const profile_user_id = req.params.user_id
 	const contenido = await buildProfileWall({
@@ -58,6 +60,7 @@ export async function showProfile(req, res) {
 	})
 }
 
+// Displays a user's favorites and profile statistics.
 export async function showFavourites(req, res) {
 	const user_id = req.params.user_id;
 
@@ -90,6 +93,7 @@ export async function showFavourites(req, res) {
 	})
 }
 
+// Adds an image to the authenticated user's favorites.
 export async function addFavourite(req, res) {
 	const user_id = Number(req.user.id);
 	const image_id = Number(req.params.image_id);
@@ -109,6 +113,7 @@ export async function addFavourite(req, res) {
 	return res.redirect(`/post/album/${album_id}/${image_id}`);
 }
 
+// Removes an image from the authenticated user's favorites.
 export async function removeFavourite(req, res) {
 	const user_id = Number(req.user.id);
 	const image_id = Number(req.params.image_id);
@@ -128,6 +133,7 @@ export async function removeFavourite(req, res) {
 	return res.redirect(`/post/album/${album_id}/${image_id}`);
 }
 
+// Displays the form for adding an image to a collection.
 export async function showAddToCollectionForm(req, res) {
 	const user_id = req.user.id;
 	const image_id = Number(req.params.image_id);
@@ -144,6 +150,7 @@ export async function showAddToCollectionForm(req, res) {
 	});
 }
 
+// Adds an image to an owned collection.
 export async function addToCollection(req, res) {
 	const user_id = req.user.id;
 	const col_id = Number(req.params.col_id);
@@ -164,6 +171,7 @@ export async function addToCollection(req, res) {
 	return res.redirect(`/post/album/${album_id}/${image_id}`);
 }
 
+// Creates a collection and adds the selected image to it.
 export async function createCollection(req, res) {
 	const user_id = req.user.id;
 	const image_id = Number(req.body.image_id);
@@ -185,6 +193,7 @@ export async function createCollection(req, res) {
 	return res.redirect(`/post/album/${album_id}/${image_id}`);
 }
 
+// Lists the authenticated user's collections with thumbnails.
 export async function showCollections(req, res) {
 	const user_id = req.params.user_id;
 
@@ -228,6 +237,7 @@ export async function showCollections(req, res) {
 	});
 }
 
+// Displays one collection owned by the authenticated user.
 export async function showCollection(req, res) {
 	const user_id = req.params.user_id;
 	const col_id = Number(req.params.col_id);
@@ -268,6 +278,7 @@ export async function showCollection(req, res) {
 	});
 }
 
+// Follows another user and creates a notification.
 export async function followUser(req, res) {
 	const profile_user_id = Number(req.params.user_id);
 	const currentUserId = Number(req.user.id);
@@ -295,6 +306,7 @@ export async function followUser(req, res) {
 	return res.redirect(`/users/${profile_user_id}`);
 }
 
+// Removes the authenticated user's follow of another user.
 export async function unfollowUser(req, res) {
 	const profile_user_id = Number(req.params.user_id);
 	const currentUserId = Number(req.user.id);
@@ -314,6 +326,7 @@ export async function unfollowUser(req, res) {
 	return res.redirect(`/users/${profile_user_id}`);
 }
 
+// Displays posts uploaded by users the current user follows.
 export async function followedPosts(req, res) {
 	// get current user
 	const current_user_id = Number(req.user.id);

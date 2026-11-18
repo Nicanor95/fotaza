@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const list = document.getElementById("reportesLista");
 	let isOpen = false;
 
+	// Fetches JSON data and converts API errors into exceptions.
 	async function request(url, options) {
 		const response = await fetch(url, options);
 		const body = await response.json();
@@ -15,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		return body;
 	}
 
+	// Replaces the report panel content with a message.
 	function showMessage(message) {
 		list.replaceChildren();
 		const paragraph = document.createElement("p");
@@ -22,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		list.append(paragraph);
 	}
 
+	// Creates an image report card with moderation actions.
 	function createReportCard(report) {
 		const card = document.createElement("article");
 		card.className = "reporte-imagen";
@@ -69,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		return card;
 	}
 
+	// Loads and renders images that have reached the report threshold.
 	async function loadReports() {
 		try {
 			const reports = await request("/reportes/moderacion/imagenes");
@@ -85,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
+	// Performs a moderation action for one reported image.
 	async function performAction(id, action) {
 		try {
 			await request(`/reportes/moderacion/imagenes/${encodeURIComponent(id)}/${action}`, {
@@ -96,6 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
+	// Opens or closes the report panel and loads reports as needed.
 	function setOpen(open) {
 		isOpen = open;
 		panel.classList.toggle("oculto", !isOpen);

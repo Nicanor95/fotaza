@@ -1,6 +1,7 @@
 import { Usuario } from "../models/Usuario.js";
 import { Moderador } from "../models/Moderador.js";
 
+// Requires a valid signed-in user before allowing a request to continue.
 export async function authMiddleware(req, res, next) {
 	const user = req.session.user;
 
@@ -22,6 +23,7 @@ export async function authMiddleware(req, res, next) {
 	next();
 }
 
+// Requires the authenticated user to have moderator permissions.
 export async function moderatorMiddleware(req, res, next) {
 	if (!req.user?.moderador) {
 		return res.status(403).json({ error: 'Acceso reservado para moderadores.' });
@@ -36,6 +38,7 @@ export async function moderatorMiddleware(req, res, next) {
 	next();
 }
 
+// Loads available user session data without requiring authentication.
 export async function userMiddleware(req,res,next) {
 	const user = req.session.user;
 
@@ -57,6 +60,7 @@ export async function userMiddleware(req,res,next) {
 	next();
 }
 
+// Resolves a session user to a safe database user object.
 async function processUser(user) {
 	const userId = Number(user.id);
 	const dbUser = await Usuario.findByPk(userId, {

@@ -4,10 +4,12 @@ import { Mensaje } from "../models/Mensaje.js";
 import { Notificacion } from "../models/Notificacion.js";
 import { Usuario } from "../models/Usuario.js";
 
+// Builds a base64 data URL for an image stored in the database.
 function getImageData(image) {
 	return `${image.metadata}${image.blob.toString("base64")}`;
 }
 
+// Finds a chat only when it exists and includes the requested user.
 async function findChatForUser(chatId, userId) {
 	if (!Number.isSafeInteger(chatId) || chatId <= 0) {
 		return null;
@@ -27,6 +29,7 @@ async function findChatForUser(chatId, userId) {
 	return chat;
 }
 
+// Opens or creates the chat associated with a user's interest in an image.
 export async function meInteresa(req, res) {
 	const imageId = Number(req.params.image_id);
 	if (!Number.isSafeInteger(imageId) || imageId <= 0) {
@@ -70,6 +73,7 @@ export async function meInteresa(req, res) {
 	return res.redirect(`/chat/${chat.id}`);
 }
 
+// Displays a chat and its message history to an authorized participant.
 export async function showChat(req, res) {
 	const chat = await findChatForUser(Number(req.params.chat_id), req.user.id);
 	if (!chat) {
@@ -91,6 +95,7 @@ export async function showChat(req, res) {
 	});
 }
 
+// Sends a validated message to an authorized chat.
 export async function sendMessage(req, res) {
 	const chat = await findChatForUser(Number(req.params.chat_id), req.user.id);
 	if (!chat) {
@@ -111,6 +116,7 @@ export async function sendMessage(req, res) {
 	return res.redirect(`/chat/${chat.id}`);
 }
 
+// Lists the authenticated user's chats.
 export async function showChats(req, res) {
 	const chats = await req.user.getChats({
 		include: [

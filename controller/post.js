@@ -22,6 +22,7 @@ export const upload = multer({
 
 export const tagRegex = /#\w+/gmi;
 
+// Checks whether an album contains any reported image.
 async function hasReportedImage(publicationId) {
 	const reportCount = await ReporteImagen.count({
 		include: [{
@@ -34,18 +35,21 @@ async function hasReportedImage(publicationId) {
 	return reportCount > 0;
 }
 
+// Renders the standard error for modifying a reported publication.
 function rejectReportedPublication(res) {
 	return res.status(403).render('error', {
 		error: "No puedes modificar una publicación que contiene imágenes denunciadas."
 	});
 }
 
+// Returns an uploaded image's data URL.
 export async function retrieveImage(model_image) {
 	const imgMetadata = model_image.metadata;
 	const imgB64 = model_image.blob.toString('base64');
 	return `${imgMetadata}${imgB64}`;
 } 
 
+// Displays an album and prepares its images, comments, and ratings.
 export async function showAlbum(req,res) {
 	// Get the post id, check if it's a number.
 	const pid = parseInt(req.params.album_id, 10);
@@ -170,10 +174,12 @@ export async function showAlbum(req,res) {
 	});
 }
 
+// Renders the new-post form.
 export async function showNewPost(req,res) {
 	res.render('newpost');
 }
 
+// Renders the album edit form for its owner.
 export async function editPost(req,res) {
 	// Only logged-in users can reach the edit view.
 	if (!req.user) {
@@ -210,6 +216,7 @@ export async function editPost(req,res) {
 	res.render('editpost', { title: pub.titulo, publication_id: pub.id, images: imageData });
 }
 
+// Updates album metadata, image details, comments, and tags.
 export async function updatePost(req, res) {
 	if (!req.user) {
 		return res.redirect('/auth/login');
@@ -264,6 +271,7 @@ export async function updatePost(req, res) {
 	res.redirect(`/post/album/${pid}`);
 }
 
+// Deletes one image from an owned album.
 export async function removeImage(req, res) {
 	const pid = parseInt(req.params.album_id, 10);
 	const imageId = parseInt(req.body.image_id, 10);
@@ -292,6 +300,7 @@ export async function removeImage(req, res) {
 	return res.redirect(`/post/edit/${pid}`);
 }
 
+// Deletes an owned album after title confirmation.
 export async function removeAlbum(req, res) {
 	const pid = parseInt(req.params.album_id, 10);
 	if (!Number.isInteger(pid) || pid < 1) {
@@ -324,6 +333,7 @@ export async function removeAlbum(req, res) {
 }
 
 /* Necesitamos esto para no romper el xml usado para configurar el sharp */
+// Escapes text so it can be inserted safely into watermark SVG XML.
 function escapeXml(text) {
 	return text.replace(/[&<>"']/g, (character) => ({
 		'&': '&amp;',
@@ -334,6 +344,7 @@ function escapeXml(text) {
 	})[character]);
 }
 
+// Applies a text watermark to an uploaded image buffer.
 async function addWatermark(buffer, text) {
 	const image = sharp(buffer);
 	const { width, height } = await image.metadata();
@@ -353,6 +364,7 @@ async function addWatermark(buffer, text) {
 	return image.composite([{ input: watermark }]).png().toBuffer();
 }
 
+// Creates a new album from uploaded images and their metadata.
 export async function newPost(req,res) {
 	// Get user
 	const user = await Usuario.findByPk(Number(req.user.id));

@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	}
 
+	// Creates a list item for one notification.
 	function crearElementoNotificacion(notificacion, incluirBoton = false) {
 		const item = document.createElement("li");
 		if (
@@ -101,6 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		return item;
 	}
 
+	// Opens or closes the notification panel.
 	function establecerPanelAbierto(abierto) {
 		if (!panel) return;
 		abierta = abierto;

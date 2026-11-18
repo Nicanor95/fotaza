@@ -3,6 +3,7 @@ import { Comentario } from "../models/Comentario.js";
 import { Notificacion } from "../models/Notificacion.js";
 import { Usuario } from "../models/Usuario.js";
 
+// Creates a comment and tries to notify the image owner.
 export async function createComment(req, res) {
     const albumId = Number(req.params.album_id);
     const imageId = Number(req.params.image_id);

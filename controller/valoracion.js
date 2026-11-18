@@ -3,6 +3,7 @@ import { Imagen } from "../models/Imagen.js";
 import { Notificacion } from "../models/Notificacion.js";
 import { Sequelize } from "sequelize";
 
+// Creates or updates a user's rating for an image.
 async function valorate(user_id, img_id, value) {
 	// With the values for user_id, img_id, and value, add or update a valoration
 	try {
@@ -18,6 +19,7 @@ async function valorate(user_id, img_id, value) {
 	}
 }
 
+// Calculates the average rating for an image.
 export async function getAvgValoration(img_id) {
 	// From img_id get average valoration
 	try {
@@ -38,6 +40,7 @@ export async function getAvgValoration(img_id) {
 	}
 }
 
+// Retrieves an authenticated user's rating for an image.
 export async function getUserValoration(user_id, img_id) {
 	const valoration = await Valoracion.findOne({
 		attributes: ['valor'],
@@ -51,6 +54,7 @@ export async function getUserValoration(user_id, img_id) {
 	return valoration?.valor ?? null;
 }
 
+// Saves a validated image rating and notifies the owner.
 export async function newValoration(req, res) {
 	const albumId = Number(req.params.album_id);
 	const imageId = Number(req.params.image_id);

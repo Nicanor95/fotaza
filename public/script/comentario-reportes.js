@@ -13,11 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
 	let reportCount = null;
 	let actionPending = false;
 
+	// Updates moderation button availability based on panel state.
 	function updateActionButtons() {
 		dismissButton.disabled = actionPending || !reportsLoaded || reportCount === 0;
 		deleteButton.disabled = actionPending || !reportsLoaded;
 	}
 
+	// Toggles the comment-report panel and manages focus.
 	function setOpen(open) {
 		panel.classList.toggle("oculto", !open);
 		panel.setAttribute("aria-hidden", String(!open));
@@ -35,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
+	// Creates a report detail item for the panel list.
 	function createReportItem(report) {
 		const item = document.createElement("li");
 		item.className = "reporte-comentario";
@@ -57,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		return item;
 	}
 
+	// Loads and renders reports for a selected comment.
 	async function loadReports(commentId) {
 		const currentRequest = ++requestSequence;
 		reportsLoaded = false;
@@ -102,6 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
+	// Performs the selected moderation action for the active comment.
 	async function performAction(action) {
 		if (!activeBadge || actionPending || !reportsLoaded) {
 			return;

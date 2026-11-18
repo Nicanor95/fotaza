@@ -8,6 +8,7 @@ import { Rule } from '../models/Rule.js';
 import { Usuario } from '../models/Usuario.js';
 import sequelize from '../models/config.js';
 
+// Resolves a report target by type and database identifier.
 async function getTarget(type, id) {
 	if (type === 'imagen') {
 		const image = await Imagen.findByPk(id);
@@ -26,11 +27,13 @@ async function getTarget(type, id) {
 	return null;
 }
 
+// Parses a route parameter into a positive safe integer.
 function parseTargetId(value) {
 	const id = Number(value);
 	return Number.isSafeInteger(id) && id > 0 ? id : null;
 }
 
+// Determines whether the authenticated user owns a report target.
 function isOwnReportTarget(req, type, target) {
 	const ownerId = type === 'imagen'
 		? target.image.usuario_id
@@ -38,11 +41,13 @@ function isOwnReportTarget(req, type, target) {
 	return Number(ownerId) === Number(req.user.id);
 }
 
+// Builds the validation message for reporting a user's own content.
 function ownReportError(type) {
 	const targetName = type === 'imagen' ? 'tu propia imagen' : 'tu propio comentario';
 	return `No puedes reportar ${targetName}.`;
 }
 
+// Loads a comment and the publication context needed to moderate it.
 async function getCommentReportTarget(id) {
 	const comment = await Comentario.findByPk(id);
 	if (!comment) {
@@ -62,6 +67,7 @@ async function getCommentReportTarget(id) {
 	return publication ? { comment, image, publication } : null;
 }
 
+// Checks whether the user can manage reports for a comment.
 function canManageCommentReports(req, target) {
 	return Boolean(
 		req.user?.moderador ||
@@ -69,6 +75,7 @@ function canManageCommentReports(req, target) {
 	);
 }
 
+// Renders the report form for an image or comment.
 export async function showReport(req, res) {
 	const id = parseTargetId(req.params.id);
 	const target = id && await getTarget(req.params.type, id);
@@ -90,6 +97,7 @@ export async function showReport(req, res) {
 	});
 }
 
+// Validates and creates an image or comment report.
 export async function createReport(req, res) {
 	const id = parseTargetId(req.params.id);
 	const target = id && await getTarget(req.params.type, id);
@@ -192,6 +200,7 @@ export async function createReport(req, res) {
 	return res.redirect(`/post/album/${target.image.publicacion_id}/${target.image.id}`);
 }
 
+// Lists images that have reached the report threshold.
 export async function listarReportesImagen(req, res) {
 	const reportes = await ReporteImagen.findAll({
 		attributes: ['img_id', [sequelize.fn('COUNT', sequelize.col('img_id')), 'cantidad']],
@@ -242,6 +251,7 @@ export async function listarReportesImagen(req, res) {
 	return res.json(result);
 }
 
+// Lists reports for a comment when the requester can moderate it.
 export async function listarReportesComentario(req, res) {
 	const id = parseTargetId(req.params.id);
 	const target = id && await getCommentReportTarget(id);
@@ -267,6 +277,7 @@ export async function listarReportesComentario(req, res) {
 	})));
 }
 
+// Removes all reports for a comment.
 export async function descartarReportesComentario(req, res) {
 	const id = parseTargetId(req.params.id);
 	const target = id && await getCommentReportTarget(id);
@@ -281,6 +292,7 @@ export async function descartarReportesComentario(req, res) {
 	return res.json({ ok: true });
 }
 
+// Deletes a reported comment after moderation authorization.
 export async function eliminarComentarioReportado(req, res) {
 	const id = parseTargetId(req.params.id);
 	const target = id && await getCommentReportTarget(id);
@@ -302,6 +314,7 @@ export async function eliminarComentarioReportado(req, res) {
 	return res.json({ ok: true });
 }
 
+// Returns a reported image only if it has reached the moderation threshold.
 async function getModeratedImage(value) {
 	const id = parseTargetId(value);
 	if (!id) {
@@ -317,6 +330,7 @@ async function getModeratedImage(value) {
 	return count >= 3 ? image : null;
 }
 
+// Removes a sufficiently reported image and records the moderation action.
 export async function eliminarImagenReportada(req, res) {
 	const image = await getModeratedImage(req.params.id);
 	if (!image) {
@@ -346,6 +360,7 @@ export async function eliminarImagenReportada(req, res) {
 	return res.json({ ok: true });
 }
 
+// Discards reports of an image.
 export async function descartarReportesImagen(req, res) {
 	const image = await getModeratedImage(req.params.id);
 	if (!image) {

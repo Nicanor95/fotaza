@@ -13,7 +13,7 @@ if (prev) {
 	prev.hidden = true;
 }
 
-
+// Shows the selected album slide and updates navigation controls.
 function moveSlide(n) {
 	slides[slideIndex].style.display = "none";
 	descs[slideIndex].style.display = "none";

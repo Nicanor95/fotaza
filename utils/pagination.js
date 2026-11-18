@@ -1,5 +1,6 @@
 export const WALL_PAGE_SIZE = 15;
 
+// Paginates a list and calculates the current page and available range.
 export function paginateItems(items, page, pageSize = WALL_PAGE_SIZE) {
 	const totalItems = items.length;
 	const totalPages = Math.ceil(totalItems / pageSize);

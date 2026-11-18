@@ -6,6 +6,7 @@ const previews = document.getElementById("previews");
 // Add event trigger to file selection
 inputFiles.addEventListener("change", handleFiles);
 
+// Creates metadata and previews for each selected file.
 function handleFiles() {
 	const fileList = Array.from(this.files);
 	

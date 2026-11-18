@@ -6,6 +6,7 @@ import { promisify } from "util";
 const scrypt = promisify(_scrypt);
 
 export class Usuario extends Model {
+	// Verifies a plaintext password against the user's stored password hash.
 	async verifyPassword(password) {
 		const [salt, key] = this.phash.split(":::") //[hex, hex]
 		const derivedKey = await scrypt(password, salt, 64); // Buffer
@@ -59,6 +60,7 @@ Usuario.init(
 		paranoid: true,
 		tableName: 'usuarios',
 		hooks: {
+			// Hashes a new or changed plaintext password before it is saved.
 			beforeSave: async (usuario) => {
 				if (!usuario.phash) return;
 				if (!usuario.changed('phash')) return;

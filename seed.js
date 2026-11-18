@@ -85,6 +85,7 @@ const img_array3 = [
 	}
 ]
 
+// Initializes the database and seeds users, posts, and related records.
 async function initialize() {
 	// Test database
 	try {
@@ -136,6 +137,7 @@ async function initialize() {
 }
 
 
+// Creates a seeded user and grants administrator moderator status when applicable.
 async function signup(user) {
 	//Manejar el registro
 	const nombre = user.nombre;
@@ -172,6 +174,7 @@ async function signup(user) {
 	}
 }
 
+// Creates a seeded publication and associates its images and tags.
 async function newPost(userId, img_array, titulo) {
 	const user = await Usuario.findByPk(userId);
 	if (!user) {

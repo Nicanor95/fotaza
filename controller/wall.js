@@ -6,11 +6,13 @@ import { Usuario } from "../models/Usuario.js";
 import { Valoracion } from "../models/Valoracion.js";
 import { sortPostsByRating } from "../utils/wall-priority.js";
 
+// Builds and prioritizes the posts.
 export async function buildWall(terms) {
 	const posts = await getWallPosts(terms);
 	return prioritizeWallPosts(posts);
 }
 
+// Retrieves wall images with optional tag filtering.
 async function getWallPosts(terms) {
 	const tags = terms.tags;
 	// Copyrighted images are only visible to signed-in users.
@@ -66,6 +68,7 @@ async function getWallPosts(terms) {
 	return shapeWallPosts(images);
 }
 
+// Applies rating-based ordering to wall posts.
 async function prioritizeWallPosts(posts) {
 	if (posts.length < 2) {
 		return posts;
@@ -90,6 +93,7 @@ async function prioritizeWallPosts(posts) {
 	return sortPostsByRating(posts, ratings);
 }
 
+// Converts database image records into wall display objects.
 function shapeWallPosts(images) {
 	return images.map((image) => ({
 		id: image.id,
@@ -99,6 +103,7 @@ function shapeWallPosts(images) {
 	}));
 }
 
+// Builds posts matching search tags or publication titles.
 export async function buildSearchWall(terms) {
 	const tags = terms.tags;
 	const title = terms.title.trim();
@@ -135,6 +140,7 @@ export async function buildSearchWall(terms) {
 	return prioritizeWallPosts(posts);
 }
 
+// Builds a paged wall for a specific user profile.
 export async function buildProfileWall(terms) {
 	const user_id = terms.user_id;
 	
@@ -172,6 +178,7 @@ export async function buildProfileWall(terms) {
 	return { profile_user: shapedUser, wall_posts: shapedResults };
 }
 
+// Builds wall entries from a user's favorited images.
 export async function buildFavouritesWall(terms) {
 	const user_id = Number(terms.user_id);
 
@@ -201,6 +208,7 @@ export async function buildFavouritesWall(terms) {
 	return shapedResults;
 }
 
+// Builds wall entries for every image uploaded by a user.
 export async function buildWallById(userId) {
 	const user_id = Number(userId);
 	
