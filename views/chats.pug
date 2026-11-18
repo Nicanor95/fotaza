@@ -1,15 +1,24 @@
 extends partials/layout
 
 block content
-	div.c_flex.center
-		h2 Tus chats
+	div.chats-page
+		div.chats-heading
+			p.chat-eyebrow Tus conversaciones
+			h2 Mensajes
+			p.chats-intro Conversa con quienes comparten sus imágenes en Fotaza.
+
 		if chats.length
-			each chat in chats
-				a(href=`/chat/${chat.id}`)
-					div.r_flex.center
-						img.post_image(src=chat.imageData, alt="Imagen del chat")
-						div
+			div.chats-list(aria-label="Lista de conversaciones")
+				each chat in chats
+					a.chat-card(href=`/chat/${chat.id}`)
+						img.chat-card-image(src=chat.imageData, alt="Imagen relacionada con la conversación")
+						div.chat-card-copy
 							h3= chat.otherParticipant ? chat.otherParticipant.nombre : "Chat"
 							p= chat.imageDescription || "Conversación sobre esta imagen"
+						i.fa-solid.fa-chevron-right.chat-card-arrow(aria-hidden="true")
 		else
-			p Todavía no tienes chats.
+			div.chats-empty
+				div.chats-empty-icon
+					i.fa-solid.fa-comments(aria-hidden="true")
+				h3 Todavía no tienes chats
+				p Cuando te interese una imagen, podrás iniciar una conversación con su autor.

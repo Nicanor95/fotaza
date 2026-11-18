@@ -1,14 +1,33 @@
 extends partials/layout
 
 block content
-	div.c_flex.center
-		h2 Chat con #{otherParticipant.nombre}
-		img.post_image.center(src=imageData, alt="Imagen de interés")
-		div.chat_messages
-			each message in messages
-				div.chat_message
-					strong= message.Usuario ? message.Usuario.nombre : "Usuario"
-					p= message.contenido
-		form(action=`/chat/${chat.id}/messages`, method="post")
-			textarea(name="contenido", maxlength="255", required=true, placeholder="Escribe un mensaje...")
-			button(type="submit") Enviar
+	div.chat-page
+		a.chat-back(href="/chat")
+			i.fa-solid.fa-arrow-left(aria-hidden="true")
+			span Volver a tus chats
+
+		section.chat-panel(aria-label=`Conversación con ${otherParticipant.nombre}`)
+			header.chat-header
+				img.chat-image(src=imageData, alt="Imagen relacionada con la conversación")
+				div.chat-header-copy
+					p.chat-eyebrow Conversación sobre una imagen
+					h2= otherParticipant.nombre
+
+			div.chat-messages
+				if messages.length
+					each message in messages
+						article.chat-message(class=Number(message.usuario_id) === Number(user.id) ? "is-own" : "is-other")
+							p.chat-message-author= message.Usuario ? message.Usuario.nombre : "Usuario"
+							p.chat-message-content= message.contenido
+				else
+					div.chat-empty
+						i.fa-solid.fa-comments(aria-hidden="true")
+						p Aún no hay mensajes. Inicia la conversación.
+
+			form.chat-composer(action=`/chat/${chat.id}/messages`, method="post")
+				label.chat-composer-label(for="chat-message") Tu mensaje
+				div.chat-composer-controls
+					textarea#chat-message(name="contenido", maxlength="255", required=true, placeholder="Escribe un mensaje...")
+					button(type="submit")
+						span Enviar
+						i.fa-solid.fa-paper-plane(aria-hidden="true")
