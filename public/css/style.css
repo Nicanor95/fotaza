@@ -419,6 +419,57 @@ footer a i {
 	flex-wrap: wrap;
 }
 
+.pagination {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.75rem;
+	width: 100%;
+	margin: 1.5rem 0 0.5rem;
+}
+
+.pagination-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.45rem;
+	min-height: 2.5rem;
+	padding: 0.55rem 1rem;
+	border: 1px solid var(--border);
+	border-radius: 0.75rem;
+	background: var(--background-light);
+	color: var(--accent-bright) !important;
+	box-shadow: 2px 2px 3px #101010;
+	font-weight: 600;
+	transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.pagination-button:visited {
+	color: var(--accent-bright);
+}
+
+.pagination-button:hover {
+	border-color: var(--accent);
+	background: var(--background-dl);
+	transform: translateY(-1px);
+}
+
+.pagination-button:active {
+	box-shadow: 1px 1px 2px #101010;
+	transform: translateY(1px);
+}
+
+.pagination-button:focus-visible {
+	outline: 2px solid var(--accent-bright);
+	outline-offset: 3px;
+}
+
+.pagination-status {
+	min-width: 8.5rem;
+	color: var(--foreground);
+	font-size: 0.95rem;
+}
+
 .post-page {
 	width: min(1200px, 94%);
 	margin: 1.5rem auto;

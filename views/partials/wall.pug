@@ -6,9 +6,13 @@ mixin wall(wall_posts, pagination)
 					img(src=`${p.img_b64}`, width=300, height=600)
 					h3 #{p.titulo}
 	if pagination && pagination.totalPages > 1
-		nav.r_flex.center
+		nav.pagination.center
 			if pagination.page > 1
-				a(href=`${pagination.baseUrl}${pagination.baseUrl.includes('?') ? '&' : '?'}page=${pagination.page - 1}`) Anterior
-			span Página #{pagination.page} de #{pagination.totalPages}
+				a.pagination-button(href=`${pagination.baseUrl}${pagination.baseUrl.includes('?') ? '&' : '?'}page=${pagination.page - 1}`)
+					i.fa-solid.fa-chevron-left
+					span Anterior
+			span.pagination-status Página #{pagination.page} de #{pagination.totalPages}
 			if pagination.page < pagination.totalPages
-				a(href=`${pagination.baseUrl}${pagination.baseUrl.includes('?') ? '&' : '?'}page=${pagination.page + 1}`) Siguiente
+				a.pagination-button(href=`${pagination.baseUrl}${pagination.baseUrl.includes('?') ? '&' : '?'}page=${pagination.page + 1}`)
+					span Siguiente
+					i.fa-solid.fa-chevron-right
