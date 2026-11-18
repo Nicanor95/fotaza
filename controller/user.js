@@ -4,6 +4,7 @@ import { Usuario } from "../models/Usuario.js";
 import { Notificacion } from "../models/Notificacion.js";
 import { Coleccion } from "../models/Coleccion.js";
 import { buildProfileWall, buildWallById, buildFavouritesWall } from "./wall.js";
+import { paginateItems } from "../utils/pagination.js";
 
 export async function follows(userId1, userId2) {
 	/**
@@ -42,10 +43,15 @@ export async function showProfile(req, res) {
 		});
 	}
 
+	const pagination = paginateItems(contenido.wall_posts, req.query.page);
 	res.render('userprofile', {
 		profile_user: contenido.profile_user,
 		follows: siguiendo,
-		wall_posts: contenido.wall_posts,
+		wall_posts: pagination.items,
+		pagination: {
+			...pagination,
+			baseUrl: `/users/${profile_user_id}`
+		},
 		colecciones,
 		followers_count,
 		followed_count
@@ -64,9 +70,14 @@ export async function showFavourites(req, res) {
 		return res.status(404).render('fourohfour');
 	}
 
+	const pagination = paginateItems(fav_posts, req.query.page);
 	res.render('favorites', {
 		profile_user: profileUser,
-		fav_posts
+		fav_posts: pagination.items,
+		pagination: {
+			...pagination,
+			baseUrl: `/users/${user_id}/favoritos`
+		}
 	})
 }
 
@@ -211,10 +222,15 @@ export async function showCollection(req, res) {
 		img_b64: `${image.metadata}${image.blob.toString("base64")}`
 	}));
 
+	const pagination = paginateItems(shapedImages, req.query.page);
 	res.render("collection", {
 		profile_user: user,
 		collection: coleccion,
-		images: shapedImages
+		images: pagination.items,
+		pagination: {
+			...pagination,
+			baseUrl: `/users/${user_id}/colecciones/${col_id}`
+		}
 	});
 }
 
@@ -285,5 +301,9 @@ export async function followedPosts(req, res) {
 		post_list = post_list.concat(lista);
 	}
 
-	res.render('followed', {wall_posts: post_list});
+	const pagination = paginateItems(post_list, req.query.page);
+	res.render('followed', {
+		wall_posts: pagination.items,
+		pagination: { ...pagination, baseUrl: '/users/followed' }
+	});
 }

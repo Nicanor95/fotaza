@@ -1,11 +1,12 @@
 import { tagRegex } from "./post.js" 
 import { buildSearchWall } from "./wall.js";
+import { paginateItems } from "../utils/pagination.js";
 
 const possibleTagRegex = /\w+/gmi;
 
 export async function searchByTags(req,res) {
-	const title = req.body.terms.trim();
-	let terms = req.body.terms.toUpperCase();
+	const title = (req.method === 'POST' ? req.body.terms : req.query.terms || '').trim();
+	let terms = title.toUpperCase();
 	let tags = terms.match(tagRegex); //Proper tags
 	if (!tags) {
 		tags = []; // No matches
@@ -32,5 +33,11 @@ export async function searchByTags(req,res) {
 		title,
 		isLoggedIn: Boolean(req.user)
 	});
-	res.render('searchresults.pug', {wall_posts: posts});
+	const pagination = paginateItems(posts, req.query.page || req.body?.page);
+	const encodedTerms = encodeURIComponent(title);
+	res.render('searchresults.pug', {
+		wall_posts: pagination.items,
+		search: title,
+		pagination: { ...pagination, baseUrl: `/search/bytag?terms=${encodedTerms}` }
+	});
 }

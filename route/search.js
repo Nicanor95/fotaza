@@ -5,6 +5,7 @@ import { searchByTags } from '../controller/search.js';
 
 const searchRouter = Router();
 
+searchRouter.get('/bytag', searchByTags);
 searchRouter.post('/bytag', searchByTags);
 
 export default searchRouter;

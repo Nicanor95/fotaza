@@ -17,6 +17,7 @@ import { Imagen } from './models/Imagen.js';
 import { Usuario } from './models/Usuario.js';
 import { authMiddleware, userMiddleware } from './middleware/auth.js';
 import { buildWall } from './controller/wall.js';
+import { paginateItems } from './utils/pagination.js';
 
 
 // Server options
@@ -56,7 +57,11 @@ app.use(userMiddleware);
 // Routes
 app.get('/', async (req, res) => {
 	let wall_posts = await buildWall({tags: [], isLoggedIn: Boolean(req.user)});
-	res.render('homepage', {wall_posts: wall_posts});
+	const pagination = paginateItems(wall_posts, req.query.page);
+	res.render('homepage', {
+		wall_posts: pagination.items,
+		pagination: { ...pagination, baseUrl: '/' }
+	});
 });
 
 app.use('/auth', authRouter);
