@@ -7,8 +7,10 @@ block content
 			label.center.endalign(for="title") Titulo:
 			input.center.startalign#title(type="text", name="title", required=true)
 		div
-			label.center.endalign(for="images") Imágenes:
-			input.center.startalign#fileinput(type="file", name="images" accept="image/*" multiple)
+			label.center.endalign(for="fileinput") Imágenes:
+			input.center.startalign#fileinput(type="file", name="images", accept="image/*", multiple, data-max-files="6", data-max-file-size="1000000")
+		label.smallinstructions(for="fileinput") Máximo 6 imágenes; 1 MB por imagen.
+		p#upload-error(role="alert", hidden)
 		div.c_flex#previews
 		button.center(type="submit") Subir
 

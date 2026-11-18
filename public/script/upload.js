@@ -1,16 +1,29 @@
 const title = document.getElementById("title");
 const inputFiles = document.getElementById("fileinput");
 const previews = document.getElementById("previews");
+const uploadError = document.getElementById("upload-error");
+const maxFiles = Number(inputFiles.dataset.maxFiles);
+const maxFileSize = Number(inputFiles.dataset.maxFileSize);
 //const reader = new FileReader(); // To read the files in base64
 
 // Add event trigger to file selection
 inputFiles.addEventListener("change", handleFiles);
+inputFiles.form.addEventListener("submit", (event) => {
+	const error = getFileValidationError(Array.from(inputFiles.files));
+	showFileValidationError(error);
+	if (error) {
+		event.preventDefault();
+	}
+});
 
 // Creates metadata and previews for each selected file.
 function handleFiles() {
-	const fileList = Array.from(this.files);
+	const fileList = Array.from(inputFiles.files);
+	previews.replaceChildren();
+	const error = getFileValidationError(fileList);
+	showFileValidationError(error);
 	
-	if (fileList.length <= 0) { // No files, abort.
+	if (error || fileList.length <= 0) { // No files, abort.
 		return;
 	}
 
@@ -83,4 +96,20 @@ function handleFiles() {
 
 		previews.appendChild(base);
 	}
+}
+
+function getFileValidationError(files) {
+	const errors = [];
+	if (files.length > maxFiles) {
+		errors.push(`Puedes seleccionar hasta ${maxFiles} imágenes.`);
+	}
+	if (files.some((file) => file.size > maxFileSize)) {
+		errors.push(`Cada imagen debe pesar como máximo ${maxFileSize / 1000000} MB.`);
+	}
+	return errors.join(" ");
+}
+
+function showFileValidationError(error) {
+	uploadError.textContent = error;
+	uploadError.hidden = !error;
 }
