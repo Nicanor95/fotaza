@@ -1,10 +1,9 @@
 mixin wall(wall_posts, pagination)
 	div.r_flex.center.wall
 		each p in wall_posts
-			a(href=`/post/album/${p.publicacion_id}/${p.id}`)
-				div.post
-					img(src=`${p.img_b64}`, width=300, height=600)
-					h3 #{p.titulo}
+			a.post(href=`/post/album/${p.publicacion_id}/${p.id}`)
+				img(src=`${p.img_b64}`, width=300, height=600)
+				h3 #{p.titulo}
 	if pagination && pagination.totalPages > 1
 		nav.pagination.center
 			if pagination.page > 1

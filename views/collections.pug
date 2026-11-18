@@ -10,8 +10,7 @@ block content
 	div.r_flex.center.wall
 		if colecciones.length
 			each c in colecciones
-				a(href=`/users/${profile_user.id}/colecciones/${c.id}`)
-					div.post
-						h3 #{c.title}
+				a.post(href=`/users/${profile_user.id}/colecciones/${c.id}`)
+					h3 #{c.title}
 		else
 			p Todavía no tienes colecciones.
