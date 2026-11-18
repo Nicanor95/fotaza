@@ -125,11 +125,62 @@ header h1 {
 	padding: 0 2rem 0 2rem
 }
 
-header nav ul {
+.site-navigation {
+	min-width: 0;
+	background: var(--background-dl);
+	border: 1px solid var(--border);
+	border-radius: 1rem;
+	box-shadow: 2px 2px 3px #101010;
+}
+
+.nav-links {
 	list-style: none;
 	display: flex;
-	gap: 1rem;
-	padding-left: 0;
+	flex-wrap: wrap;
+	gap: 0;
+	margin: 0;
+	padding: 0.3rem;
+}
+
+.nav-links li {
+	display: flex;
+}
+
+.nav-links li + li {
+	border-left: 1px solid var(--border);
+}
+
+.nav-links a,
+.nav-links a:visited {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.55rem 0.7rem;
+	border-radius: 0.7rem;
+	color: var(--foreground);
+	font-size: 0.95rem;
+	text-decoration: none;
+	white-space: nowrap;
+	transition: background-color 140ms ease, color 140ms ease;
+}
+
+.nav-links a i {
+	color: var(--accent);
+}
+
+.nav-links a:hover {
+	background: var(--background-light);
+	color: var(--accent-bright);
+}
+
+.nav-links a:hover i,
+.nav-links a:focus-visible i {
+	color: var(--accent-bright);
+}
+
+.nav-links a:focus-visible {
+	outline: 2px solid var(--accent-bright);
+	outline-offset: -2px;
 }
 
 main {
@@ -793,10 +844,6 @@ footer a i {
 	border-radius: 1rem;
 	border: 1px solid var(--border);
 	box-shadow: 2px 2px 3px #101010;
-}
-
-.navHeader > a {
-	margin: 0 0.2rem;
 }
 
 .profile-page {

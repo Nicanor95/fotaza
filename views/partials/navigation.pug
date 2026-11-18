@@ -1,12 +1,19 @@
-nav
-	ul
-		li.navHeader 
-			a(href="/") Home
-				i( class="fa-solid fa-house")
-			a(href="/users/followed") Seguidos
-				i( class="fa-solid fa-heart")
-			if user
-				a(href=`/users/${user.id}/colecciones`) Mis colecciones
-					i(class="fa-solid fa-images")
-				a(href=`/users/${user.id}/favoritos`) Mis favoritos 
-					i(class="fa-solid fa-star")
+nav.site-navigation(aria-label="Navegación principal")
+	ul.nav-links
+		li
+			a(href="/")
+				i.fa-solid.fa-house(aria-hidden="true")
+				span Home
+		li
+			a(href="/users/followed")
+				i.fa-solid.fa-heart(aria-hidden="true")
+				span Seguidos
+		if user
+			li
+				a(href=`/users/${user.id}/colecciones`)
+					i.fa-solid.fa-images(aria-hidden="true")
+					span Mis colecciones
+			li
+				a(href=`/users/${user.id}/favoritos`)
+					i.fa-solid.fa-star(aria-hidden="true")
+					span Mis favoritos
