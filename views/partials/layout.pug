@@ -5,12 +5,11 @@ html(lang="en")
 		title= title || "Fotaza"
 	body 
 		header
-			a#icon(href="/") 
-				h1 F
-			include navigation.pug
+			div.header-brand
+				a#icon(href="/")
+					h1 F
+				include navigation.pug
 			include searchbar.pug
-			include notificaciones.pug
-			include reportes.pug
 			include user.pug
 		main
 			block content

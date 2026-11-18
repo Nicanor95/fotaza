@@ -1,8 +1,8 @@
 if user && user.moderador
 	div#reportes
-		button#btnReportes(type="button", title="Reportes", aria-expanded="false", aria-controls="panelReportes")
-			i.fa-solid.fa-flag
-		span#contadorReportes(hidden) 0
+		button#btnReportes.header-action-button(type="button", title="Reportes", aria-label="Reportes", aria-expanded="false", aria-controls="panelReportes")
+			i.fa-solid.fa-flag(aria-hidden="true")
+			span#contadorReportes(hidden) 0
 		div#panelReportes.side-panel.oculto(aria-hidden="true")
 			button#btnCerrarReportes.side-panel-close(type="button", aria-label="Cerrar reportes") ✕
 			h3 Imágenes reportadas

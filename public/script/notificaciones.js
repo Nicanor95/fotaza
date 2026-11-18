@@ -11,13 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		panel.setAttribute("aria-hidden", "true");
 	}
 
-	// Escapa texto para evitar inyección de HTML.
-	function escapar(texto) {
-		const div = document.createElement("div");
-		div.textContent = texto;
-		return div.innerHTML;
-	}
-
 	// Pide las notificaciones al servidor y actualiza el contador de no vistas.
 	async function actualizarContador() {
 		if (!contador) return;
@@ -37,32 +30,37 @@ document.addEventListener("DOMContentLoaded", () => {
 		const noVistas = notificaciones.filter((n) => !n.visto);
 		const vistas = notificaciones.filter((n) => n.visto).slice(0, 10);
 
-		let html = "";
+		lista.replaceChildren();
 
 		if (noVistas.length) {
-			html += "<h4>Nuevas</h4><ul>";
-			for (const n of noVistas) {
-				html += `<li>
-					${escapar(n.contenido)}
-					<button class="marcarVisto" type="button" data-id="${n.id}">marcar como visto</button>
-				</li>`;
+			const heading = document.createElement("h4");
+			heading.textContent = "Nuevas";
+			lista.append(heading);
+
+			const ul = document.createElement("ul");
+			for (const notificacion of noVistas) {
+				ul.append(crearElementoNotificacion(notificacion, true));
 			}
-			html += "</ul>";
+			lista.append(ul);
 		}
 
 		if (vistas.length) {
-			html += "<h4>Historial (últimas 10 leídas)</h4><ul>";
-			for (const n of vistas) {
-				html += `<li>${escapar(n.contenido)}</li>`;
+			const heading = document.createElement("h4");
+			heading.textContent = "Historial (últimas 10 leídas)";
+			lista.append(heading);
+
+			const ul = document.createElement("ul");
+			for (const notificacion of vistas) {
+				ul.append(crearElementoNotificacion(notificacion));
 			}
-			html += "</ul>";
+			lista.append(ul);
 		}
 
-		if (!html) {
-			html = "<p>No hay notificaciones.</p>";
+		if (!noVistas.length && !vistas.length) {
+			const emptyMessage = document.createElement("p");
+			emptyMessage.textContent = "No hay notificaciones.";
+			lista.append(emptyMessage);
 		}
-
-		lista.innerHTML = html;
 
 		// Cada notificación nueva tiene un botón para marcarla como vista.
 		lista.querySelectorAll(".marcarVisto").forEach((boton) => {
@@ -74,6 +72,33 @@ document.addEventListener("DOMContentLoaded", () => {
 				await cargarNotificaciones();
 			});
 		});
+	}
+
+	function crearElementoNotificacion(notificacion, incluirBoton = false) {
+		const item = document.createElement("li");
+		if (
+			typeof notificacion.link === "string"
+			&& notificacion.link.startsWith("/")
+			&& !notificacion.link.startsWith("//")
+		) {
+			const link = document.createElement("a");
+			link.href = notificacion.link;
+			link.textContent = notificacion.contenido;
+			item.append(link);
+		} else {
+			// textContent keeps legacy and new notification text inert.
+			item.append(document.createTextNode(notificacion.contenido));
+		}
+
+		if (incluirBoton) {
+			const button = document.createElement("button");
+			button.className = "marcarVisto";
+			button.type = "button";
+			button.dataset.id = notificacion.id;
+			button.textContent = "marcar como visto";
+			item.append(button);
+		}
+		return item;
 	}
 
 	function establecerPanelAbierto(abierto) {

@@ -1,15 +1,16 @@
-// Boton para crear post.
-a(href="/post/newpost").newpost
-	button
-		i.fa-solid.fa-plus
-
 div#usuario
+	a.newpost.header-action-button(href="/post/newpost", title="Crear publicación", aria-label="Crear publicación")
+		i.fa-solid.fa-plus(aria-hidden="true")
+	include notificaciones.pug
+	include reportes.pug
+
 	if user
 		
 		- var userpage = `/users/${user.id}`
 		
 		form(action="/chat", method="get")
-			button(type="submit") Chats
+			button.header-action-button(type="submit", title="Chats", aria-label="Chats")
+				i.fa-solid.fa-comments(aria-hidden="true")
 		span
 			a(href=userpage) #{user.nombre}
 		form(action="/auth/logout", method="post")
