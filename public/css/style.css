@@ -118,6 +118,17 @@ header {
 	grid-column: 3;
 	grid-row: 1;
 	justify-self: end;
+	margin-right: 0;
+	background-color: var(--background-dl);
+	padding: 0.5rem;
+	min-height: 2.5rem;
+	flex-direction: row;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	border-radius: 1rem;
+	border: 1px solid var(--border);
+	box-shadow: 2px 2px 3px #101010;
 }
 
 header h1 {
@@ -252,20 +263,6 @@ footer a i {
 
 #icon {
 	text-decoration: none;
-}
-
-#usuario {
-	margin-right: 0;
-	background-color: var(--background-dl);
-	padding: 0.5rem;
-	min-height: 2.5rem;
-	flex-direction: row;
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	border-radius: 1rem;
-	border: 1px solid var(--border);
-	box-shadow: 2px 2px 3px #101010;
 }
 
 #usuario button:not(.header-action-button) { /* Logout */
@@ -994,12 +991,7 @@ footer a i {
 	}
 }
 
-#notificaciones {
-	display: flex;
-	align-items: center;
-	gap: 0;
-}
-
+#notificaciones,
 #reportes {
 	display: flex;
 	align-items: center;
@@ -1136,13 +1128,7 @@ a.header-action-button:visited {
 	color: var(--accent-bright);
 }
 
-.confirmation-dialog form {
-	display: flex;
-	justify-content: flex-end;
-	gap: 0.5rem;
-	margin-top: 1.5rem;
-}
-
+.confirmation-dialog form,
 .confirmation-dialog-actions {
 	display: flex;
 	justify-content: flex-end;
@@ -1346,22 +1332,14 @@ a.header-action-button:visited {
 	padding-right: 2.75rem;
 }
 
-.remove-image-confirm {
-	border-color: #ff8a80;
-	background-color: #7f1d1d;
-	padding: 0.5rem 1rem;
-}
-
-.remove-image-confirm:hover {
-	background-color: #b91c1c;
-}
-
+.remove-image-confirm,
 .confirmation-dialog-confirm {
 	border-color: #ff8a80;
 	background-color: #7f1d1d;
 	padding: 0.5rem 1rem;
 }
 
+.remove-image-confirm:hover,
 .confirmation-dialog-confirm:hover {
 	background-color: #b91c1c;
 }
