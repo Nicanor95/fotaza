@@ -188,9 +188,23 @@ export async function showCollections(req, res) {
 		where: { usuario_id: user_id }
 	});
 
+	const imageCollectionAssociation = Coleccion.associations.Imagens;
+	const collectionsWithThumbnails = await Promise.all(colecciones.map(async (collection) => {
+		const [image] = await collection.getImagens({
+			attributes: ["metadata", "blob"],
+			order: [[imageCollectionAssociation.oneFromTarget, "createdAt", "ASC"]],
+			limit: 1
+		});
+
+		return {
+			...collection.toJSON(),
+			thumbnail: image ? `${image.metadata}${image.blob.toString("base64")}` : null
+		};
+	}));
+
 	res.render('collections', {
 		profile_user: profileUser,
-		colecciones
+		colecciones: collectionsWithThumbnails
 	});
 }
 

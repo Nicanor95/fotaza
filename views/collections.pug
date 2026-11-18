@@ -11,6 +11,8 @@ block content
 		if colecciones.length
 			each c in colecciones
 				a.post(href=`/users/${profile_user.id}/colecciones/${c.id}`)
+					if c.thumbnail
+						img.collection-thumbnail(src=c.thumbnail, alt=`Primera imagen de ${c.title}`)
 					h3 #{c.title}
 		else
 			p Todavía no tienes colecciones.
