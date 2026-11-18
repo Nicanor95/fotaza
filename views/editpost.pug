@@ -9,8 +9,9 @@ block content
 		h3.center Imágenes del álbum
 		ul.center.image-list
 			each image in images
-				li.center.marginBottom
-					img.edit-thumb(src=image.data)
+				li.center.marginBottom.edit-image-card
+					div.edit-image-preview
+						img.edit-thumb(src=image.data)
 					div.edit-image-fields
 						div.edit-field-row
 							label(for=`description-${image.id}`) Descripción:
@@ -21,9 +22,17 @@ block content
 						label(for=`comments-enabled-${image.id}`)
 							input(type="checkbox", name=`comments-enabled-${image.id}` id=`comments-enabled-${image.id}` checked=image.comments_enabled)
 							| Comentarios habilitados
-						button(type="submit", formaction=`/post/edit/${publication_id}/image/delete`, formmethod="post", name="image_id", value=image.id) Quitar imagen
+					button.remove-image-button(type="submit", formaction=`/post/edit/${publication_id}/image/delete`, formmethod="post", name="image_id", value=image.id, aria-label="Quitar imagen", title="Quitar imagen", data-remove-image=true)
+						i.fa-solid.fa-trash-can(aria-hidden="true")
 
 		button.center(type="submit") Guardar cambios
+
+	dialog#remove-image-dialog.confirmation-dialog(aria-labelledby="remove-image-title", aria-describedby="remove-image-message")
+		h3#remove-image-title ¿Quitar imagen?
+		p#remove-image-message ¿Estás seguro de que quieres eliminar esta imagen? Esta acción no se puede deshacer.
+		div.confirmation-dialog-actions
+			button(type="button", data-cancel-removal, autofocus=true) Cancelar
+			button.remove-image-confirm(type="button", data-confirm-removal) Quitar imagen
 
 	form.authform.center(method="post", action=`/post/edit/${publication_id}/delete`)
 		label(for="album-confirmation") Para eliminar el álbum, escribe su nombre: #{title}
@@ -32,3 +41,5 @@ block content
 
 	div.center.marginTop
 		a(href=`/post/album/${publication_id}`) Volver a la publicación
+
+	script(src="/script/editpost.js", defer=true)
