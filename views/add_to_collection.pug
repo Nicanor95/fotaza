@@ -1,19 +1,28 @@
 extends partials/layout
 
 block content
-	div.profile
-		h1 Añadir a colección
-		form(method="post", action=`/users/${user.id}/colecciones`)
-			input(type="hidden", name="image_id", value=image_id)
-			input(type="hidden", name="album_id", value=album_id)
-			input(type="text", name="title", required=true, placeholder="Nombre de la nueva colección")
-			button(type="submit") Crear colección y añadir
-		hr
-		h3 Colecciones existentes
-		if colecciones.length
-			each c in colecciones
-				form(method="post", action=`/users/${user.id}/colecciones/${c.id}/imagenes/${image_id}?album_id=${album_id}`)
-					button(type="submit") #{c.title}
-		else
-			p Todavía no tienes colecciones. Crea una para guardar esta imagen.
-		a(href=`/post/album/${album_id}/${image_id}`) Volver
+	section.collection-picker(aria-labelledby="collection-picker-title")
+		header.collection-picker-header
+			h1#collection-picker-title Añadir a colección
+
+		section.collection-picker-section(aria-labelledby="create-collection-title")
+			h2#create-collection-title Crear una colección
+			form.collection-create-form(method="post", action=`/users/${user.id}/colecciones`)
+				input(type="hidden", name="image_id", value=image_id)
+				input(type="hidden", name="album_id", value=album_id)
+				div.collection-create-field
+					label(for="collection-title") Nombre de la colección
+					input#collection-title(type="text", name="title", required=true, placeholder="Nombre de la nueva colección")
+				button(type="submit") Crear colección y añadir
+
+		section.collection-picker-section(aria-labelledby="existing-collections-title")
+			h2#existing-collections-title Colecciones existentes
+			if colecciones.length
+				div.collection-options
+					each c in colecciones
+						form.collection-choice-form(method="post", action=`/users/${user.id}/colecciones/${c.id}/imagenes/${image_id}?album_id=${album_id}`)
+							button.collection-choice(type="submit")= c.title
+			else
+				p.collection-empty Todavía no tienes colecciones. Crea una para guardar esta imagen.
+
+		a.collection-back-link(href=`/post/album/${album_id}/${image_id}`) Volver
