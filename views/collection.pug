@@ -1,9 +1,38 @@
 extends partials/layout
-include partials/wall
 
 block content
 	div.profile
 		h1= collection.title
 		a(href=`/users/${profile_user.id}`) Volver al perfil
 	hr
-	+wall(images, pagination)
+	div.r_flex.center.wall
+		each image in images
+			div.post.collection-image-card
+				a(href=`/post/album/${image.publicacion_id}/${image.id}`)
+					img(src=image.img_b64, width=300, height=600, alt=image.titulo)
+					h3 #{image.titulo}
+				form(method="post", action=`/users/${profile_user.id}/colecciones/${collection.id}/imagenes/${image.id}/eliminar`, data-remove-collection-image=true)
+					input(type="hidden", name="page", value=pagination.page)
+					button.remove-image-button(type="submit", aria-label=`Quitar ${image.titulo} de la colección`, title="Quitar de la colección")
+						i.fa-solid.fa-trash-can(aria-hidden="true")
+
+	if pagination && pagination.totalPages > 1
+		nav.pagination.center
+			if pagination.page > 1
+				a.pagination-button(href=`${pagination.baseUrl}${pagination.baseUrl.includes('?') ? '&' : '?'}page=${pagination.page - 1}`)
+					i.fa-solid.fa-chevron-left
+					span Anterior
+			span.pagination-status Página #{pagination.page} de #{pagination.totalPages}
+			if pagination.page < pagination.totalPages
+				a.pagination-button(href=`${pagination.baseUrl}${pagination.baseUrl.includes('?') ? '&' : '?'}page=${pagination.page + 1}`)
+					span Siguiente
+					i.fa-solid.fa-chevron-right
+
+	dialog#remove-collection-image-dialog.confirmation-dialog(aria-labelledby="remove-collection-image-title", aria-describedby="remove-collection-image-message")
+		h3#remove-collection-image-title ¿Quitar imagen de la colección?
+		p#remove-collection-image-message Si es la última imagen, también se eliminará la colección. La imagen original no se borrará.
+		div.confirmation-dialog-actions
+			button(type="button", data-cancel-removal, autofocus=true) Cancelar
+			button.remove-image-confirm(type="button", data-confirm-removal) Quitar imagen
+
+	script(src="/script/collection.js", defer=true)
