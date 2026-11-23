@@ -387,6 +387,25 @@ footer a i {
 	overflow: hidden;
 }
 
+.collection-image-card {
+	position: relative;
+}
+
+.collection-image-card > a {
+	display: block;
+}
+
+.collection-image-card > a > img {
+	max-height: 400px;
+	height: fit-content;
+	overflow: hidden;
+	border-radius: 0.9rem 0.9rem 0 0;
+}
+
+.collection-image-card h3 {
+	overflow: hidden;
+}
+
 .slide {
 	display: none;
 	flex-direction: column;
