@@ -3,6 +3,7 @@ import { Imagen } from "../models/Imagen.js";
 import { Usuario } from "../models/Usuario.js";
 import { Notificacion } from "../models/Notificacion.js";
 import { Coleccion } from "../models/Coleccion.js";
+import sequelize from "../models/config.js";
 import { buildProfileWall, buildWallById, buildFavouritesWall } from "./wall.js";
 import { paginateItems } from "../utils/pagination.js";
 
@@ -169,6 +170,54 @@ export async function addToCollection(req, res) {
 	}
 
 	return res.redirect(`/post/album/${album_id}/${image_id}`);
+}
+
+// Removes an image from an owned collection and deletes the collection if it becomes empty.
+export async function removeFromCollection(req, res) {
+	const user_id = Number(req.params.user_id);
+	const col_id = Number(req.params.col_id);
+	const image_id = Number(req.params.image_id);
+
+	if (Number(req.user.id) !== user_id) {
+		return res.status(404).render('fourohfour');
+	}
+
+	const result = await sequelize.transaction(async (transaction) => {
+		const coleccion = await Coleccion.findByPk(col_id, {
+			transaction,
+			lock: transaction.LOCK.UPDATE
+		});
+		const image = await Imagen.findByPk(image_id, { transaction });
+
+		if (!coleccion || Number(coleccion.usuario_id) !== user_id || !image) {
+			return { notFound: true };
+		}
+
+		if (!(await coleccion.hasImagen(image, { transaction }))) {
+			return { notFound: true };
+		}
+
+		await coleccion.removeImagen(image, { transaction });
+		const remainingImages = await coleccion.countImagens({ transaction });
+		if (remainingImages === 0) {
+			await coleccion.destroy({ transaction });
+			return { collectionDeleted: true };
+		}
+
+		return { collectionDeleted: false };
+	});
+
+	if (result.notFound) {
+		return res.status(404).render('fourohfour');
+	}
+	if (result.collectionDeleted) {
+		return res.redirect(`/users/${user_id}/colecciones`);
+	}
+
+	const requestedPage = Number.parseInt(req.body.page, 10);
+	const page = Number.isInteger(requestedPage) && requestedPage > 1 ? requestedPage : 1;
+	const pageQuery = page > 1 ? `?page=${page}` : '';
+	return res.redirect(`/users/${user_id}/colecciones/${col_id}${pageQuery}`);
 }
 
 // Creates a collection and adds the selected image to it.
