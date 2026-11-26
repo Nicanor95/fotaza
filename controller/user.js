@@ -286,6 +286,38 @@ export async function showCollections(req, res) {
 	});
 }
 
+// Deletes an owned collection.
+export async function deleteCollection(req, res) {
+	const user_id = Number(req.params.user_id);
+	const col_id = Number(req.params.col_id);
+
+	if (Number(req.user.id) !== user_id) {
+		return res.status(404).render('fourohfour');
+	}
+
+	const deleted = await sequelize.transaction(async (transaction) => {
+		const coleccion = await Coleccion.findByPk(col_id, {
+			transaction,
+			lock: transaction.LOCK.UPDATE
+		});
+
+		if (!coleccion || Number(coleccion.usuario_id) !== user_id) {
+			return false;
+		}
+
+		await coleccion.setImagens([], { transaction });
+		await coleccion.setPublicacions([], { transaction });
+		await coleccion.destroy({ transaction });
+		return true;
+	});
+
+	if (!deleted) {
+		return res.status(404).render('fourohfour');
+	}
+
+	return res.redirect(`/users/${user_id}/colecciones`);
+}
+
 // Displays one collection owned by the authenticated user.
 export async function showCollection(req, res) {
 	const user_id = req.params.user_id;
