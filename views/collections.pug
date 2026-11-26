@@ -10,9 +10,28 @@ block content
 	div.r_flex.center.wall
 		if colecciones.length
 			each c in colecciones
-				a.post(href=`/users/${profile_user.id}/colecciones/${c.id}`)
-					if c.thumbnail
-						img.collection-thumbnail(src=c.thumbnail, alt=`Primera imagen de ${c.title}`)
-					h3 #{c.title}
+				div.post.collection-card
+					a.collection-card-link(href=`/users/${profile_user.id}/colecciones/${c.id}`)
+						if c.thumbnail
+							img.collection-thumbnail(src=c.thumbnail, alt=`Primera imagen de ${c.title}`)
+						h3 #{c.title}
+					div.options-wrapper.collection-options-wrapper
+						button.options-button(type="button", aria-label=`Opciones de ${c.title}`, aria-expanded="false", aria-controls=`collection-options-${c.id}`)
+							i.fa-solid.fa-ellipsis-vertical(aria-hidden="true")
+						ul.options-menu.collection-options-menu.hidden(id=`collection-options-${c.id}`)
+							li
+								form(method="post", action=`/users/${profile_user.id}/colecciones/${c.id}/eliminar`, data-delete-collection=true)
+									button.report-option.collection-delete-option(type="submit")
+										i.fa-solid.fa-trash-can(aria-hidden="true")
+										span Eliminar colección
 		else
 			p Todavía no tienes colecciones.
+
+	dialog#delete-collection-dialog.confirmation-dialog(aria-labelledby="delete-collection-title", aria-describedby="delete-collection-message")
+		h3#delete-collection-title ¿Eliminar colección?
+		p#delete-collection-message Se quitará la colección, pero las imágenes originales no se eliminarán.
+		div.confirmation-dialog-actions
+			button(type="button", data-cancel-deletion, autofocus=true) Cancelar
+			button.remove-image-confirm(type="button", data-confirm-deletion) Eliminar colección
+
+	script(src="/script/collections.js", defer=true)
